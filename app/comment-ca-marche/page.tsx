@@ -41,13 +41,22 @@ export default function CommentCaMarchePage() {
               annuelles hors zone euro),
             </li>
             <li>+ les frais de retrait à l&apos;étranger estimés,</li>
-            <li>− la valeur de la prime de bienvenue, amortie sur un an,</li>
-            <li>− la valeur estimée du cashback.</li>
+            <li>
+              − la valeur de la prime de bienvenue, <strong>amortie sur 3 ans</strong>,
+            </li>
+            <li>− la valeur estimée du cashback,</li>
+            <li>
+              − la valeur estimée des miles/points, uniquement si vous déclarez
+              vouloir les optimiser.
+            </li>
           </ul>
           <p className="mt-3">
-            Le <strong>même barème et les mêmes hypothèses</strong> s&apos;appliquent à
-            toutes les cartes. Le détail poste par poste est affiché et dépliable
-            sur chaque résultat.
+            Le résultat est présenté selon <strong>deux vues</strong> : le coût de
+            la <strong>1ʳᵉ année</strong> (prime incluse) et le coût{" "}
+            <strong>récurrent</strong> des années suivantes (hors prime, qui ne se
+            répète pas). Le <strong>même barème et les mêmes hypothèses</strong>{" "}
+            s&apos;appliquent à toutes les cartes. Le détail poste par poste est
+            affiché et dépliable sur chaque résultat.
           </p>
         </Section>
 
@@ -55,8 +64,13 @@ export default function CommentCaMarchePage() {
           <ul className="mt-1 list-disc space-y-1.5 pl-5">
             <li>Montant moyen supposé d&apos;un retrait à l&apos;étranger : 100 €.</li>
             <li>
-              Prime de bienvenue amortie sur un an (elle compte intégralement la
-              première année).
+              Prime de bienvenue <strong>amortie sur 3 ans</strong> : une prime
+              n&apos;est pas récurrente, on la lisse pour ne pas fausser le coût
+              des années suivantes.
+            </li>
+            <li>
+              Valeur des miles/points estimée prudemment (facteur de réalisme de
+              0,7, pour tenir compte des points expirés ou non utilisés).
             </li>
             <li>
               Situation actuelle estimée à partir d&apos;un profil de frais de
@@ -95,7 +109,7 @@ export default function CommentCaMarchePage() {
         <div className="mt-10">
           <Link
             href="/simulateur"
-            className="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-indigo-700"
+            className="inline-flex items-center justify-center rounded-xl bg-brand px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-indigo-600/25 transition-transform hover:-translate-y-0.5"
           >
             Lancer la simulation
           </Link>

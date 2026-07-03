@@ -1,14 +1,22 @@
+import Link from "next/link";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
+import { cards, publicCards } from "@/lib/cards";
 
 export const metadata = {
-  title: "Mentions légales — CB180",
+  title: "Mentions légales",
 };
 
-// Mentions légales (LCEN). Les champs [À compléter] doivent être renseignés
-// avant mise en ligne publique.
+// Mentions légales (LCEN) + informations obligatoires du comparateur
+// (Code de la consommation, décret n°2016-505). Les champs [à compléter]
+// doivent être renseignés avant mise en ligne publique.
+
+const LAST_UPDATE = "4 juillet 2026";
 
 export default function MentionsLegalesPage() {
+  const total = cards.length;
+  const listed = publicCards().length;
+
   return (
     <>
       <SiteHeader />
@@ -32,19 +40,90 @@ export default function MentionsLegalesPage() {
 
         <Section title="Hébergement">
           <p>
-            Le site est hébergé par Vercel Inc., 340 S Lemon Ave #4133, Walnut,
-            CA 91789, États-Unis. Les données du questionnaire sont stockées via
-            Supabase, sur une infrastructure située en Union européenne.
+            L&apos;application est hébergée par <strong>Vercel Inc.</strong>{" "}
+            (<a
+              href="https://vercel.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-600 hover:underline"
+            >
+              vercel.com
+            </a>) ; les fonctions serveur sont exécutées en région{" "}
+            <strong>Union européenne (Paris)</strong>.{" "}
+            <Todo>adresse postale et téléphone de l&apos;hébergeur</Todo>
+          </p>
+          <p className="mt-2">
+            La base de données (audits anonymisés et adresses email) est fournie
+            par <strong>Turso</strong> (libSQL), en région{" "}
+            <strong>Paris (Union européenne)</strong>.
           </p>
         </Section>
 
         <Section title="Nature du service">
           <p>
             CB180 est un site d&apos;information et de comparaison des offres de
-            cartes bancaires. CB180 n&apos;est pas intermédiaire en opérations de
-            banque et en services de paiement. Les informations proviennent des
-            documents tarifaires publics des établissements et ne constituent ni
-            un conseil personnalisé ni une recommandation de souscription.
+            cartes bancaires. <strong>CB180 n&apos;est pas intermédiaire</strong>{" "}
+            en opérations de banque et en services de paiement (IOBSP) et ne
+            fournit ni conseil personnalisé ni recommandation de souscription. Les
+            informations proviennent des documents tarifaires publics des
+            établissements.
+          </p>
+        </Section>
+
+        <Section title="Informations sur le comparateur">
+          <p className="text-slate-500">
+            Conformément aux obligations d&apos;information des comparateurs en
+            ligne (Code de la consommation, décret n°2016-505) :
+          </p>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>
+              <strong>Critère de classement.</strong> Les cartes sont classées
+              exclusivement par <strong>coût annuel net croissant</strong>,
+              calculé avec le même barème transparent pour chaque carte. Aucun
+              critère subjectif n&apos;intervient. La méthode est détaillée sur la
+              page{" "}
+              <Link href="/comment-ca-marche" className="text-indigo-600 hover:underline">
+                « Comment ça marche »
+              </Link>.
+            </li>
+            <li>
+              <strong>Référencement non payant.</strong> Aucun établissement ne
+              peut payer pour figurer dans le comparateur ni pour être mieux
+              classé. Le classement ne dépend d&apos;aucune contrepartie
+              financière.
+            </li>
+            <li>
+              <strong>Relations et rémunération.</strong> Certains liens sortants
+              sont <strong>affiliés</strong> : une commission peut être versée à
+              l&apos;éditeur si vous ouvrez une carte via un lien. Cette
+              commission estimée est <strong>affichée en clair</strong> sur chaque
+              fiche et <strong>n&apos;influence pas le classement</strong>.
+            </li>
+            <li>
+              <strong>Périmètre.</strong> Le comparateur porte sur une{" "}
+              <strong>sélection</strong> de {total} cartes (dont {listed}{" "}
+              présentées publiquement et 2 cartes de réseau servant de référence).
+              Il <strong>n&apos;est pas exhaustif</strong> et ne couvre pas
+              l&apos;intégralité du marché.
+            </li>
+            <li>
+              <strong>Mise à jour.</strong> Chaque carte porte une{" "}
+              <strong>date de dernière vérification</strong>, indiquée sur sa
+              fiche. Les données sont revues périodiquement à partir des documents
+              tarifaires publics des établissements.
+            </li>
+          </ul>
+        </Section>
+
+        <Section title="Données personnelles">
+          <p>
+            Le traitement des données est décrit dans la{" "}
+            <Link href="/confidentialite" className="text-indigo-600 hover:underline">
+              politique de confidentialité
+            </Link>
+            . Le service est conçu pour fonctionner sans donnée identifiante :
+            seules des fourchettes anonymisées sont traitées, et l&apos;email
+            (facultatif) est stocké séparément.
           </p>
         </Section>
 
@@ -53,21 +132,20 @@ export default function MentionsLegalesPage() {
             L&apos;ensemble des contenus du site (textes, éléments graphiques,
             mise en forme) est protégé. Toute reproduction sans autorisation est
             interdite. Les marques et logos des établissements cités appartiennent
-            à leurs titulaires respectifs.
+            à leurs titulaires respectifs et ne sont pas reproduits.
           </p>
         </Section>
 
-        <Section title="Liens affiliés">
+        <Section title="Médiation de la consommation">
           <p>
-            Certains liens sortants sont affiliés et peuvent donner lieu au
-            versement d&apos;une commission à l&apos;éditeur. Cette rémunération
-            est indiquée en clair et n&apos;influence pas le classement des
-            cartes. Voir la page « Comment fonctionne le comparateur ».
+            CB180 est un service d&apos;information gratuit : aucune vente ni
+            contrat de consommation n&apos;est conclu avec l&apos;utilisateur. Le
+            cas échéant, les coordonnées d&apos;un médiateur seront indiquées ici.
           </p>
         </Section>
 
         <p className="mt-10 text-xs text-slate-400">
-          Dernière mise à jour : <Todo>date</Todo>.
+          Dernière mise à jour : {LAST_UPDATE}.
         </p>
       </main>
       <SiteFooter />
