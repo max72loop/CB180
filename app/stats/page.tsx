@@ -3,6 +3,7 @@
 
 import { getCard } from "@/lib/cards";
 import { getDashboardStats, isDbConfigured, type DashboardStats } from "@/lib/db";
+import { Logo } from "@/components/brand/Logo";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -64,8 +65,9 @@ function Dashboard({ stats }: { stats: DashboardStats }) {
   return (
     <main className="mx-auto max-w-3xl px-5 py-10">
       <header className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          Tableau de bord CB180
+        <Logo size={28} />
+        <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-900">
+          Tableau de bord
         </h1>
         <p className="mt-1 text-sm text-slate-500">
           Suivi kill/continue · données anonymisées.
@@ -135,25 +137,83 @@ function Dashboard({ stats }: { stats: DashboardStats }) {
         )}
       </section>
 
-      {/* Funnel d'events */}
-      <section className="mt-10">
-        <h2 className="text-base font-semibold text-slate-900">Funnel (events)</h2>
-        {stats.eventsByType.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-400">Aucun event enregistré.</p>
-        ) : (
-          <dl className="mt-4 divide-y divide-slate-100 rounded-2xl border border-slate-200">
-            {stats.eventsByType.map((e) => (
-              <div key={e.type} className="flex justify-between px-4 py-2.5 text-sm">
-                <dt className="text-slate-600">{e.type}</dt>
-                <dd className="font-semibold tabular-nums text-slate-900">
-                  {nf.format(e.count)}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        )}
-      </section>
+      {/* Funnel de conversion */}
+      <Funnel stats={stats} />
     </main>
+  );
+}
+
+/** Entonnoir de conversion : arrivée → démarrage → résultat → clic offre. */
+function Funnel({ stats }: { stats: DashboardStats }) {
+  const ev = new Map(stats.eventsByType.map((e) => [e.type, e.count]));
+  const steps = [
+    { label: "Arrivée sur le simulateur", value: ev.get("arrivee") ?? 0 },
+    { label: "Questionnaire démarré", value: ev.get("start_quiz") ?? 0 },
+    { label: "Résultat obtenu", value: stats.audits },
+    { label: "Clic sur une offre", value: stats.clicks },
+  ];
+  const top = steps[0].value || Math.max(...steps.map((s) => s.value), 1);
+
+  return (
+    <section className="mt-10">
+      <h2 className="text-base font-semibold text-slate-900">
+        Entonnoir de conversion
+      </h2>
+      <p className="mt-1 text-xs text-slate-500">
+        Chaque étape indique le taux de passage depuis l&apos;étape précédente.
+      </p>
+
+      {steps.every((s) => s.value === 0) ? (
+        <p className="mt-4 text-sm text-slate-400">
+          Aucune donnée de funnel pour l&apos;instant.
+        </p>
+      ) : (
+        <ol className="mt-5 space-y-3">
+          {steps.map((step, i) => {
+            const width = Math.max(Math.round((step.value / top) * 100), 4);
+            const prev = i > 0 ? steps[i - 1].value : null;
+            const conv =
+              prev == null ? null : prev === 0 ? null : Math.round((step.value / prev) * 100);
+            return (
+              <li key={step.label}>
+                <div className="mb-1 flex items-baseline justify-between gap-3">
+                  <span className="text-sm text-slate-700">{step.label}</span>
+                  <span className="shrink-0 text-sm font-semibold tabular-nums text-slate-900">
+                    {nf.format(step.value)}
+                    {conv != null && (
+                      <span
+                        className={[
+                          "ml-2 text-xs font-medium",
+                          conv >= 50 ? "text-emerald-600" : "text-amber-600",
+                        ].join(" ")}
+                      >
+                        {conv} %
+                      </span>
+                    )}
+                  </span>
+                </div>
+                <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className="h-full rounded-full bg-brand"
+                    style={{ width: `${width}%` }}
+                  />
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+
+      {/* Taux global arrivée → clic */}
+      {steps[0].value > 0 && (
+        <p className="mt-4 text-sm text-slate-600">
+          Conversion globale (arrivée → clic offre) :{" "}
+          <span className="font-semibold text-slate-900">
+            {pct(steps[3].value, steps[0].value)}
+          </span>
+        </p>
+      )}
+    </section>
   );
 }
 

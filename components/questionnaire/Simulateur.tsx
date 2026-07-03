@@ -79,6 +79,16 @@ const ADVANCE_DELAY_MS = 420;
 /** Durée de l'écran de calcul avant l'affichage du résultat (P8). */
 const CALC_DELAY_MS = 2200;
 
+/** Log d'un event de funnel, silencieux (le stockage est optionnel côté UX). */
+function logFunnelEvent(eventType: "arrivee" | "start_quiz") {
+  fetch("/api/event", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sessionId: null, eventType }),
+    keepalive: true,
+  }).catch(() => {});
+}
+
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "start":
@@ -156,6 +166,14 @@ export default function Simulateur({ cards }: SimulateurProps) {
     };
   }, []);
 
+  // Funnel : « arrivée » une seule fois à l'ouverture de la page.
+  const arrived = useRef(false);
+  useEffect(() => {
+    if (arrived.current) return;
+    arrived.current = true;
+    logFunnelEvent("arrivee");
+  }, []);
+
   /** Lance la temporisation d'auto-avance vers l'écran suivant. */
   const scheduleAdvance = useCallback(() => {
     setAdvancing(true);
@@ -208,6 +226,7 @@ export default function Simulateur({ cards }: SimulateurProps) {
   }, []);
 
   const startQuestionnaire = useCallback(() => {
+    logFunnelEvent("start_quiz");
     dispatch({ type: "start" });
   }, []);
 
