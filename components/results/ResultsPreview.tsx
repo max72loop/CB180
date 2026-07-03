@@ -17,11 +17,20 @@
 
 import { useMemo, useState } from "react";
 import { costComposition, splitByEligibility } from "@/lib/engine";
-import type { CostBreakdown, CostShare, RankedCard } from "@/lib/types";
+import { MiniCard } from "@/components/brand/CardVisual";
+import type { Card, CostBreakdown, CostShare, RankedCard } from "@/lib/types";
 import { formatEur, formatEurCents, formatSignedEur } from "@/lib/format";
 
 /** Vue de coût mise en avant. */
 type CostView = "recurring" | "year1";
+
+/** Teinte de la vignette de carte selon la gamme (décoratif, neutre). */
+function toneForTier(tier: Card["tier"]): "brand" | "dark" | "emerald" | "slate" {
+  if (tier === "premium") return "dark";
+  if (tier === "haut_de_gamme") return "emerald";
+  if (tier === "intermediaire") return "brand";
+  return "slate";
+}
 
 interface ResultsPreviewProps {
   current: CostBreakdown;
@@ -402,25 +411,28 @@ function RankedCardRow({
         </p>
       )}
       <div className="flex items-start justify-between gap-3 p-4">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            {rank != null ? (
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
-                {rank}
-              </span>
-            ) : (
-              <span className="flex h-6 shrink-0 items-center rounded-full bg-amber-100 px-2 text-[11px] font-semibold text-amber-700">
-                revenu requis
-              </span>
+        <div className="flex min-w-0 gap-3">
+          <MiniCard tone={toneForTier(card.tier)} className="mt-0.5" />
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              {rank != null ? (
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
+                  {rank}
+                </span>
+              ) : (
+                <span className="flex h-6 shrink-0 items-center rounded-full bg-amber-100 px-2 text-[11px] font-semibold text-amber-700">
+                  revenu requis
+                </span>
+              )}
+              <p className="line-clamp-2 font-semibold text-slate-900">{card.name}</p>
+            </div>
+            <p className="mt-0.5 pl-8 text-sm text-slate-500">{card.issuer}</p>
+            {incomeDisclosed && !eligible && card.min_monthly_income_eur != null && (
+              <p className="mt-1 pl-8 text-xs font-medium text-amber-600">
+                Revenu requis annoncé : ≥ {formatEur(card.min_monthly_income_eur)}/mois.
+              </p>
             )}
-            <p className="line-clamp-2 font-semibold text-slate-900">{card.name}</p>
           </div>
-          <p className="mt-0.5 pl-8 text-sm text-slate-500">{card.issuer}</p>
-          {incomeDisclosed && !eligible && card.min_monthly_income_eur != null && (
-            <p className="mt-1 pl-8 text-xs font-medium text-amber-600">
-              Revenu requis annoncé : ≥ {formatEur(card.min_monthly_income_eur)}/mois.
-            </p>
-          )}
         </div>
         <div className="shrink-0 text-right">
           <p className="text-lg font-bold text-slate-900">

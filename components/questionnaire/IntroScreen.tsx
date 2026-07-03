@@ -96,7 +96,7 @@ export default function IntroScreen({
         <button
           type="button"
           onClick={onStart}
-          className="w-full rounded-xl bg-indigo-600 px-6 py-4 text-base font-semibold text-white transition-colors hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+          className="w-full rounded-xl bg-brand px-6 py-4 text-base font-semibold text-white shadow-lg shadow-indigo-600/25 transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
         >
           Commencer la simulation
         </button>

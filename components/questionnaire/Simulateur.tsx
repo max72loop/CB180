@@ -22,6 +22,7 @@ import {
 import { answersToAuditProfile, buildAuditResult } from "@/lib/audit";
 import { computeCurrentSituationCost, rankCards } from "@/lib/engine";
 import type { Card } from "@/lib/types";
+import { Logo } from "@/components/brand/Logo";
 import IntroScreen from "./IntroScreen";
 import ProgressBar from "./ProgressBar";
 import QuestionStep from "./QuestionStep";
@@ -282,11 +283,8 @@ export default function Simulateur({ cards }: SimulateurProps) {
             </button>
           )}
         </div>
-        <Link
-          href="/"
-          className="justify-self-center text-sm font-semibold text-indigo-600"
-        >
-          CB180
+        <Link href="/" aria-label="Accueil CB180" className="justify-self-center">
+          <Logo size={26} />
         </Link>
         <div />
       </div>

@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
+/* Design tokens CB180 : polices + dégradé signature. */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: var(--font-sora), var(--font-inter), ui-sans-serif, system-ui,
+    sans-serif;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
+  /* Dégradé de marque (indigo → violet → fuchsia), utilisé avec parcimonie. */
+  --brand-gradient: linear-gradient(
+    100deg,
+    #4f46e5 0%,
+    #7c3aed 50%,
+    #d946ef 100%
+  );
 }
 
 html {
@@ -12,8 +27,97 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Titres en Sora par défaut. */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* Texte en dégradé de marque (highlight de titre). */
+.text-gradient {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Aplat dégradé de marque (boutons, logo, sections). */
+.bg-brand {
+  background-image: var(--brand-gradient);
+}
+
+/* Voile décoratif : halos flous en fond de section (à placer en absolute). */
+.brand-glow {
+  background: radial-gradient(
+      40% 50% at 15% 20%,
+      rgba(99, 102, 241, 0.28),
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 55% at 85% 10%,
+      rgba(217, 70, 239, 0.22),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 60% at 60% 90%,
+      rgba(124, 58, 237, 0.2),
+      transparent 70%
+    );
+}
+
+/* Grille en pointillés subtile pour habiller les fonds. */
+.dot-grid {
+  background-image: radial-gradient(
+    rgba(15, 23, 42, 0.06) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+}
+
+/* Reflet animé qui balaie la carte visuelle. */
+@keyframes sheen {
+  0% {
+    transform: translateX(-120%) rotate(8deg);
+  }
+  60%,
+  100% {
+    transform: translateX(220%) rotate(8deg);
+  }
+}
+.card-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  width: 40%;
+  animation: sheen 5.5s ease-in-out infinite;
+}
+
+/* Flottement doux des visuels de carte. */
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.floaty {
+  animation: floaty 6s ease-in-out infinite;
+}
+.floaty-slow {
+  animation: floaty 8s ease-in-out infinite;
 }
 
 /* Fondu d'entrée entre deux écrans du questionnaire. */
@@ -45,10 +149,11 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-step {
-    animation: none;
-  }
-  .calc-spinner {
+  .animate-step,
+  .calc-spinner,
+  .card-sheen::after,
+  .floaty,
+  .floaty-slow {
     animation: none;
   }
 }

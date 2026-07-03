@@ -3,19 +3,15 @@
 // comparateurs, RGPD) et la mention de non-intermédiation IOBSP.
 
 import Link from "next/link";
+import { Logo } from "@/components/brand/Logo";
 
 export default function SiteFooter() {
   return (
     <footer className="border-t border-slate-200 bg-slate-50">
-      <div className="mx-auto max-w-5xl px-5 py-12">
+      <div className="mx-auto max-w-6xl px-5 py-12">
         <div className="grid gap-8 sm:grid-cols-3">
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-600 text-xs font-bold text-white">
-                CB
-              </span>
-              <span className="text-sm font-bold text-slate-900">CB180</span>
-            </div>
+            <Logo size={28} />
             <p className="text-sm leading-relaxed text-slate-500">
               Comparateur et simulateur d&apos;information sur les cartes
               bancaires françaises.

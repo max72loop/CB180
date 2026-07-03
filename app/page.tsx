@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
+import CardVisual from "@/components/brand/CardVisual";
 
 // Landing CB180 — conforme au wording IOBSP : information chiffrée objective,
 // jamais « recommandé pour vous », « souscrivez » ou « courtier ».
@@ -28,30 +29,35 @@ export default function Home() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50 to-white">
-      <div className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-white px-3 py-1 text-xs font-medium text-indigo-700">
+    <section className="relative overflow-hidden bg-white">
+      {/* Fonds décoratifs : halos dégradés + grille en pointillés */}
+      <div className="brand-glow pointer-events-none absolute inset-0 -z-10 opacity-70" />
+      <div className="dot-grid pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(70%_60%_at_50%_0%,black,transparent)]" />
+
+      <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 sm:py-24 lg:grid-cols-2">
+        {/* Colonne texte */}
+        <div className="text-center lg:text-left">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-white/80 px-3 py-1 text-xs font-medium text-indigo-700 shadow-sm backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
             Information chiffrée, pas de conseil personnalisé
           </span>
 
-          <h1 className="mt-6 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
             Combien vous coûte{" "}
-            <span className="text-indigo-600">vraiment</span> votre carte
+            <span className="text-gradient">vraiment</span> votre carte
             bancaire&nbsp;?
           </h1>
 
-          <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
+          <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-600 lg:mx-0">
             Répondez à 8 questions. CB180 calcule le coût annuel chiffré de votre
             carte actuelle et le compare, objectivement, aux alternatives du
             marché français.
           </p>
 
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row lg:justify-start">
             <Link
               href="/simulateur"
-              className="inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 sm:w-auto"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-brand px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-indigo-600/25 transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 sm:w-auto"
             >
               Lancer la simulation — gratuit
             </Link>
@@ -67,8 +73,49 @@ function Hero() {
             Anonyme · en fourchettes · aucun nom de banque demandé
           </p>
         </div>
+
+        {/* Colonne visuelle : cartes empilées + pastille de résultat */}
+        <HeroVisual />
       </div>
     </section>
+  );
+}
+
+/** Illustration produit : deux cartes qui flottent + une carte « résultat ». */
+function HeroVisual() {
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-md">
+      {/* Carte du fond (sombre), légèrement pivotée */}
+      <div className="floaty-slow absolute left-2 top-6 w-[68%] rotate-[-8deg]">
+        <CardVisual tone="dark" label="Carte actuelle" last4="4417" />
+      </div>
+      {/* Carte de marque au premier plan */}
+      <div className="floaty absolute right-1 top-0 w-[72%] rotate-[6deg]">
+        <CardVisual tone="brand" label="Alternative" last4="1802" sheen />
+      </div>
+
+      {/* Pastille de résultat, façon extrait de simulation (illustratif) */}
+      <div className="absolute bottom-0 left-0 w-[80%] rounded-2xl border border-slate-100 bg-white/95 p-4 shadow-2xl ring-1 ring-black/5 backdrop-blur sm:w-[72%]">
+        <p className="text-xs font-medium text-slate-500">Écart annuel estimé</p>
+        <div className="mt-1 flex items-baseline gap-2">
+          <span className="text-3xl font-extrabold text-emerald-600">
+            +269&nbsp;€
+          </span>
+          <span className="text-xs font-medium text-slate-400">/ an</span>
+        </div>
+        {/* Mini graphique à barres décoratif */}
+        <div className="mt-3 flex items-end gap-1.5" aria-hidden>
+          <span className="h-8 w-full rounded-sm bg-slate-200" />
+          <span className="h-6 w-full rounded-sm bg-slate-200" />
+          <span className="h-10 w-full rounded-sm bg-indigo-200" />
+          <span className="h-4 w-full rounded-sm bg-emerald-200" />
+          <span className="h-3 w-full rounded-sm bg-emerald-400" />
+        </div>
+        <p className="mt-2 text-[11px] leading-tight text-slate-400">
+          Exemple illustratif · recalculé selon vos réponses
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -100,31 +147,31 @@ function TrustStrip() {
 function ValueProps() {
   const props = [
     {
-      icon: <EuroIcon className="h-6 w-6 text-indigo-600" />,
+      icon: <EuroIcon className="h-6 w-6 text-white" />,
       title: "Le coût réel, en euros",
       body: "Cotisation, frais de change, retraits à l'étranger, moins les primes et le cashback. Pas un avis : un montant annuel net.",
     },
     {
-      icon: <ScaleIcon className="h-6 w-6 text-indigo-600" />,
+      icon: <ScaleIcon className="h-6 w-6 text-white" />,
       title: "Un classement objectif",
       body: "Les cartes sont triées par coût annuel net, avec le détail du calcul dépliable. Le même barème s'applique à toutes.",
     },
     {
-      icon: <EyeIcon className="h-6 w-6 text-indigo-600" />,
+      icon: <EyeIcon className="h-6 w-6 text-white" />,
       title: "Transparence radicale",
       body: "Les liens sont affiliés et la commission est affichée en clair. Elle n'influence jamais le classement.",
     },
   ];
   return (
     <section className="bg-white">
-      <div className="mx-auto max-w-5xl px-5 py-16">
+      <div className="mx-auto max-w-6xl px-5 py-16">
         <div className="grid gap-6 sm:grid-cols-3">
           {props.map((p) => (
             <div
               key={p.title}
-              className="rounded-2xl border border-slate-200 bg-white p-6"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-600/5"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-white shadow-md shadow-indigo-600/20">
                 {p.icon}
               </div>
               <h3 className="mt-4 text-lg font-semibold text-slate-900">
@@ -159,10 +206,11 @@ function HowItWorks() {
     },
   ];
   return (
-    <section className="bg-slate-50">
-      <div className="mx-auto max-w-5xl px-5 py-16">
+    <section className="relative overflow-hidden bg-slate-50">
+      <div className="brand-glow pointer-events-none absolute inset-0 -z-10 opacity-40" />
+      <div className="mx-auto max-w-6xl px-5 py-16">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Comment ça marche
           </h2>
           <p className="mt-3 text-slate-600">
@@ -170,10 +218,13 @@ function HowItWorks() {
           </p>
         </div>
 
-        <ol className="mt-12 grid gap-8 sm:grid-cols-3">
+        <ol className="mt-12 grid gap-6 sm:grid-cols-3">
           {steps.map((step, i) => (
-            <li key={step.title} className="relative">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-base font-bold text-white">
+            <li
+              key={step.title}
+              className="relative rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+            >
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-lg font-bold text-white shadow-md shadow-indigo-600/20">
                 {i + 1}
               </span>
               <h3 className="mt-4 text-lg font-semibold text-slate-900">
@@ -197,20 +248,19 @@ function ExampleResult() {
     { label: "Cotisation annuelle", value: "0,00 €" },
     { label: "Frais de change estimés", value: "0,00 €" },
     { label: "Frais de retrait étranger estimés", value: "0,00 €" },
-    { label: "Prime de bienvenue (amortie 1 an)", value: "−160,00 €", neg: true },
-    { label: "Cashback estimé", value: "0,00 €" },
+    { label: "Prime de bienvenue (amortie 3 ans)", value: "−10,00 €", neg: true },
   ];
   return (
     <section className="bg-white">
-      <div className="mx-auto grid max-w-5xl items-center gap-10 px-5 py-16 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 lg:grid-cols-2">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Un résultat lisible, jusqu&apos;au moindre euro
           </h2>
           <p className="mt-4 text-slate-600">
-            Chaque carte affiche son coût annuel net et le détail complet du
-            calcul. Vous voyez exactement d&apos;où vient le chiffre — libre à
-            vous de l&apos;interpréter.
+            Chaque carte affiche deux vues de coût — la 1ʳᵉ année et le coût
+            récurrent — et le détail complet du calcul. Vous voyez exactement
+            d&apos;où vient le chiffre, libre à vous de l&apos;interpréter.
           </p>
           <p className="mt-4 text-sm text-slate-500">
             Exemple illustratif pour un profil donné. Les montants réels
@@ -219,43 +269,54 @@ function ExampleResult() {
         </div>
 
         {/* Maquette de carte résultat (statique, illustrative) */}
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex items-start justify-between gap-3 p-4">
-            <div className="flex items-center gap-2">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
-                1
-              </span>
-              <div>
-                <p className="font-semibold text-slate-900">Exemple de carte</p>
-                <p className="text-sm text-slate-500">Émetteur</p>
+        <div className="relative">
+          <div className="brand-glow pointer-events-none absolute -inset-6 -z-10 opacity-60 blur-xl" />
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black/5">
+            <div className="bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-700">
+              Coût annuel le plus bas du panel
+            </div>
+            <div className="flex items-start justify-between gap-3 p-4">
+              <div className="flex items-center gap-2">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
+                  1
+                </span>
+                <div>
+                  <p className="font-semibold text-slate-900">Exemple de carte</p>
+                  <p className="text-sm text-slate-500">Réseau</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-lg font-bold text-slate-900">
+                  0 €<span className="text-xs font-normal text-slate-500"> / an</span>
+                </p>
+                <p className="text-xs text-slate-400">1ʳᵉ année : −10 €</p>
+                <p className="text-xs font-medium text-emerald-600">
+                  Économie vs actuel +269 €
+                </p>
               </div>
             </div>
-            <div className="text-right">
-              <p className="text-lg font-bold text-slate-900">
-                −160 €<span className="text-xs font-normal text-slate-500"> / an</span>
-              </p>
-              <p className="text-xs font-medium text-emerald-600">
-                la carte vous rapporte
-              </p>
-            </div>
+            <dl className="space-y-1.5 border-t border-slate-100 bg-slate-50/60 px-4 py-3 text-sm">
+              {lines.map((l) => (
+                <div key={l.label} className="flex justify-between text-slate-600">
+                  <dt>{l.label}</dt>
+                  <dd className={l.neg ? "text-emerald-600" : ""}>{l.value}</dd>
+                </div>
+              ))}
+              <div className="mt-1 flex justify-between border-t border-slate-200 pt-2 font-semibold text-slate-900">
+                <dt>Coût net la 1ʳᵉ année</dt>
+                <dd>−10,00 €</dd>
+              </div>
+              <div className="flex justify-between text-slate-500">
+                <dt>Coût récurrent (hors prime)</dt>
+                <dd>0,00 €</dd>
+              </div>
+            </dl>
+            <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
+              Lien affilié — commission estimée versée à CB180 :{" "}
+              <span className="font-medium text-slate-700">80 €</span>.
+              N&apos;influence pas le classement.
+            </p>
           </div>
-          <dl className="space-y-1.5 border-t border-slate-100 bg-slate-50/60 px-4 py-3 text-sm">
-            {lines.map((l) => (
-              <div key={l.label} className="flex justify-between text-slate-600">
-                <dt>{l.label}</dt>
-                <dd className={l.neg ? "text-emerald-600" : ""}>{l.value}</dd>
-              </div>
-            ))}
-            <div className="mt-1 flex justify-between border-t border-slate-200 pt-2 font-semibold text-slate-900">
-              <dt>Coût annuel net</dt>
-              <dd>−160,00 €</dd>
-            </div>
-          </dl>
-          <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
-            Lien affilié — commission estimée versée à CB180 :{" "}
-            <span className="font-medium text-slate-700">80 €</span>.
-            N&apos;influence pas le classement.
-          </p>
         </div>
       </div>
     </section>
@@ -273,10 +334,11 @@ function Transparency() {
     "Les données proviennent des documents tarifaires publics, avec une date de dernière vérification par carte.",
   ];
   return (
-    <section className="bg-slate-900">
-      <div className="mx-auto max-w-5xl px-5 py-16">
+    <section className="relative overflow-hidden bg-slate-950">
+      <div className="brand-glow pointer-events-none absolute inset-0 opacity-40" />
+      <div className="relative mx-auto max-w-6xl px-5 py-16">
         <div className="mx-auto max-w-2xl">
-          <h2 className="text-3xl font-bold tracking-tight text-white">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             La transparence, par obligation et par conviction
           </h2>
           <p className="mt-4 text-slate-300">
@@ -357,9 +419,11 @@ function Faq() {
 
 function FinalCta() {
   return (
-    <section className="bg-indigo-600">
-      <div className="mx-auto max-w-3xl px-5 py-16 text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-white">
+    <section className="bg-brand relative overflow-hidden">
+      <div className="pointer-events-none absolute -left-10 top-0 h-64 w-64 rounded-full bg-white/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-fuchsia-300/20 blur-3xl" />
+      <div className="relative mx-auto max-w-3xl px-5 py-20 text-center">
+        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
           Chiffrez le coût réel de votre carte
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-indigo-100">
@@ -368,7 +432,7 @@ function FinalCta() {
         </p>
         <Link
           href="/simulateur"
-          className="mt-8 inline-flex items-center justify-center rounded-xl bg-white px-6 py-3.5 text-base font-semibold text-indigo-700 transition-colors hover:bg-indigo-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-600"
+          className="mt-8 inline-flex items-center justify-center rounded-xl bg-white px-7 py-3.5 text-base font-semibold text-indigo-700 shadow-lg transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-600"
         >
           Lancer la simulation
         </Link>
