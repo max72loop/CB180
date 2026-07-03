@@ -34,6 +34,11 @@ export default function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/guides" className="text-slate-600 hover:text-slate-900">
+                  Guides
+                </Link>
+              </li>
+              <li>
                 <Link
                   href="/comment-ca-marche"
                   className="text-slate-600 hover:text-slate-900"

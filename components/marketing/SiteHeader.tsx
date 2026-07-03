@@ -20,8 +20,14 @@ export default function SiteHeader() {
             Cartes
           </Link>
           <Link
-            href="/comment-ca-marche"
+            href="/guides"
             className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 sm:block"
+          >
+            Guides
+          </Link>
+          <Link
+            href="/comment-ca-marche"
+            className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 lg:block"
           >
             Comment ça marche
           </Link>

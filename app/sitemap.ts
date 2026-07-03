@@ -4,6 +4,7 @@
 import type { MetadataRoute } from "next";
 import { publicCards } from "@/lib/cards";
 import { comparisonSlug } from "@/lib/card-display";
+import { GUIDES } from "@/lib/guides";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cb180.fr";
 
@@ -11,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPaths = [
     "",
     "/cartes",
+    "/guides",
     "/simulateur",
     "/comment-ca-marche",
     "/mentions-legales",
@@ -19,8 +21,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticEntries: MetadataRoute.Sitemap = staticPaths.map((path) => ({
     url: `${SITE}${path}`,
-    changeFrequency: path === "" || path === "/cartes" ? "weekly" : "monthly",
+    changeFrequency:
+      path === "" || path === "/cartes" || path === "/guides"
+        ? "weekly"
+        : "monthly",
     priority: path === "" ? 1 : path === "/simulateur" ? 0.9 : 0.7,
+  }));
+
+  const guideEntries: MetadataRoute.Sitemap = GUIDES.map((g) => ({
+    url: `${SITE}/guides/${g.slug}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
   }));
 
   const pub = publicCards();
@@ -44,5 +55,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  return [...staticEntries, ...cardEntries, ...comparisonEntries];
+  return [
+    ...staticEntries,
+    ...guideEntries,
+    ...cardEntries,
+    ...comparisonEntries,
+  ];
 }
