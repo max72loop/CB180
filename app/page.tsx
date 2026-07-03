@@ -2,6 +2,9 @@ import Link from "next/link";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
 import CardVisual from "@/components/brand/CardVisual";
+import { publicCards } from "@/lib/cards";
+import { GUIDES } from "@/lib/guides";
+import { feeLabel, fxLabel, toneForTier } from "@/lib/card-display";
 
 // Landing CB180 — conforme au wording IOBSP : information chiffrée objective,
 // jamais « recommandé pour vous », « souscrivez » ou « courtier ».
@@ -16,6 +19,8 @@ export default function Home() {
         <ValueProps />
         <HowItWorks />
         <ExampleResult />
+        <FeaturedCards />
+        <GuidesTeaser />
         <Transparency />
         <Faq />
         <FinalCta />
@@ -318,6 +323,127 @@ function ExampleResult() {
             </p>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ----------------------------------------------------- Featured cards ---- */
+
+function FeaturedCards() {
+  // Cartes à la une : sans frais à l'étranger (change 0 % + retraits gratuits),
+  // les moins chères d'abord, une par établissement pour la diversité.
+  const seen = new Set<string>();
+  const featured = publicCards()
+    .filter(
+      (c) => c.fx_fee_percent === 0 && (c.foreign_withdrawal_fee_percent ?? 0) === 0,
+    )
+    .sort((a, b) => a.annual_fee_eur - b.annual_fee_eur || a.name.localeCompare(b.name))
+    .filter((c) => {
+      if (seen.has(c.issuer)) return false;
+      seen.add(c.issuer);
+      return true;
+    })
+    .slice(0, 3);
+
+  return (
+    <section className="bg-slate-50">
+      <div className="mx-auto max-w-6xl px-5 py-16">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Cartes à la une
+            </h2>
+            <p className="mt-2 text-slate-600">
+              Trois cartes sans frais à l&apos;étranger, sur données vérifiées.
+            </p>
+          </div>
+          <Link
+            href="/cartes"
+            className="hidden shrink-0 text-sm font-semibold text-indigo-600 hover:text-indigo-700 sm:block"
+          >
+            Toutes les cartes →
+          </Link>
+        </div>
+
+        <ul className="mt-8 grid gap-6 sm:grid-cols-3">
+          {featured.map((card) => (
+            <li key={card.id}>
+              <Link
+                href={`/cartes/${card.id}`}
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-600/5"
+              >
+                <div className="p-4">
+                  <CardVisual
+                    tone={toneForTier(card.tier)}
+                    label={card.network}
+                    className="w-full"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col px-4 pb-4">
+                  <h3 className="font-semibold text-slate-900">{card.name}</h3>
+                  <p className="text-sm text-slate-500">{card.issuer}</p>
+                  <div className="mt-auto flex items-center justify-between pt-4 text-sm">
+                    <span className="font-semibold text-slate-900">
+                      {feeLabel(card)}
+                    </span>
+                    <span className="text-slate-400">change {fxLabel(card)}</span>
+                  </div>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <Link
+          href="/cartes"
+          className="mt-6 inline-block text-sm font-semibold text-indigo-600 hover:text-indigo-700 sm:hidden"
+        >
+          Toutes les cartes →
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------- Guides teaser ---- */
+
+function GuidesTeaser() {
+  return (
+    <section className="bg-white">
+      <div className="mx-auto max-w-6xl px-5 py-16">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Guides pour choisir
+            </h2>
+            <p className="mt-2 text-slate-600">
+              Un besoin précis ? Partez d&apos;un critère objectif.
+            </p>
+          </div>
+          <Link
+            href="/guides"
+            className="hidden shrink-0 text-sm font-semibold text-indigo-600 hover:text-indigo-700 sm:block"
+          >
+            Tous les guides →
+          </Link>
+        </div>
+
+        <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+          {GUIDES.map((guide) => (
+            <li key={guide.slug}>
+              <Link
+                href={`/guides/${guide.slug}`}
+                className="group flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"
+              >
+                <span className="font-semibold text-slate-900">{guide.title}</span>
+                <span className="shrink-0 text-indigo-600 transition-transform group-hover:translate-x-0.5">
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
