@@ -206,7 +206,14 @@ export default function ResultsPreview({
       )}
 
       {/* Capture email optionnelle, stockée séparément du profil */}
-      <EmailCapture sessionId={sessionId} />
+      <EmailCapture
+        sessionId={sessionId}
+        summary={{
+          topCardName: best?.card.name,
+          gainEur: best?.savingsVsCurrentEur,
+          currentCostEur: current.netAnnualCostEur,
+        }}
+      />
 
       <div className="space-y-3 border-t border-slate-200 pt-6">
         <button
@@ -574,12 +581,25 @@ function CompositionBar({ shares }: { shares: CostShare[] }) {
   );
 }
 
-function EmailCapture({ sessionId }: { sessionId: string | null }) {
+interface EmailSummary {
+  topCardName?: string;
+  gainEur?: number;
+  currentCostEur?: number;
+}
+
+function EmailCapture({
+  sessionId,
+  summary,
+}: {
+  sessionId: string | null;
+  summary: EmailSummary;
+}) {
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
     "idle",
   );
+  const [sent, setSent] = useState(false);
 
   const emailValid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
 
@@ -591,8 +611,10 @@ function EmailCapture({ sessionId }: { sessionId: string | null }) {
       const res = await fetch("/api/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId, email, consent }),
+        body: JSON.stringify({ sessionId, email, consent, summary }),
       });
+      const data = await res.json().catch(() => ({}));
+      setSent(Boolean(data?.sent));
       setStatus(res.ok ? "done" : "error");
     } catch {
       setStatus("error");
@@ -603,7 +625,9 @@ function EmailCapture({ sessionId }: { sessionId: string | null }) {
     return (
       <section className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
         <p className="text-sm font-medium text-emerald-800">
-          C&apos;est noté. Votre résultat vous sera envoyé à cette adresse.
+          {sent
+            ? "C'est envoyé ! Consultez votre boîte mail (pensez aux spams)."
+            : "C'est noté. Votre adresse est enregistrée, et vous serez prévenu si une carte moins chère apparaît."}
         </p>
       </section>
     );
