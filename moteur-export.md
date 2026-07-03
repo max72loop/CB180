@@ -9,6 +9,12 @@ le recopier tel quel pour un audit.
 > sur 3 ans, valorisation des miles/points, plancher de part hors euro impliqué
 > par les voyages, séparation par éligibilité, montant de retrait paramétrable,
 > décomposition du coût). Ces évolutions sont détaillées ci-dessous.
+>
+> **Données** : catalogue `data/cards.json` **version 1.0** — **13 des 15 cartes
+> vérifiées sur source officielle le 2026-07-03** (`to_verify: false`), 2 cartes
+> de référence génériques restent indicatives. La provenance complète (URL, dates,
+> citations par champ) est dans `cards_v1_verified.json` et
+> `rapport_verification_cartes.md`.
 
 ## Architecture & flux de données
 
@@ -32,7 +38,7 @@ Affichage résultats (jamais "recommandé pour vous")
    └─ costComposition(breakdown)   poids relatif de chaque poste de coût (P6)
 ```
 
-Données : `data/cards.json` (15 cartes) chargé par `lib/cards.ts`.
+Données : `data/cards.json` (15 cartes, 13 vérifiées) chargé par `lib/cards.ts`.
 
 ## Formule du coût annuel net (cœur de la sélection)
 
@@ -70,11 +76,14 @@ net (vitesse croisière) = net (année 1) + prime amortie   (récurrent, sans la
   dépensé, atténué par un **facteur de réalisme 0,7** (points expirés/non utilisés),
   et **compté uniquement si l'utilisateur déclare vouloir optimiser ses points**
   (`valuesRewards`). Les valeurs par carte (`point_value_eur`, `rewards_source`)
-  sont des **estimations conservatrices à vérifier**, au même titre que les autres
-  champs `[moteur]`. Aujourd'hui seules Revolut Premium, Amex Gold et Amex AF-KLM
-  Gold portent une valeur > 0.
-- **Le cashback en %** (`cashback_rate_percent`) reste collecté et déduit, plafonné
-  par `cashback_cap_eur` ; aucune carte du catalogue n'a de taux > 0 aujourd'hui.
+  sont des **estimations conservatrices**. Aujourd'hui seules **Amex Gold**
+  (0,004 €/pt) et **Amex AF-KLM Gold** (0,01 €/mile, taux de base hors dépenses
+  AF/KLM) portent une valeur > 0 ; les RevPoints Revolut ont un `points_per_euro`
+  renseigné mais une valeur € non publiée → non créditée.
+- **Le cashback en %** (`cashback_rate_percent`) est collecté et déduit, plafonné
+  par `cashback_cap_eur`. Une carte en porte un réel : **BoursoBank Ultim Metal**
+  (0,20 %, plafonné). Les programmes d'offres partenaires (The Corner, Amex Offers,
+  Hello Extra) ne sont **pas** des taux % et restent à 0.
 - **Plancher de part hors euro impliqué par les voyages (P3)** : un voyageur
   fréquent dépense rarement 0 en devises. `travelImpliedForeignShareFloor` relève
   la part déclarée (jamais à la baisse) : ≥ 6 voyages/an → 20 %, ≥ 4 → 12 %,
@@ -93,9 +102,15 @@ net (vitesse croisière) = net (année 1) + prime amortie   (récurrent, sans la
   pour expliquer lisiblement un mauvais classement (ex. « 71 % du coût = frais de
   change »).
 - **Champs `[moteur]`** (`foreign_withdrawal_fee_percent`, `points_per_euro`, etc.) :
-  dérivés numériques des politiques en texte libre. Pour les 12 cartes
-  `to_verify: true`, ce sont des **estimations** (surtout frais de retrait et
-  valeurs de points), pas des valeurs lues sur les grilles tarifaires officielles.
+  dérivés numériques des politiques officielles. Pour les **13 cartes vérifiées**,
+  ils sont issus des sources officielles (voir `cards_v1_verified.json`) et
+  **traduits dans la sémantique du moteur** : les frais concernent les retraits
+  **en devises** (hors zone euro), et un plafond de gratuité exprimé en **montant**
+  est encodé en **nombre** à ~100 €/retrait (ex. Revolut Premium 400 €/mois →
+  `free_foreign_withdrawals_per_month = 4`). Les 2 cartes de référence
+  `to_verify: true` gardent des valeurs indicatives non sourcées. Les primes non
+  confirmées comme récurrentes sont mises à **0** (on ne crédite pas un bonus
+  ponctuel ou promotionnel).
 
 ---
 
@@ -331,6 +346,19 @@ export interface Question {
 export type Answers = Partial<Record<QuestionId, string>>;
 
 /**
+ * Priorité 5 — id de l'option « je préfère ne pas répondre » du revenu.
+ * Choisir cette option laisse continuer et fait basculer le moteur en mode
+ * « toutes cartes affichées, sans vérification des conditions d'accès ».
+ */
+export const INCOME_SKIP_OPTION_ID = "i_skip";
+
+/** True si l'utilisateur a réellement renseigné son revenu (option non « skip »). */
+export function isIncomeDisclosed(answers: Answers): boolean {
+  const v = answers.income;
+  return v != null && v !== INCOME_SKIP_OPTION_ID;
+}
+
+/**
  * Définition du questionnaire. C'est à la fois la structure d'affichage ET la
  * table de correspondance fourchette → valeur. Une seule source de vérité.
  */
@@ -406,13 +434,14 @@ export const QUESTIONS: Question[] = [
   {
     id: "income",
     title: "Quel est votre revenu mensuel net, environ ?",
-    help: "Sert uniquement à indiquer les cartes dont vous remplissez les conditions.",
+    help: "Sert uniquement à indiquer les cartes dont vous remplissez les conditions. Vous pouvez ne pas répondre.",
     options: [
       { id: "i1", label: "Moins de 1 200 €", value: 1000, band: "moins_1200" },
       { id: "i2", label: "1 200 à 1 800 €", value: 1500, band: "1200_1800" },
       { id: "i3", label: "1 800 à 2 500 €", value: 2150, band: "1800_2500" },
       { id: "i4", label: "2 500 à 4 000 €", value: 3250, band: "2500_4000" },
       { id: "i5", label: "Plus de 4 000 €", value: 5000, band: "plus_4000" },
+      { id: "i_skip", label: "Je préfère ne pas répondre", hint: "toutes les cartes vous seront affichées", value: 0, band: "non_renseigne" },
     ],
   },
   {
@@ -843,39 +872,38 @@ export function getCard(id: string): Card | undefined {
 
 ---
 
-## `data/cards.json` (catalogue complet — 15 cartes)
+## `data/cards.json` (catalogue — 15 cartes, valeurs vérifiées)
 
-> Les 3 cartes `to_verify: false` (boursobank-ultim, fortuneo-gold, revolut-premium)
-> sont vérifiées. Les 12 autres portent des valeurs `[moteur]` **estimées**.
-> Les champs récompenses (`points_per_euro`, `point_value_eur`, `rewards_source`)
-> ne sont renseignés que pour Revolut Standard/Premium et les deux cartes Amex ;
-> ce sont des **estimations conservatrices à vérifier**.
+> Source de vérité : `data/cards.json` (**version 1.0**). La **provenance
+> officielle** de chaque valeur (URL, date de grille, citation par champ) est
+> dans **`cards_v1_verified.json`** ; la synthèse et les réserves de fiabilité
+> dans **`rapport_verification_cartes.md`**. Ci-dessous, un extrait d'audit des
+> champs qui pèsent dans le calcul (les colonnes UI/affiliation — `cashback`,
+> `miles_program`, `affiliate`, `target_profiles`, `verif_note` — sont dans le
+> fichier réel). Retrait = **en devises** ; `∞` = gratuit illimité ; `n.p.` =
+> valeur € du point non publiée → non créditée.
 
-```json
-{
-  "project": "CB180",
-  "version": "0.1",
-  "cards": [
-    { "id": "boursobank-welcome", "name": "BoursoBank Welcome", "issuer": "BoursoBank", "network": "Visa", "tier": "entree", "monthly_fee_eur": 0, "annual_fee_eur": 0, "fx_fee_percent": 1.69, "foreign_withdrawal": "payant hors zone euro", "insurances_level": "basique", "welcome_bonus_eur": 80, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 2, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 0, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null },
-    { "id": "boursobank-ultim", "name": "BoursoBank Ultim", "issuer": "BoursoBank", "network": "Visa", "tier": "intermediaire", "monthly_fee_eur": 0, "annual_fee_eur": 0, "fx_fee_percent": 0, "foreign_withdrawal": "3 retraits devises gratuits/mois, au-delà 1,69%", "insurances_level": "premier_gold", "welcome_bonus_eur": 160, "last_verified": "2026-07-03", "to_verify": false, "foreign_withdrawal_fee_percent": 1.69, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 3, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null },
-    { "id": "boursobank-metal", "name": "BoursoBank Ultim Metal", "issuer": "BoursoBank", "network": "Visa", "tier": "premium", "monthly_fee_eur": 9.9, "annual_fee_eur": 118.8, "fx_fee_percent": 0, "foreign_withdrawal": "gratuit et illimité", "insurances_level": "elite", "welcome_bonus_eur": 150, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 0, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 999, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null },
-    { "id": "fortuneo-fosfo", "name": "Fortuneo Fosfo Mastercard", "issuer": "Fortuneo", "network": "Mastercard", "tier": "entree", "monthly_fee_eur": 0, "annual_fee_eur": 0, "fx_fee_percent": 0, "foreign_withdrawal": "paiements gratuits monde, retraits euro gratuits", "insurances_level": "basique", "welcome_bonus_eur": 80, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 2, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 0, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null },
-    { "id": "fortuneo-gold", "name": "Fortuneo Gold Mastercard", "issuer": "Fortuneo", "network": "Mastercard", "tier": "intermediaire", "monthly_fee_eur": 0, "annual_fee_eur": 0, "fx_fee_percent": 0, "foreign_withdrawal": "Paiements ET retraits gratuits illimités monde entier", "insurances_level": "premier_gold", "welcome_bonus_eur": 80, "last_verified": "2026-07-03", "to_verify": false, "foreign_withdrawal_fee_percent": 0, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 999, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": 2200 },
-    { "id": "fortuneo-world-elite", "name": "Fortuneo World Elite Mastercard", "issuer": "Fortuneo", "network": "Mastercard", "tier": "haut_de_gamme", "monthly_fee_eur": 0, "annual_fee_eur": 0, "fx_fee_percent": 0, "foreign_withdrawal": "gratuits et illimités monde", "insurances_level": "elite", "welcome_bonus_eur": 220, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 0, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 999, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": 4000 },
-    { "id": "hellobank-prime", "name": "Hello Prime", "issuer": "Hello bank! (BNP Paribas)", "network": "Visa", "tier": "intermediaire", "monthly_fee_eur": 5, "annual_fee_eur": 60, "fx_fee_percent": 0, "foreign_withdrawal": "gratuits monde", "insurances_level": "premier_gold", "welcome_bonus_eur": 180, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 0, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 999, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": 1000 },
-    { "id": "monabanq-uniq-plus", "name": "Monabanq Uniq+", "issuer": "Monabanq (Crédit Mutuel Alliance Fédérale)", "network": "Visa", "tier": "intermediaire", "monthly_fee_eur": 6, "annual_fee_eur": 72, "fx_fee_percent": 0, "foreign_withdrawal": "gratuits selon palier", "insurances_level": "premier_gold", "welcome_bonus_eur": 120, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 2, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 3, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null },
-    { "id": "revolut-standard", "name": "Revolut Standard", "issuer": "Revolut", "network": "Visa/Mastercard", "tier": "entree", "monthly_fee_eur": 0, "annual_fee_eur": 0, "fx_fee_percent": 0, "foreign_withdrawal": "plafond mensuel gratuit puis frais, majoration week-end", "insurances_level": "none", "welcome_bonus_eur": 0, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 2, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 3, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null, "points_per_euro": 0, "point_value_eur": 0, "rewards_source": "RevPoints Standard jugé sans valeur nette exploitable (2026-07)" },
-    { "id": "revolut-premium", "name": "Revolut Premium", "issuer": "Revolut", "network": "Visa/Mastercard", "tier": "premium", "monthly_fee_eur": 9.99, "annual_fee_eur": 119.88, "fx_fee_percent": 0, "foreign_withdrawal": "Retraits gratuits jusqu'à 400 EUR/mois, puis 2%", "insurances_level": "premier_gold", "welcome_bonus_eur": 20, "last_verified": "2026-07-03", "to_verify": false, "foreign_withdrawal_fee_percent": 2, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 4, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null, "points_per_euro": 1, "point_value_eur": 0.005, "rewards_source": "Estimation conservatrice RevPoints, à vérifier (2026-07)" },
-    { "id": "n26-standard", "name": "N26 Standard", "issuer": "N26", "network": "Mastercard", "tier": "entree", "monthly_fee_eur": 0, "annual_fee_eur": 0, "fx_fee_percent": 0, "foreign_withdrawal": "paiements gratuits monde, retraits payants au-delà du quota", "insurances_level": "none", "welcome_bonus_eur": 0, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 2, "foreign_withdrawal_flat_eur": 0, "free_foreign_withdrawals_per_month": 3, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null },
-    { "id": "amex-gold", "name": "American Express Carte Gold", "issuer": "American Express France", "network": "Amex", "tier": "premium", "monthly_fee_eur": 0, "annual_fee_eur": 180, "fx_fee_percent": 2.5, "foreign_withdrawal": "déconseillé (frais élevés)", "insurances_level": "elite", "welcome_bonus_eur": 200, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 3, "foreign_withdrawal_flat_eur": 4.5, "free_foreign_withdrawals_per_month": 0, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null, "points_per_euro": 1, "point_value_eur": 0.012, "rewards_source": "Estimation conservatrice Membership Rewards, à vérifier (2026-07)" },
-    { "id": "amex-afklm-gold", "name": "Carte Air France KLM American Express Gold", "issuer": "American Express France", "network": "Amex", "tier": "premium", "monthly_fee_eur": 0, "annual_fee_eur": 199, "fx_fee_percent": 2.5, "foreign_withdrawal": "déconseillé (frais élevés)", "insurances_level": "elite", "welcome_bonus_eur": 250, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 3, "foreign_withdrawal_flat_eur": 4.5, "free_foreign_withdrawals_per_month": 0, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null, "points_per_euro": 1, "point_value_eur": 0.01, "rewards_source": "Estimation conservatrice Flying Blue, à vérifier (2026-07)" },
-    { "id": "visa-premier-traditionnelle", "name": "Visa Premier (banque traditionnelle, référence)", "issuer": "Générique (BNP, SG, CA, LCL, CE, BP)", "network": "Visa", "tier": "intermediaire", "monthly_fee_eur": null, "annual_fee_eur": 135, "fx_fee_percent": 2.7, "foreign_withdrawal": "payant hors zone euro", "insurances_level": "premier_gold", "welcome_bonus_eur": 0, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 2.9, "foreign_withdrawal_flat_eur": 3, "free_foreign_withdrawals_per_month": 0, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null },
-    { "id": "gold-mastercard-traditionnelle", "name": "Gold Mastercard (banque traditionnelle, référence)", "issuer": "Générique (CM, CIC, Banque Postale...)", "network": "Mastercard", "tier": "intermediaire", "monthly_fee_eur": null, "annual_fee_eur": 130, "fx_fee_percent": 2.7, "foreign_withdrawal": "payant hors zone euro", "insurances_level": "premier_gold", "welcome_bonus_eur": 0, "last_verified": null, "to_verify": true, "foreign_withdrawal_fee_percent": 2.9, "foreign_withdrawal_flat_eur": 3, "free_foreign_withdrawals_per_month": 0, "cashback_rate_percent": 0, "cashback_cap_eur": null, "min_monthly_income_eur": null }
-  ]
-}
-```
+| Carte | Cotis./an | fx % | Retrait devises (fee % / fixe € / gratuits/mois) | Prime € | Revenu req. €/mois | Points (pt/€ × €/pt) | Vérif. |
+|---|--:|--:|---|--:|--:|---|:--:|
+| BoursoBank Welcome | 0 | 0 | 1,69 % / 0 / 1 | 0 | — | — | ✅ |
+| BoursoBank Ultim | 0 | 0 | 1,69 % / 0 / 3 | 0 | — | — | ✅ |
+| BoursoBank Ultim Metal | 118,80 | 0 | 0 / 0 / ∞ | 0 | — | — (cashback 0,20 %) | ✅ |
+| Fortuneo Fosfo | 0 | 0 | 0 / 0 / ∞ | 30 | — | — | ✅ |
+| Fortuneo Gold | 0 | 0 | 0 / 0 / ∞ | 80 | 2 200 | — | ✅ |
+| Fortuneo World Elite | 0 | 0 | 0 / 0 / ∞ | 0 | 4 000 | — | ✅ |
+| Hello Prime | 60 | 0 | 0 / 0 / ∞ | 80 | 1 500 | — | ✅ |
+| Monabanq Uniq+ | 108 | 0 | 0 / 0 / ∞ | 0 | — | — | ✅ |
+| Revolut Standard | 0 | 1 | 2 % / 0 / 2 | 20 | — | 0,1 × n.p. | ✅ |
+| Revolut Premium | 131,88 | 0 | 2 % / 0 / 4 | 20 | — | 0,25 × n.p. | ✅ |
+| N26 Standard | 0 | 0 | 1,7 % / 0 / 0 | 0 | — | — | ✅ |
+| American Express Gold | 252 | 2,80 | 2 % / 3 / 0 | 0 | — | 1 × 0,004 | ✅ |
+| Carte AF-KLM Amex Gold | 252 | 2,80 | 2 % / 3 / 0 | 0 | — | 1 × 0,01 | ✅ |
+| Visa Premier (référence) | 135 | 2,70 | 3 % / 0 / 0 | 0 | — | — | indic. |
+| Gold Mastercard (référence) | 130 | 2,70 | 3 % / 0 / 0 | 0 | — | — | indic. |
 
-> Le fichier réel `data/cards.json` contient en plus, pour chaque carte, les champs
-> `free_condition`, `cashback`, `miles_program`, `target_profiles`, `source_url`,
-> `verif_note` et le `status` d'affiliation — non essentiels au calcul mais utiles
-> à l'affichage et à la traçabilité de vérification.
+> **Traductions moteur notables** (politique officielle → champ `[moteur]`) :
+> plafond de retrait exprimé en **montant** encodé en **nombre** à ~100 €/retrait
+> (Revolut Premium 400 €/mois → `free = 4`, Standard 200 €/mois → `free = 2`) ;
+> N26 : quota gratuit **zone euro** ignoré, retrait **devises** facturé 1,7 % dès
+> le 1er (`free = 0`) ; BoursoBank Metal `annual_fee = 118,80` dérivé de
+> 9,90 €/mois ; primes non confirmées comme récurrentes mises à **0**.
