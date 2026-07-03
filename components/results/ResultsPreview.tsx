@@ -87,20 +87,6 @@ function formatDate(iso: string | null): string {
   return `${d}/${m}/${y}`;
 }
 
-/** Log d'event de funnel, silencieux (le stockage est optionnel côté UX). */
-function logEvent(
-  sessionId: string | null,
-  eventType: string,
-  meta?: Record<string, unknown>,
-) {
-  fetch("/api/event", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ sessionId, eventType, meta }),
-    keepalive: true,
-  }).catch(() => {});
-}
-
 export default function ResultsPreview({
   current,
   ranked,
@@ -388,6 +374,9 @@ function RankedCardRow({
   sessionId: string | null;
 }) {
   const { card, breakdown, eligible } = row;
+  // Offre affichable uniquement pour les vraies cartes (pas les références).
+  const hasOffer =
+    card.affiliate.network != null && !!card.source_url?.startsWith("http");
   const shownCost = costForView(breakdown, view);
   const otherView: CostView = view === "year1" ? "recurring" : "year1";
   const otherCost = costForView(breakdown, otherView);
@@ -521,15 +510,18 @@ function RankedCardRow({
         <div className="text-xs text-slate-500">
           Dernière vérification : {formatDate(card.last_verified)}
         </div>
-        <a
-          href={card.source_url || "#"}
-          target="_blank"
-          rel="noopener noreferrer sponsored"
-          onClick={() => logEvent(sessionId, "click_affilie", { card_id: card.id })}
-          className="shrink-0 rounded-lg bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
-        >
-          Voir l&apos;offre
-        </a>
+        {hasOffer && (
+          <a
+            href={`/go/${card.id}?from=results${
+              sessionId ? `&sid=${encodeURIComponent(sessionId)}` : ""
+            }`}
+            target="_blank"
+            rel="noopener noreferrer sponsored nofollow"
+            className="shrink-0 rounded-lg bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+          >
+            Voir l&apos;offre
+          </a>
+        )}
       </div>
     </li>
   );

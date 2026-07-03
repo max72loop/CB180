@@ -147,9 +147,9 @@ export default async function CartePage({ params }: Params) {
               </Link>
               {hasOffer && (
                 <a
-                  href={card.source_url}
+                  href={`/go/${card.id}?from=fiche`}
                   target="_blank"
-                  rel="noopener noreferrer sponsored"
+                  rel="noopener noreferrer sponsored nofollow"
                   className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
                 >
                   Voir l&apos;offre

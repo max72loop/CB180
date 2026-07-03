@@ -10,8 +10,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      // Les routes d'API ne sont pas indexables.
-      disallow: "/api/",
+      // API et liens de redirection affiliée : non indexables.
+      disallow: ["/api/", "/go/"],
     },
     sitemap: `${SITE}/sitemap.xml`,
     host: SITE,

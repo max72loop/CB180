@@ -13,6 +13,12 @@ export interface CardAffiliate {
   network: string | null;
   est_commission_eur: number;
   status?: string;
+  /**
+   * Lien de tracking affilié (Awin, Kwanko…). Quand il est renseigné, la route
+   * /go/[carte] y redirige ; sinon elle retombe sur `source_url` (page officielle).
+   * À remplir une fois la candidature au programme acceptée.
+   */
+  url?: string;
 }
 
 /**
