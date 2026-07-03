@@ -29,6 +29,11 @@ export default function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/cartes" className="text-slate-600 hover:text-slate-900">
+                  Toutes les cartes
+                </Link>
+              </li>
+              <li>
                 <Link
                   href="/comment-ca-marche"
                   className="text-slate-600 hover:text-slate-900"

@@ -14,6 +14,12 @@ export default function SiteHeader() {
 
         <nav className="flex items-center gap-5">
           <Link
+            href="/cartes"
+            className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 sm:block"
+          >
+            Cartes
+          </Link>
+          <Link
             href="/comment-ca-marche"
             className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 sm:block"
           >

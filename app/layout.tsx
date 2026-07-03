@@ -15,8 +15,15 @@ const sora = Sora({
   display: "swap",
 });
 
+// Domaine de production (surchargable via env), pour les URLs canoniques et OG.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cb180.fr";
+
 export const metadata: Metadata = {
-  title: "CB180 — Comparateur d'information sur les cartes bancaires",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "CB180 — Comparateur d'information sur les cartes bancaires",
+    template: "%s — CB180",
+  },
   description:
     "Outil d'information : renseignez vos usages, obtenez le coût annuel chiffré de votre carte et le classement objectif des alternatives. CB180 n'est pas intermédiaire en opérations de banque.",
 };

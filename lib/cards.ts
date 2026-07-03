@@ -22,6 +22,15 @@ export function verifiedCards(): Card[] {
   return cards.filter((c) => c.last_verified != null && c.to_verify !== true);
 }
 
+/**
+ * Cartes « publiques » : cartes réelles présentables sur des pages produit
+ * (exclut les cartes de référence génériques, non monétisées et sans source
+ * officielle unique — elles servent de baseline interne, pas de fiche publique).
+ */
+export function publicCards(): Card[] {
+  return cards.filter((c) => c.affiliate.network != null);
+}
+
 /** Récupère une carte par id. */
 export function getCard(id: string): Card | undefined {
   return cards.find((c) => c.id === id);
