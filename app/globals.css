@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+/* Fondu d'entrée entre deux écrans du questionnaire. */
+@keyframes stepIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-step {
+  animation: stepIn 240ms ease-out;
+}
+
+/* Rotation de l'anneau de l'écran de calcul (P8). */
+@keyframes calcSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.calc-spinner {
+  display: inline-flex;
+  animation: calcSpin 900ms linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-step {
+    animation: none;
+  }
+  .calc-spinner {
+    animation: none;
+  }
+}

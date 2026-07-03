@@ -1,0 +1,461 @@
+{
+  "project": "Grappi",
+  "version": "0.1",
+  "created": "2026-07-03",
+  "note": "Sélection CA-004 : 15 cartes couvrant ~90% du marché FR. Les montants sont INDICATIFS (état de marché mi-2026) et doivent être vérifiés un par un lors des tâches de saisie CA-008 à CA-012 sur les pages tarifaires officielles. Chaque vérification met à jour last_verified et source_url.",
+  "schema": {
+    "id": "identifiant unique",
+    "name": "nom commercial",
+    "issuer": "établissement émetteur",
+    "network": "Visa / Mastercard / Amex",
+    "tier": "entree | intermediaire | premium | haut_de_gamme",
+    "monthly_fee_eur": "cotisation mensuelle, 0 si gratuite",
+    "annual_fee_eur": "cotisation annuelle équivalente",
+    "free_condition": "condition de gratuité ou d'obtention (revenus, usage), null si aucune",
+    "fx_fee_percent": "frais de change hors zone euro en %",
+    "foreign_withdrawal": "politique de retraits à l'étranger",
+    "insurances_level": "none | basique | premier_gold | elite",
+    "cashback": "programme de cashback, null si aucun",
+    "miles_program": "programme de fidélité aérien ou points, null si aucun",
+    "welcome_bonus_eur": "prime de bienvenue indicative, très volatile, à vérifier avant chaque publication",
+    "affiliate": "réseau d'affiliation probable et commission estimée",
+    "target_profiles": "profils utilisateurs pour lesquels la carte score bien",
+    "last_verified": "date de dernière vérification des données",
+    "source_url": "page tarifaire officielle",
+    "to_verify": "true tant que la saisie vérifiée n'a pas été faite"
+  },
+  "cards": [
+    {
+      "id": "boursobank-welcome",
+      "name": "BoursoBank Welcome",
+      "issuer": "BoursoBank",
+      "network": "Visa",
+      "tier": "entree",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 0,
+      "free_condition": "1 paiement par mois, sinon frais d'inactivité",
+      "fx_fee_percent": 1.69,
+      "foreign_withdrawal": "payant hors zone euro",
+      "insurances_level": "basique",
+      "cashback": "The Corner (offres partenaires)",
+      "miles_program": null,
+      "welcome_bonus_eur": 80,
+      "affiliate": {
+        "network": "Awin",
+        "est_commission_eur": 60,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "etudiant",
+        "petit_budget",
+        "premier_compte"
+      ],
+      "last_verified": null,
+      "source_url": "https://www.boursobank.com",
+      "to_verify": true
+    },
+    {
+      "id": "boursobank-ultim",
+      "name": "BoursoBank Ultim",
+      "issuer": "BoursoBank",
+      "network": "Visa",
+      "tier": "intermediaire",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 0,
+      "free_condition": "1 paiement/mois en debit immediat, sinon 9 EUR/mois d'inactivite. Debit differe : revenus 2400 EUR/mois nets ou 6000 EUR d'encours BoursoBank.",
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "Paiements gratuits illimités monde. 3 retraits en devises gratuits/mois, au-dela 1,69%. Offre temporaire 01/07-30/09/2026 : retraits devises gratuits illimites.",
+      "insurances_level": "premier_gold",
+      "cashback": "The Corner (offres partenaires)",
+      "miles_program": null,
+      "welcome_bonus_eur": 160,
+      "affiliate": {
+        "network": "Awin",
+        "est_commission_eur": 80,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "voyageur_occasionnel",
+        "jeune_actif",
+        "optimiseur_gratuit"
+      ],
+      "last_verified": "2026-07-03",
+      "source_url": "https://www.boursobank.com/banque/carte-bancaire-gratuite-ultim",
+      "to_verify": false,
+      "verif_note": "Prime jusqu'a 160 EUR (code BRSOPE160) constatee juillet 2026, tres volatile. Depot initial 300 EUR requis."
+    },
+    {
+      "id": "boursobank-metal",
+      "name": "BoursoBank Ultim Metal",
+      "issuer": "BoursoBank",
+      "network": "Visa",
+      "tier": "premium",
+      "monthly_fee_eur": 9.9,
+      "annual_fee_eur": 118.8,
+      "free_condition": null,
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "gratuit et illimité",
+      "insurances_level": "elite",
+      "cashback": "The Corner renforcé",
+      "miles_program": null,
+      "welcome_bonus_eur": 150,
+      "affiliate": {
+        "network": "Awin",
+        "est_commission_eur": 100,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "grand_voyageur",
+        "cadre_mobile"
+      ],
+      "last_verified": null,
+      "source_url": "https://www.boursobank.com",
+      "to_verify": true
+    },
+    {
+      "id": "fortuneo-fosfo",
+      "name": "Fortuneo Fosfo Mastercard",
+      "issuer": "Fortuneo",
+      "network": "Mastercard",
+      "tier": "entree",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 0,
+      "free_condition": "1 opération carte par mois, sans condition de revenus",
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "paiements gratuits monde, retraits euro gratuits",
+      "insurances_level": "basique",
+      "cashback": null,
+      "miles_program": null,
+      "welcome_bonus_eur": 80,
+      "affiliate": {
+        "network": "Awin",
+        "est_commission_eur": 70,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "etudiant",
+        "voyageur_petit_budget",
+        "compte_secondaire_voyage"
+      ],
+      "last_verified": null,
+      "source_url": "https://www.fortuneo.fr",
+      "to_verify": true
+    },
+    {
+      "id": "fortuneo-gold",
+      "name": "Fortuneo Gold Mastercard",
+      "issuer": "Fortuneo",
+      "network": "Mastercard",
+      "tier": "intermediaire",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 0,
+      "free_condition": "Revenus 2200 EUR/mois nets (releve depuis 09/02/2026, avant 1800) OU 10000 EUR epargne Fortuneo. 1 paiement/mois sinon frais inactivite. Debit differe : +6 mois anciennete.",
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "Paiements ET retraits gratuits illimites monde entier (euros et devises), taux Mastercard sans marge.",
+      "insurances_level": "premier_gold",
+      "cashback": null,
+      "miles_program": null,
+      "welcome_bonus_eur": 80,
+      "affiliate": {
+        "network": "Awin",
+        "est_commission_eur": 80,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "jeune_actif",
+        "voyageur_regulier",
+        "optimiseur_gratuit"
+      ],
+      "last_verified": "2026-07-03",
+      "source_url": "https://www.fortuneo.fr/compte-bancaire/carte-gold-mastercard",
+      "to_verify": false,
+      "verif_note": "ATTENTION seuil revenus passe de 1800 a 2200 EUR le 09/02/2026. Prime 80 EUR base (jusqu'a 160 avec parrainage). Frais inactivite cite 9 EUR ou 3 EUR selon sources, a reverifier."
+    },
+    {
+      "id": "fortuneo-world-elite",
+      "name": "Fortuneo World Elite Mastercard",
+      "issuer": "Fortuneo",
+      "network": "Mastercard",
+      "tier": "haut_de_gamme",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 0,
+      "free_condition": "revenus ~4000€/mois, usage mensuel requis",
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "gratuits et illimités monde",
+      "insurances_level": "elite",
+      "cashback": null,
+      "miles_program": null,
+      "welcome_bonus_eur": 220,
+      "affiliate": {
+        "network": "Awin",
+        "est_commission_eur": 110,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "cadre_sup",
+        "grand_voyageur",
+        "famille_aisee"
+      ],
+      "last_verified": null,
+      "source_url": "https://www.fortuneo.fr",
+      "to_verify": true
+    },
+    {
+      "id": "hellobank-prime",
+      "name": "Hello Prime",
+      "issuer": "Hello bank! (BNP Paribas)",
+      "network": "Visa",
+      "tier": "intermediaire",
+      "monthly_fee_eur": 5,
+      "annual_fee_eur": 60,
+      "free_condition": "revenus ~1000€/mois pour souscrire",
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "gratuits monde",
+      "insurances_level": "premier_gold",
+      "cashback": null,
+      "miles_program": null,
+      "welcome_bonus_eur": 180,
+      "affiliate": {
+        "network": "Kwanko/Awin",
+        "est_commission_eur": 90,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "voyageur_regulier",
+        "attache_reseau_bnp"
+      ],
+      "last_verified": null,
+      "source_url": "https://www.hellobank.fr",
+      "to_verify": true
+    },
+    {
+      "id": "monabanq-uniq-plus",
+      "name": "Monabanq Uniq+",
+      "issuer": "Monabanq (Crédit Mutuel Alliance Fédérale)",
+      "network": "Visa",
+      "tier": "intermediaire",
+      "monthly_fee_eur": 6,
+      "annual_fee_eur": 72,
+      "free_condition": "aucune condition de revenus (positionnement inclusif)",
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "gratuits selon palier",
+      "insurances_level": "premier_gold",
+      "cashback": null,
+      "miles_program": null,
+      "welcome_bonus_eur": 120,
+      "affiliate": {
+        "network": "Effiliation",
+        "est_commission_eur": 100,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "revenus_irreguliers",
+        "independant",
+        "interdit_conditions_revenus"
+      ],
+      "last_verified": null,
+      "source_url": "https://www.monabanq.com",
+      "to_verify": true
+    },
+    {
+      "id": "revolut-standard",
+      "name": "Revolut Standard",
+      "issuer": "Revolut",
+      "network": "Visa/Mastercard",
+      "tier": "entree",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 0,
+      "free_condition": null,
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "plafond mensuel gratuit puis frais, majoration week-end possible sur le change",
+      "insurances_level": "none",
+      "cashback": "RevPoints (programme de points)",
+      "miles_program": "RevPoints convertibles partenaires aériens",
+      "welcome_bonus_eur": 0,
+      "affiliate": {
+        "network": "programme direct / Impact",
+        "est_commission_eur": 40,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "voyageur_petit_budget",
+        "multi_devises",
+        "digital_natif"
+      ],
+      "last_verified": null,
+      "source_url": "https://www.revolut.com/fr-FR",
+      "to_verify": true
+    },
+    {
+      "id": "revolut-premium",
+      "name": "Revolut Premium",
+      "issuer": "Revolut",
+      "network": "Visa/Mastercard",
+      "tier": "premium",
+      "monthly_fee_eur": 9.99,
+      "annual_fee_eur": 119.88,
+      "free_condition": "Engagement 12 mois. Sans condition de revenus. Provision 10 EUR a l'ouverture.",
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "Paiements en devises illimites gratuits. Retraits DAB gratuits jusqu'a 400 EUR/mois, puis 2%. Majoration change +2% le week-end sur certaines devises.",
+      "insurances_level": "premier_gold",
+      "cashback": "RevPoints boostés",
+      "miles_program": "RevPoints convertibles partenaires aériens",
+      "welcome_bonus_eur": 20,
+      "affiliate": {
+        "network": "programme direct / Impact",
+        "est_commission_eur": 50,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "voyageur_regulier",
+        "multi_devises",
+        "optimiseur_points"
+      ],
+      "last_verified": "2026-07-03",
+      "source_url": "https://www.revolut.com/fr-FR/our-pricing-plans/",
+      "to_verify": false,
+      "verif_note": "9,99 EUR/mois avec engagement annuel. Prime 20 EUR tous plans. Assurances : annulation 5000, medical 10000, bagages 1000. Point de vigilance frais week-end a expliquer aux users."
+    },
+    {
+      "id": "n26-standard",
+      "name": "N26 Standard",
+      "issuer": "N26",
+      "network": "Mastercard",
+      "tier": "entree",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 0,
+      "free_condition": null,
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "paiements gratuits monde, retraits payants au-delà du quota",
+      "insurances_level": "none",
+      "cashback": null,
+      "miles_program": null,
+      "welcome_bonus_eur": 0,
+      "affiliate": {
+        "network": "programme direct",
+        "est_commission_eur": 30,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "digital_natif",
+        "compte_secondaire",
+        "expatrie_zone_euro"
+      ],
+      "last_verified": null,
+      "source_url": "https://n26.com/fr-fr",
+      "to_verify": true
+    },
+    {
+      "id": "amex-gold",
+      "name": "American Express Carte Gold",
+      "issuer": "American Express France",
+      "network": "Amex",
+      "tier": "premium",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 180,
+      "free_condition": "souvent 1ère année offerte, à vérifier",
+      "fx_fee_percent": 2.5,
+      "foreign_withdrawal": "déconseillé (frais élevés)",
+      "insurances_level": "elite",
+      "cashback": "Amex Offers",
+      "miles_program": "Membership Rewards (points convertibles miles)",
+      "welcome_bonus_eur": 200,
+      "affiliate": {
+        "network": "Awin (programme Amex FR)",
+        "est_commission_eur": 120,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "optimiseur_points",
+        "gros_depensier",
+        "restaurants_voyages"
+      ],
+      "last_verified": null,
+      "source_url": "https://www.americanexpress.com/fr-fr",
+      "to_verify": true
+    },
+    {
+      "id": "amex-afklm-gold",
+      "name": "Carte Air France KLM American Express Gold",
+      "issuer": "American Express France",
+      "network": "Amex",
+      "tier": "premium",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 199,
+      "free_condition": null,
+      "fx_fee_percent": 2.5,
+      "foreign_withdrawal": "déconseillé (frais élevés)",
+      "insurances_level": "elite",
+      "cashback": null,
+      "miles_program": "Flying Blue (miles directs sur chaque dépense + bonus)",
+      "welcome_bonus_eur": 250,
+      "affiliate": {
+        "network": "Awin (programme Amex FR)",
+        "est_commission_eur": 130,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "voyageur_air_france",
+        "optimiseur_miles",
+        "pro_mobile"
+      ],
+      "last_verified": null,
+      "source_url": "https://www.americanexpress.com/fr-fr",
+      "to_verify": true
+    },
+    {
+      "id": "visa-premier-traditionnelle",
+      "name": "Visa Premier (banque traditionnelle, référence)",
+      "issuer": "Générique (BNP, SG, CA, LCL, CE, BP)",
+      "network": "Visa",
+      "tier": "intermediaire",
+      "monthly_fee_eur": null,
+      "annual_fee_eur": 135,
+      "free_condition": "carte de référence pour calculer la perte de l'utilisateur moyen, fourchette 120-150€/an + frais de tenue de compte",
+      "fx_fee_percent": 2.7,
+      "foreign_withdrawal": "payant hors zone euro",
+      "insurances_level": "premier_gold",
+      "cashback": null,
+      "miles_program": null,
+      "welcome_bonus_eur": 0,
+      "affiliate": {
+        "network": null,
+        "est_commission_eur": 0,
+        "status": "carte de référence, non monétisée"
+      },
+      "target_profiles": [
+        "baseline_comparaison"
+      ],
+      "last_verified": null,
+      "source_url": "brochures tarifaires banques de réseau",
+      "to_verify": true
+    },
+    {
+      "id": "gold-mastercard-traditionnelle",
+      "name": "Gold Mastercard (banque traditionnelle, référence)",
+      "issuer": "Générique (CM, CIC, Banque Postale...)",
+      "network": "Mastercard",
+      "tier": "intermediaire",
+      "monthly_fee_eur": null,
+      "annual_fee_eur": 130,
+      "free_condition": "carte de référence miroir de Visa Premier côté Mastercard",
+      "fx_fee_percent": 2.7,
+      "foreign_withdrawal": "payant hors zone euro",
+      "insurances_level": "premier_gold",
+      "cashback": null,
+      "miles_program": null,
+      "welcome_bonus_eur": 0,
+      "affiliate": {
+        "network": null,
+        "est_commission_eur": 0,
+        "status": "carte de référence, non monétisée"
+      },
+      "target_profiles": [
+        "baseline_comparaison"
+      ],
+      "last_verified": null,
+      "source_url": "brochures tarifaires banques de réseau",
+      "to_verify": true
+    }
+  ]
+}

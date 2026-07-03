@@ -1,0 +1,87 @@
+// components/marketing/SiteFooter.tsx
+// Pied de page commun. Porte les liens légaux obligatoires (LCEN, décret
+// comparateurs, RGPD) et la mention de non-intermédiation IOBSP.
+
+import Link from "next/link";
+
+export default function SiteFooter() {
+  return (
+    <footer className="border-t border-slate-200 bg-slate-50">
+      <div className="mx-auto max-w-5xl px-5 py-12">
+        <div className="grid gap-8 sm:grid-cols-3">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-600 text-xs font-bold text-white">
+                CB
+              </span>
+              <span className="text-sm font-bold text-slate-900">CB180</span>
+            </div>
+            <p className="text-sm leading-relaxed text-slate-500">
+              Comparateur et simulateur d&apos;information sur les cartes
+              bancaires françaises.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Le comparateur
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/simulateur" className="text-slate-600 hover:text-slate-900">
+                  Lancer la simulation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/comment-ca-marche"
+                  className="text-slate-600 hover:text-slate-900"
+                >
+                  Comment fonctionne le comparateur
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Légal
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  href="/mentions-legales"
+                  className="text-slate-600 hover:text-slate-900"
+                >
+                  Mentions légales
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/confidentialite"
+                  className="text-slate-600 hover:text-slate-900"
+                >
+                  Politique de confidentialité
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-10 border-t border-slate-200 pt-6">
+          <p className="text-xs leading-relaxed text-slate-500">
+            CB180 est un site d&apos;information et de comparaison des offres de
+            cartes bancaires. CB180 n&apos;est pas intermédiaire en opérations de
+            banque et en services de paiement. Les informations proviennent des
+            documents tarifaires publics des établissements et ne constituent ni
+            un conseil personnalisé ni une recommandation de souscription.
+            Certains liens sont affiliés et n&apos;influencent pas le classement.
+          </p>
+          <p className="mt-4 text-xs text-slate-400">
+            © {new Date().getFullYear()} CB180. Tous droits réservés.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}
