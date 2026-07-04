@@ -30,7 +30,7 @@ export default function ConfidentialitePage() {
             Le responsable de traitement est l&apos;éditeur du site,{" "}
             <Todo>nom / raison sociale de l&apos;éditeur</Todo>. Pour toute
             question relative à vos données, écrivez à{" "}
-            <Todo>adresse email de contact</Todo>.
+            <a href="mailto:contact@cb180.xyz" className="text-indigo-600 hover:underline">contact@cb180.xyz</a>.
           </p>
         </Section>
 
@@ -108,7 +108,7 @@ export default function ConfidentialitePage() {
             Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de
             rectification, d&apos;opposition, de limitation et d&apos;effacement,
             ainsi que du droit de retirer votre consentement. Pour les exercer,
-            écrivez à <Todo>adresse email de contact</Todo>. Les réponses au
+            écrivez à <a href="mailto:contact@cb180.xyz" className="text-indigo-600 hover:underline">contact@cb180.xyz</a>. Les réponses au
             questionnaire étant anonymes, elles ne peuvent pas être rattachées à
             une personne ; le droit d&apos;effacement s&apos;applique pleinement à
             votre adresse email. Vous pouvez également introduire une réclamation

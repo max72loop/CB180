@@ -33,7 +33,15 @@ export default function MentionsLegalesPage() {
           <ul className="mt-2 list-none space-y-1">
             <li>Adresse : <Todo>adresse postale</Todo></li>
             <li>SIREN / SIRET : <Todo>numéro</Todo></li>
-            <li>Contact : <Todo>adresse email de contact</Todo></li>
+            <li>
+              Contact :{" "}
+              <a
+                href="mailto:contact@cb180.xyz"
+                className="text-indigo-600 hover:underline"
+              >
+                contact@cb180.xyz
+              </a>
+            </li>
             <li>Directeur de la publication : <Todo>nom</Todo></li>
           </ul>
         </Section>
