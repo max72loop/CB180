@@ -150,6 +150,8 @@ export default function ResultsPreview({
         <Reveal current={current} best={bestRecurring} sessionId={sessionId} />
       )}
 
+      {/* Le détail garde une largeur de lecture confortable sous la révélation. */}
+      <div className="mx-auto w-full max-w-2xl space-y-8">
       {!incomeDisclosed && (
         <p className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-600">
           Revenu non renseigné : toutes les cartes sont affichées sans
@@ -286,6 +288,7 @@ export default function ResultsPreview({
           banque et évaluez votre situation personnelle.
         </p>
       </div>
+      </div>
     </div>
   );
 }
@@ -399,11 +402,17 @@ function Reveal({
   const counted = useCountUp(improves ? gain : currentCost);
 
   return (
-    <div className="space-y-6">
+    <div
+      className={
+        improves
+          ? "space-y-6 md:grid md:grid-cols-2 md:items-start md:gap-6 md:space-y-0"
+          : "space-y-6"
+      }
+    >
       {/* ─ Acte 1 : le grand chiffre, au-dessus de la ligne de flottaison ─ */}
       <section
         className={[
-          "animate-step overflow-hidden rounded-3xl border p-6 text-center md:p-8",
+          "animate-step flex flex-col justify-center overflow-hidden rounded-3xl border p-6 text-center md:p-8",
           improves
             ? "border-emerald-200 bg-gradient-to-b from-emerald-50 to-white"
             : "border-slate-200 bg-slate-50",

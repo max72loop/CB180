@@ -455,7 +455,7 @@ export default function Simulateur({ cards }: SimulateurProps) {
       )}
 
       {onResults && engine && (
-        <div className="mx-auto w-full max-w-md">
+        <div className="mx-auto w-full max-w-md md:max-w-3xl lg:max-w-4xl">
           <ResultsPreview
             current={engine.current}
             ranked={engine.ranked}
