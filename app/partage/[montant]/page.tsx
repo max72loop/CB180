@@ -24,9 +24,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { montant } = await params;
   const amount = parseMontant(montant);
+  // Le titre est complété par le gabarit « %s : CB180 » du layout racine.
   const title = amount
-    ? `Économiser ${amount} €/an sur sa carte bancaire : CB180`
-    : "Combien coûte vraiment votre carte : CB180";
+    ? `Économiser ${amount} €/an sur sa carte bancaire`
+    : "Combien coûte vraiment votre carte";
   const description = amount
     ? `Un utilisateur de CB180 a estimé ${amount} €/an d'économie sur sa carte. Calculez le vôtre en 3 questions, gratuitement et sans donnée identifiante.`
     : "Le coût annuel chiffré de votre carte, comparé objectivement au marché français.";
