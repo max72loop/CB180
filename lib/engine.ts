@@ -1,5 +1,5 @@
 // lib/engine.ts
-// Moteur de calcul CB180 — fonctions PURES, zéro dépendance à React.
+// Moteur de calcul CB180 : fonctions PURES, zéro dépendance à React.
 //
 // Rôle : à partir d'un profil d'usage normalisé, calculer le coût annuel net
 // de chaque carte et produire un classement OBJECTIF trié par coût croissant,
@@ -53,7 +53,7 @@ function round2(n: number): number {
 }
 
 /**
- * Priorité 3 — plancher de part hors zone euro suggéré par la fréquence de
+ * Priorité 3 : plancher de part hors zone euro suggéré par la fréquence de
  * voyage hors Europe. On ne corrige QUE vers le haut (prudence) : un voyageur
  * fréquent dépense rarement 0 en devises. Fiabilise le chiffre central.
  */
@@ -129,10 +129,10 @@ export function computeAnnualCost(
     assumptions.averageForeignWithdrawalEur,
   );
 
-  // Somme des postes de COÛT avant déductions — sert au poids relatif (P6).
+  // Somme des postes de COÛT avant déductions, sert au poids relatif (P6).
   const grossCostEur = annualFeeEur + fxFeeEur + foreignWithdrawalFeeEur;
 
-  // 4. Prime de bienvenue amortie (déduite) — horizon 3 ans par défaut (P1)
+  // 4. Prime de bienvenue amortie (déduite), horizon 3 ans par défaut (P1)
   const years = Math.max(1, assumptions.welcomeBonusAmortizationYears);
   const welcomeBonusAmortizedEur = card.welcome_bonus_eur / years;
 
@@ -143,7 +143,7 @@ export function computeAnnualCost(
   const cashbackValueEur =
     cap == null ? rawCashback : Math.min(rawCashback, cap);
 
-  // 6. Valeur des miles/points (déduite) — P2. Garde-fou : ne compte QUE si
+  // 6. Valeur des miles/points (déduite), P2. Garde-fou : ne compte QUE si
   // l'utilisateur déclare vouloir optimiser ses points, avec facteur de réalisme.
   const rawRewards =
     (card.points_per_euro ?? 0) * (card.point_value_eur ?? 0) * annualSpending;
@@ -151,7 +151,7 @@ export function computeAnnualCost(
     ? rawRewards * assumptions.rewardsRealizationFactor
     : 0;
 
-  // Vue « année 1 » (prime incluse au prorata) — clé de tri.
+  // Vue « année 1 » (prime incluse au prorata), clé de tri.
   const netAnnualCostEur =
     grossCostEur - welcomeBonusAmortizedEur - cashbackValueEur - rewardsValueEur;
   // Vue « vitesse de croisière » (récurrent, sans la prime).
@@ -192,8 +192,8 @@ export function computeCurrentSituationCost(
   const syntheticCurrentCard: Card = {
     id: "__situation_actuelle__",
     name: "Situation actuelle (estimée)",
-    issuer: "—",
-    network: "—",
+    issuer: "-",
+    network: "-",
     tier: "intermediaire",
     monthly_fee_eur: null,
     annual_fee_eur: profile.currentAnnualFeeEur,
@@ -274,7 +274,7 @@ export function rankCards(
 }
 
 /**
- * Priorité 4 — sépare le classement en cartes accessibles (revenu suffisant) et
+ * Priorité 4 : sépare le classement en cartes accessibles (revenu suffisant) et
  * cartes nécessitant un revenu plus élevé, SANS modifier l'ordre interne. Permet
  * à l'affichage de regrouper les non éligibles dans une section dédiée plutôt que
  * de les mélanger au classement principal.
@@ -290,7 +290,7 @@ export function splitByEligibility(ranked: RankedCard[]): {
 }
 
 /**
- * Priorité 6 — poids relatif de chaque poste de COÛT (cotisation, change,
+ * Priorité 6 : poids relatif de chaque poste de COÛT (cotisation, change,
  * retrait) dans le coût brut, trié par montant décroissant. Permet d'expliquer
  * lisiblement pourquoi une carte premium est mal classée pour un voyageur en
  * devises (ex. « 71 % du coût vient des frais de change »).

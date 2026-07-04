@@ -15,7 +15,7 @@ récupérez pas d'images depuis les sites des banques sans droit d'usage.
    ```
 
 3. Sans le champ `image`, un visuel rendu fidèle à la marque
-   (`lib/card-brand.ts`) s'affiche automatiquement — rien ne casse.
+   (`lib/card-brand.ts`) s'affiche automatiquement, rien ne casse.
 
 ## Format recommandé
 

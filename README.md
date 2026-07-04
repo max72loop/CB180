@@ -20,13 +20,13 @@ State en React natif (`useState`/`useReducer`), **aucun `localStorage`**.
 
 Setup complet dans [SETUP_TURSO.md](SETUP_TURSO.md). Trois tables (`audits`,
 `emails`, `events`) séparées par un `session_id` opaque (voir [schema.sql](schema.sql)).
-Variables d'env dans `.env.local` (`TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`) —
+Variables d'env dans `.env.local` (`TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`),
 gabarit : [.env.example](.env.example). **Sans configuration, l'app fonctionne
 et les routes renvoient `stored:false`** (aucun plantage).
 
-- `lib/db.ts` — client libSQL paresseux + `saveAudit`/`saveEmail`/`logEvent`/`getStats` (server-only).
-- `lib/audit.ts` — mapping réponses → `AuditProfile` (fourchettes anonymisées), client-safe.
-- `app/api/{audit,email,event}/route.ts` — endpoints. L'audit + l'event `complete` sont
+- `lib/db.ts` : client libSQL paresseux + `saveAudit`/`saveEmail`/`logEvent`/`getStats` (server-only).
+- `lib/audit.ts` : mapping réponses → `AuditProfile` (fourchettes anonymisées), client-safe.
+- `app/api/{audit,email,event}/route.ts` : endpoints. L'audit + l'event `complete` sont
   postés automatiquement à l'arrivée sur les résultats ; l'email est optionnel et stocké séparément.
 
 ## Architecture (3 couches)
@@ -37,7 +37,7 @@ et les routes renvoient `stored:false`** (aucun plantage).
 | Moteur  | `lib/engine.ts`        | Fonctions **pures**, zéro React. Calcul du coût annuel et classement objectif. |
 | UI      | `app/`                 | Questionnaire multi-étapes et page résultats (sessions suivantes). |
 
-## Moteur — `lib/engine.ts`
+## Moteur : `lib/engine.ts`
 
 - `computeAnnualCost(card, profile, assumptions?)` → `CostBreakdown`.
   Coût net = cotisation + frais de change (`fx_fee_percent` × dépenses hors zone
@@ -68,7 +68,7 @@ vérifier en même temps que les politiques texte dont ils dérivent.
 
 ```bash
 npm install
-npm test        # vitest run — trois profils types + invariants + données réelles
+npm test        # vitest run : trois profils types + invariants + données réelles
 ```
 
 ## Schéma de carte

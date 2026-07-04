@@ -1,4 +1,4 @@
-// lib/mailer.ts — envoi de l'email de résultat via l'API REST Resend.
+// lib/mailer.ts : envoi de l'email de résultat via l'API REST Resend.
 // SERVER-ONLY. Aucune dépendance npm : on appelle l'API en fetch.
 //
 // Configuré par RESEND_API_KEY + RESEND_FROM. Sans ces variables, l'envoi est
@@ -17,7 +17,7 @@ const SITE = SITE_URL;
 
 const eur = (n?: number) =>
   n == null
-    ? "—"
+    ? "-"
     : new Intl.NumberFormat("fr-FR", {
         style: "currency",
         currency: "EUR",
@@ -124,7 +124,7 @@ export async function sendAlertConfirmation(
   return sendViaResend({
     to,
     subject: a.cardName
-      ? `Confirmez votre alerte tarif — ${a.cardName}`
+      ? `Confirmez votre alerte tarif : ${a.cardName}`
       : "Confirmez votre alerte tarif CB180",
     html: buildAlertHtml(a),
     headers: { "List-Unsubscribe": `<${a.unsubUrl}>` },

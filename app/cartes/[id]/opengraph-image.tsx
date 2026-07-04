@@ -3,7 +3,7 @@ import { getCard, publicCards } from "@/lib/cards";
 import { feeLabel, fxLabel, toneForTier } from "@/lib/card-display";
 
 // Image de partage social dédiée à chaque fiche carte.
-export const alt = "Fiche carte — CB180";
+export const alt = "Fiche carte : CB180";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

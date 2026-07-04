@@ -4,7 +4,7 @@
 // Widget de simulation EMBARQUÉ sur une fiche carte. Version compacte du
 // simulateur : 3 réglages (dépenses / part en devises / cotisation actuelle),
 // calcul instantané par le moteur pur (lib/engine), résultat centré sur LA
-// carte de la fiche — son coût annuel estimé et l'écart vs la situation actuelle.
+// carte de la fiche : son coût annuel estimé et l'écart vs la situation actuelle.
 //
 // Wording IOBSP : on affiche un coût chiffré et un écart factuel, jamais
 // « recommandé ». Aucun stockage, aucun appel réseau : 100 % en mémoire.

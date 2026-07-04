@@ -3,7 +3,7 @@ import { getCard, publicCards } from "@/lib/cards";
 import { comparisonSlug, parseComparisonSlug } from "@/lib/card-display";
 
 // Image de partage social dédiée à chaque comparaison « A vs B ».
-export const alt = "Comparatif de cartes — CB180";
+export const alt = "Comparatif de cartes : CB180";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

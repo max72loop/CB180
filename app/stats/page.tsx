@@ -1,4 +1,4 @@
-// app/stats/page.tsx — tableau de bord admin (suivi kill/continue).
+// app/stats/page.tsx : tableau de bord admin (suivi kill/continue).
 // Protégé par ADMIN_KEY (?key=...), non indexé, rendu dynamique (lecture DB).
 
 import { getCard } from "@/lib/cards";
@@ -7,7 +7,7 @@ import { Logo } from "@/components/brand/Logo";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Stats — CB180",
+  title: "Stats : CB180",
   robots: { index: false, follow: false },
 };
 
@@ -19,7 +19,7 @@ const eur = new Intl.NumberFormat("fr-FR", {
 });
 
 function pct(part: number, whole: number): string {
-  if (!whole) return "—";
+  if (!whole) return "-";
   return `${Math.round((part / whole) * 100)} %`;
 }
 
@@ -109,11 +109,11 @@ function Dashboard({ stats }: { stats: DashboardStats }) {
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <MiniStat
           label="Coût actuel moyen (estimé)"
-          value={stats.avgCurrentCost == null ? "—" : eur.format(stats.avgCurrentCost)}
+          value={stats.avgCurrentCost == null ? "-" : eur.format(stats.avgCurrentCost)}
         />
         <MiniStat
           label="Gain annuel moyen vs carte de tête"
-          value={stats.avgBestGain == null ? "—" : eur.format(stats.avgBestGain)}
+          value={stats.avgBestGain == null ? "-" : eur.format(stats.avgBestGain)}
         />
       </div>
 

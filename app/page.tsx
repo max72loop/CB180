@@ -6,7 +6,7 @@ import { publicCards } from "@/lib/cards";
 import { GUIDES } from "@/lib/guides";
 import { feeLabel, fxLabel, toneForTier } from "@/lib/card-display";
 
-// Landing CB180 — conforme au wording IOBSP : information chiffrée objective,
+// Landing CB180, conforme au wording IOBSP : information chiffrée objective,
 // jamais « recommandé pour vous », « souscrivez » ou « courtier ».
 
 export default function Home() {
@@ -64,7 +64,7 @@ function Hero() {
               href="/simulateur"
               className="inline-flex w-full items-center justify-center rounded-xl bg-brand px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-indigo-600/25 transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 sm:w-auto"
             >
-              Lancer la simulation — gratuit
+              Lancer la simulation, gratuit
             </Link>
             <Link
               href="/comment-ca-marche"
@@ -263,8 +263,8 @@ function ExampleResult() {
             Un résultat lisible, jusqu&apos;au moindre euro
           </h2>
           <p className="mt-4 text-slate-600">
-            Chaque carte affiche deux vues de coût — la 1ʳᵉ année et le coût
-            récurrent — et le détail complet du calcul. Vous voyez exactement
+            Chaque carte affiche deux vues de coût (la 1ʳᵉ année et le coût
+            récurrent) et le détail complet du calcul. Vous voyez exactement
             d&apos;où vient le chiffre, libre à vous de l&apos;interpréter.
           </p>
           <p className="mt-4 text-sm text-slate-500">
@@ -317,7 +317,7 @@ function ExampleResult() {
               </div>
             </dl>
             <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
-              Lien affilié — commission estimée versée à CB180 :{" "}
+              Lien affilié, commission estimée versée à CB180 :{" "}
               <span className="font-medium text-slate-700">80 €</span>.
               N&apos;influence pas le classement.
             </p>
@@ -456,7 +456,7 @@ function Transparency() {
     "Le classement est établi selon un seul critère objectif : le coût annuel net.",
     "Le même calcul, avec les mêmes hypothèses, s'applique à toutes les cartes.",
     "Les liens affiliés sont identifiés et la commission estimée est affichée en clair.",
-    "La rémunération n'influe pas sur l'ordre du classement — et nous le disons.",
+    "La rémunération n'influe pas sur l'ordre du classement, et nous le disons.",
     "Les données proviennent des documents tarifaires publics, avec une date de dernière vérification par carte.",
   ];
   return (

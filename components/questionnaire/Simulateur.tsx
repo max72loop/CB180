@@ -147,7 +147,7 @@ function reducer(state: State, action: Action): State {
 }
 
 /**
- * Priorité 9 — garde-fou de cohérence LÉGER. Si l'utilisateur déclare voyager
+ * Priorité 9 : garde-fou de cohérence LÉGER. Si l'utilisateur déclare voyager
  * souvent hors Europe (question d'affinage) mais quasiment aucune dépense en
  * devises (question express), on propose une micro-confirmation NON bloquante.
  */
@@ -210,7 +210,7 @@ export default function Simulateur({ cards }: SimulateurProps) {
   }, []);
 
   // Sélection : on enregistre (highlight visible), on vérifie la cohérence (P9),
-  // puis on avance après un court délai — sauf si une confirmation est requise.
+  // puis on avance après un court délai, sauf si une confirmation est requise.
   const handleSelect = useCallback(
     (qid: QuestionId, optionId: string) => {
       if (advancing) return;
@@ -229,14 +229,14 @@ export default function Simulateur({ cards }: SimulateurProps) {
     [advancing, state.answers, scheduleAdvance],
   );
 
-  // P9 — « Oui, c'est exact » : on acquitte (ne plus redemander) et on avance.
+  // P9, « Oui, c'est exact » : on acquitte (ne plus redemander) et on avance.
   const confirmCoherence = useCallback(() => {
     coherenceAckd.current = true;
     setCoherenceMsg(null);
     scheduleAdvance();
   }, [scheduleAdvance]);
 
-  // P9 — « Corriger » : retour à la question des dépenses en devises.
+  // P9, « Corriger » : retour à la question des dépenses en devises.
   const fixCoherence = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
     setAdvancing(false);
@@ -392,7 +392,7 @@ export default function Simulateur({ cards }: SimulateurProps) {
               onSelect={(optionId) => handleSelect(question.id, optionId)}
             />
 
-            {/* P9 — micro-confirmation de cohérence, non bloquante */}
+            {/* P9 : micro-confirmation de cohérence, non bloquante */}
             {coherenceMsg && (
               <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
                 <p className="text-sm text-amber-900">

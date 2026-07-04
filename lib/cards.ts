@@ -25,7 +25,7 @@ export function verifiedCards(): Card[] {
 /**
  * Cartes « publiques » : cartes réelles présentables sur des pages produit
  * (exclut les cartes de référence génériques, non monétisées et sans source
- * officielle unique — elles servent de baseline interne, pas de fiche publique).
+ * officielle unique, elles servent de baseline interne, pas de fiche publique).
  */
 export function publicCards(): Card[] {
   return cards.filter((c) => c.affiliate.network != null);

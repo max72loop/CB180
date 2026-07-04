@@ -1,4 +1,4 @@
-# CB180 — Moteur de sélection (export complet pour audit)
+# CB180 : Moteur de sélection (export complet pour audit)
 
 Ce document contient **la totalité** de ce qui compose aujourd'hui le moteur de
 sélection : le questionnaire, la couche de mapping, le moteur de calcul pur, le
@@ -10,7 +10,7 @@ le recopier tel quel pour un audit.
 > par les voyages, séparation par éligibilité, montant de retrait paramétrable,
 > décomposition du coût). Ces évolutions sont détaillées ci-dessous.
 >
-> **Données** : catalogue `data/cards.json` **version 1.0** — **13 des 15 cartes
+> **Données** : catalogue `data/cards.json` **version 1.0**, **13 des 15 cartes
 > vérifiées sur source officielle le 2026-07-03** (`to_verify: false`), 2 cartes
 > de référence génériques restent indicatives. La provenance complète (URL, dates,
 > citations par champ) est dans `cards_v1_verified.json` et
@@ -66,7 +66,7 @@ net (vitesse croisière) = net (année 1) + prime amortie   (récurrent, sans la
 ## Hypothèses & décisions de conception (contexte pour l'audit)
 
 - **Montant moyen d'un retrait étranger : 100 €** (constante `DEFAULT_ASSUMPTIONS`,
-  paramétrable par appel — P5).
+  paramétrable par appel, P5).
 - **Prime amortie sur 3 ans (P1)** : une prime de bienvenue n'est pas récurrente.
   L'amortir sur 3 ans (au lieu de 100 % en année 1) évite que les grosses primes
   écrasent le classement de profils qui ne voyagent pas et ne visent pas le bonus.
@@ -118,7 +118,7 @@ net (vitesse croisière) = net (année 1) + prime amortie   (récurrent, sans la
 
 ```ts
 // lib/types.ts
-// Types partagés CB180 — aucune dépendance à React.
+// Types partagés CB180 : aucune dépendance à React.
 // Le moteur (lib/engine.ts) ne consomme QUE ces types.
 
 /** Gamme de la carte. */
@@ -157,7 +157,7 @@ export interface Card {
   free_condition: string | null;
   /** Frais de change hors zone euro, en % (ex. 1.69). */
   fx_fee_percent: number;
-  /** Politique de retrait à l'étranger — texte libre, source d'affichage. */
+  /** Politique de retrait à l'étranger : texte libre, source d'affichage. */
   foreign_withdrawal: string;
   insurances_level: InsurancesLevel;
   cashback: string | null;
@@ -184,7 +184,7 @@ export interface Card {
   /** [moteur] Revenu mensuel net minimum requis, en €. null = aucune condition. */
   min_monthly_income_eur?: number | null;
 
-  // --- Récompenses miles/points (P2) — dérivés à vérifier comme les autres ---
+  // --- Récompenses miles/points (P2) : dérivés à vérifier comme les autres ---
   /** [moteur] Points/miles gagnés par euro dépensé. Défaut 0. */
   points_per_euro?: number;
   /** [moteur] Valeur en € d'un point/mile. Défaut 0. */
@@ -254,7 +254,7 @@ export interface CostBreakdown {
   /** Valeur estimée des miles/points (déduite, uniquement si valuesRewards). */
   rewardsValueEur: number;
   /**
-   * Coût annuel NET, vue « année 1 » (prime incluse au prorata) — clé de tri.
+   * Coût annuel NET, vue « année 1 » (prime incluse au prorata) : clé de tri.
    * = coût brut − prime amortie − cashback − récompenses.
    */
   netAnnualCostEur: number;
@@ -346,7 +346,7 @@ export interface Question {
 export type Answers = Partial<Record<QuestionId, string>>;
 
 /**
- * Priorité 5 — id de l'option « je préfère ne pas répondre » du revenu.
+ * Priorité 5 : id de l'option « je préfère ne pas répondre » du revenu.
  * Choisir cette option laisse continuer et fait basculer le moteur en mode
  * « toutes cartes affichées, sans vérification des conditions d'accès ».
  */
@@ -522,7 +522,7 @@ export function answersToProfile(answers: Answers): UsageProfile {
 
 ```ts
 // lib/engine.ts
-// Moteur de calcul CB180 — fonctions PURES, zéro dépendance à React.
+// Moteur de calcul CB180 : fonctions PURES, zéro dépendance à React.
 //
 // Rôle : à partir d'un profil d'usage normalisé, calculer le coût annuel net
 // de chaque carte et produire un classement OBJECTIF trié par coût croissant,
@@ -576,7 +576,7 @@ function round2(n: number): number {
 }
 
 /**
- * Priorité 3 — plancher de part hors zone euro suggéré par la fréquence de
+ * Priorité 3 : plancher de part hors zone euro suggéré par la fréquence de
  * voyage hors Europe. On ne corrige QUE vers le haut (prudence) : un voyageur
  * fréquent dépense rarement 0 en devises. Fiabilise le chiffre central.
  */
@@ -652,10 +652,10 @@ export function computeAnnualCost(
     assumptions.averageForeignWithdrawalEur,
   );
 
-  // Somme des postes de COÛT avant déductions — sert au poids relatif (P6).
+  // Somme des postes de COÛT avant déductions : sert au poids relatif (P6).
   const grossCostEur = annualFeeEur + fxFeeEur + foreignWithdrawalFeeEur;
 
-  // 4. Prime de bienvenue amortie (déduite) — horizon 3 ans par défaut (P1)
+  // 4. Prime de bienvenue amortie (déduite) : horizon 3 ans par défaut (P1)
   const years = Math.max(1, assumptions.welcomeBonusAmortizationYears);
   const welcomeBonusAmortizedEur = card.welcome_bonus_eur / years;
 
@@ -666,7 +666,7 @@ export function computeAnnualCost(
   const cashbackValueEur =
     cap == null ? rawCashback : Math.min(rawCashback, cap);
 
-  // 6. Valeur des miles/points (déduite) — P2. Garde-fou : ne compte QUE si
+  // 6. Valeur des miles/points (déduite), P2. Garde-fou : ne compte QUE si
   // l'utilisateur déclare vouloir optimiser ses points, avec facteur de réalisme.
   const rawRewards =
     (card.points_per_euro ?? 0) * (card.point_value_eur ?? 0) * annualSpending;
@@ -674,7 +674,7 @@ export function computeAnnualCost(
     ? rawRewards * assumptions.rewardsRealizationFactor
     : 0;
 
-  // Vue « année 1 » (prime incluse au prorata) — clé de tri.
+  // Vue « année 1 » (prime incluse au prorata) : clé de tri.
   const netAnnualCostEur =
     grossCostEur - welcomeBonusAmortizedEur - cashbackValueEur - rewardsValueEur;
   // Vue « vitesse de croisière » (récurrent, sans la prime).
@@ -715,8 +715,8 @@ export function computeCurrentSituationCost(
   const syntheticCurrentCard: Card = {
     id: "__situation_actuelle__",
     name: "Situation actuelle (estimée)",
-    issuer: "—",
-    network: "—",
+    issuer: "-",
+    network: "-",
     tier: "intermediaire",
     monthly_fee_eur: null,
     annual_fee_eur: profile.currentAnnualFeeEur,
@@ -797,7 +797,7 @@ export function rankCards(
 }
 
 /**
- * Priorité 4 — sépare le classement en cartes accessibles (revenu suffisant) et
+ * Priorité 4 : sépare le classement en cartes accessibles (revenu suffisant) et
  * cartes nécessitant un revenu plus élevé, SANS modifier l'ordre interne. Permet
  * à l'affichage de regrouper les non éligibles dans une section dédiée plutôt que
  * de les mélanger au classement principal.
@@ -813,7 +813,7 @@ export function splitByEligibility(ranked: RankedCard[]): {
 }
 
 /**
- * Priorité 6 — poids relatif de chaque poste de COÛT (cotisation, change,
+ * Priorité 6 : poids relatif de chaque poste de COÛT (cotisation, change,
  * retrait) dans le coût brut, trié par montant décroissant. Permet d'expliquer
  * lisiblement pourquoi une carte premium est mal classée pour un voyageur en
  * devises (ex. « 71 % du coût vient des frais de change »).
@@ -872,34 +872,34 @@ export function getCard(id: string): Card | undefined {
 
 ---
 
-## `data/cards.json` (catalogue — 15 cartes, valeurs vérifiées)
+## `data/cards.json` (catalogue : 15 cartes, valeurs vérifiées)
 
 > Source de vérité : `data/cards.json` (**version 1.0**). La **provenance
 > officielle** de chaque valeur (URL, date de grille, citation par champ) est
 > dans **`cards_v1_verified.json`** ; la synthèse et les réserves de fiabilité
 > dans **`rapport_verification_cartes.md`**. Ci-dessous, un extrait d'audit des
-> champs qui pèsent dans le calcul (les colonnes UI/affiliation — `cashback`,
-> `miles_program`, `affiliate`, `target_profiles`, `verif_note` — sont dans le
+> champs qui pèsent dans le calcul (les colonnes UI/affiliation, `cashback`,
+> `miles_program`, `affiliate`, `target_profiles`, `verif_note`, sont dans le
 > fichier réel). Retrait = **en devises** ; `∞` = gratuit illimité ; `n.p.` =
 > valeur € du point non publiée → non créditée.
 
 | Carte | Cotis./an | fx % | Retrait devises (fee % / fixe € / gratuits/mois) | Prime € | Revenu req. €/mois | Points (pt/€ × €/pt) | Vérif. |
 |---|--:|--:|---|--:|--:|---|:--:|
-| BoursoBank Welcome | 0 | 0 | 1,69 % / 0 / 1 | 0 | — | — | ✅ |
-| BoursoBank Ultim | 0 | 0 | 1,69 % / 0 / 3 | 0 | — | — | ✅ |
-| BoursoBank Ultim Metal | 118,80 | 0 | 0 / 0 / ∞ | 0 | — | — (cashback 0,20 %) | ✅ |
-| Fortuneo Fosfo | 0 | 0 | 0 / 0 / ∞ | 30 | — | — | ✅ |
-| Fortuneo Gold | 0 | 0 | 0 / 0 / ∞ | 80 | 2 200 | — | ✅ |
-| Fortuneo World Elite | 0 | 0 | 0 / 0 / ∞ | 0 | 4 000 | — | ✅ |
-| Hello Prime | 60 | 0 | 0 / 0 / ∞ | 80 | 1 500 | — | ✅ |
-| Monabanq Uniq+ | 108 | 0 | 0 / 0 / ∞ | 0 | — | — | ✅ |
-| Revolut Standard | 0 | 1 | 2 % / 0 / 2 | 20 | — | 0,1 × n.p. | ✅ |
-| Revolut Premium | 131,88 | 0 | 2 % / 0 / 4 | 20 | — | 0,25 × n.p. | ✅ |
-| N26 Standard | 0 | 0 | 1,7 % / 0 / 0 | 0 | — | — | ✅ |
-| American Express Gold | 252 | 2,80 | 2 % / 3 / 0 | 0 | — | 1 × 0,004 | ✅ |
-| Carte AF-KLM Amex Gold | 252 | 2,80 | 2 % / 3 / 0 | 0 | — | 1 × 0,01 | ✅ |
-| Visa Premier (référence) | 135 | 2,70 | 3 % / 0 / 0 | 0 | — | — | indic. |
-| Gold Mastercard (référence) | 130 | 2,70 | 3 % / 0 / 0 | 0 | — | — | indic. |
+| BoursoBank Welcome | 0 | 0 | 1,69 % / 0 / 1 | 0 | - | - | ✅ |
+| BoursoBank Ultim | 0 | 0 | 1,69 % / 0 / 3 | 0 | - | - | ✅ |
+| BoursoBank Ultim Metal | 118,80 | 0 | 0 / 0 / ∞ | 0 | - | - (cashback 0,20 %) | ✅ |
+| Fortuneo Fosfo | 0 | 0 | 0 / 0 / ∞ | 30 | - | - | ✅ |
+| Fortuneo Gold | 0 | 0 | 0 / 0 / ∞ | 80 | 2 200 | - | ✅ |
+| Fortuneo World Elite | 0 | 0 | 0 / 0 / ∞ | 0 | 4 000 | - | ✅ |
+| Hello Prime | 60 | 0 | 0 / 0 / ∞ | 80 | 1 500 | - | ✅ |
+| Monabanq Uniq+ | 108 | 0 | 0 / 0 / ∞ | 0 | - | - | ✅ |
+| Revolut Standard | 0 | 1 | 2 % / 0 / 2 | 20 | - | 0,1 × n.p. | ✅ |
+| Revolut Premium | 131,88 | 0 | 2 % / 0 / 4 | 20 | - | 0,25 × n.p. | ✅ |
+| N26 Standard | 0 | 0 | 1,7 % / 0 / 0 | 0 | - | - | ✅ |
+| American Express Gold | 252 | 2,80 | 2 % / 3 / 0 | 0 | - | 1 × 0,004 | ✅ |
+| Carte AF-KLM Amex Gold | 252 | 2,80 | 2 % / 3 / 0 | 0 | - | 1 × 0,01 | ✅ |
+| Visa Premier (référence) | 135 | 2,70 | 3 % / 0 / 0 | 0 | - | - | indic. |
+| Gold Mastercard (référence) | 130 | 2,70 | 3 % / 0 / 0 | 0 | - | - | indic. |
 
 > **Traductions moteur notables** (politique officielle → champ `[moteur]`) :
 > plafond de retrait exprimé en **montant** encodé en **nombre** à ~100 €/retrait

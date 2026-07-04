@@ -1,4 +1,4 @@
-// app/api/audit/route.ts — reçoit le profil anonymisé + le résultat calculé
+// app/api/audit/route.ts : reçoit le profil anonymisé + le résultat calculé
 // côté client, enregistre l'audit et logue l'event de complétion.
 
 import { NextRequest, NextResponse } from "next/server";

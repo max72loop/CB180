@@ -3,7 +3,7 @@ import { Inter, Sora } from "next/font/google";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
 
-// Inter pour le texte courant, Sora (géométrique) pour les titres — auto-hébergées.
+// Inter pour le texte courant, Sora (géométrique) pour les titres, auto-hébergées.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -19,8 +19,8 @@ const sora = Sora({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "CB180 — Comparateur d'information sur les cartes bancaires",
-    template: "%s — CB180",
+    default: "CB180 : Comparateur d'information sur les cartes bancaires",
+    template: "%s : CB180",
   },
   description:
     "Outil d'information : renseignez vos usages, obtenez le coût annuel chiffré de votre carte et le classement objectif des alternatives. CB180 n'est pas intermédiaire en opérations de banque.",

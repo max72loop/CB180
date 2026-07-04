@@ -1,4 +1,4 @@
-// app/api/event/route.ts — log léger du funnel (arrivée, start, complétion,
+// app/api/event/route.ts : log léger du funnel (arrivée, start, complétion,
 // clic affilié). Utilisé pour le suivi kill/continue.
 
 import { NextRequest, NextResponse } from "next/server";

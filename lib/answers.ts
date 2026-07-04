@@ -50,7 +50,7 @@ export interface Question {
 export type Answers = Partial<Record<QuestionId, string>>;
 
 /**
- * Priorité 5 — id de l'option « je préfère ne pas répondre » du revenu.
+ * Priorité 5 : id de l'option « je préfère ne pas répondre » du revenu.
  * Choisir cette option laisse continuer le parcours et fait basculer le moteur
  * en mode « toutes cartes affichées, sans vérification des conditions d'accès ».
  */

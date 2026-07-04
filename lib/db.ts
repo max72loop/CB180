@@ -1,4 +1,4 @@
-// lib/db.ts — client Turso (libSQL) et fonctions de persistance CB180.
+// lib/db.ts : client Turso (libSQL) et fonctions de persistance CB180.
 // SERVER-ONLY : ne jamais importer depuis un composant client.
 //
 // Env requis : TURSO_DATABASE_URL, TURSO_AUTH_TOKEN (dans .env.local, non commité).

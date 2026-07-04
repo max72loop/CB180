@@ -30,7 +30,7 @@ export default function GuidesIndex() {
           <p className="mt-4 text-slate-600">
             Chaque guide part d&apos;un critère objectif et liste les cartes du
             catalogue qui le remplissent, sur données officielles vérifiées. Une
-            information factuelle : le coût réel dépend de vos usages — chiffrez-le
+            information factuelle : le coût réel dépend de vos usages, chiffrez-le
             avec le simulateur.
           </p>
         </header>

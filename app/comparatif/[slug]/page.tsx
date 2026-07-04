@@ -98,7 +98,7 @@ export default async function ComparatifPage({ params }: Params) {
         <p className="mt-3 max-w-2xl text-slate-600">
           Les deux cartes comparées poste par poste, sur données officielles. Une
           information factuelle : la carte la moins chère dépend de{" "}
-          <em>vos</em> usages — chiffrez-la avec le simulateur.
+          <em>vos</em> usages, chiffrez-la avec le simulateur.
         </p>
 
         {/* Deux visuels côte à côte */}
@@ -153,7 +153,7 @@ export default async function ComparatifPage({ params }: Params) {
         </div>
         <p className="mt-2 text-xs text-slate-400">
           Le repère « moins cher » ne porte que sur le poste concerné, pas sur le
-          coût global — qui dépend de vos usages.
+          coût global, qui dépend de vos usages.
         </p>
 
         {/* CTA simulateur */}
@@ -171,7 +171,7 @@ export default async function ComparatifPage({ params }: Params) {
               href="/simulateur"
               className="mt-6 inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-lg transition-transform hover:-translate-y-0.5"
             >
-              Lancer la simulation — gratuit
+              Lancer la simulation, gratuit
             </Link>
           </div>
         </section>

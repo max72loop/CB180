@@ -1,4 +1,4 @@
-// app/alertes/page.tsx — page de statut des alertes tarifaires.
+// app/alertes/page.tsx : page de statut des alertes tarifaires.
 // Cible des redirections de confirmation et de désinscription (?etat=...).
 // Non indexée : c'est une page transactionnelle, pas du contenu.
 
@@ -7,7 +7,7 @@ import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
 
 export const metadata = {
-  title: "Alerte tarifaire — CB180",
+  title: "Alerte tarifaire : CB180",
   robots: { index: false, follow: false },
 };
 

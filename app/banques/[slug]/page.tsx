@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description,
     alternates: { canonical: `/banques/${bank.slug}` },
     openGraph: {
-      title: `Cartes ${bank.name} — frais et conditions | CB180`,
+      title: `Cartes ${bank.name} : frais et conditions | CB180`,
       description,
       type: "article",
     },
@@ -151,7 +151,7 @@ export default async function BanquePage({ params }: Params) {
               href="/simulateur"
               className="mt-6 inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-lg transition-transform hover:-translate-y-0.5"
             >
-              Lancer la simulation — gratuit
+              Lancer la simulation, gratuit
             </Link>
           </div>
         </section>

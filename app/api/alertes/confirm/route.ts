@@ -1,4 +1,4 @@
-// app/api/alertes/confirm/route.ts — validation du double opt-in.
+// app/api/alertes/confirm/route.ts : validation du double opt-in.
 // Clic sur le lien reçu par email : marque l'alerte comme confirmée, puis
 // redirige vers la page de statut lisible /alertes.
 

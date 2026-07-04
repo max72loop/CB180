@@ -29,7 +29,7 @@ function makeCard(partial: Partial<Card> & Pick<Card, "id" | "name">): Card {
     annual_fee_eur: 0,
     free_condition: null,
     fx_fee_percent: 0,
-    foreign_withdrawal: "—",
+    foreign_withdrawal: "-",
     insurances_level: "basique",
     cashback: null,
     miles_program: null,
@@ -135,7 +135,7 @@ const grosDepensier: UsageProfile = {
 };
 
 /* ============================ PRIORITÉ 1 ============================ */
-describe("P1 — amortissement de la prime de bienvenue (défaut 3 ans)", () => {
+describe("P1 : amortissement de la prime de bienvenue (défaut 3 ans)", () => {
   it("amortit la prime sur 3 ans par défaut, avec deux vues du coût", () => {
     const b = computeAnnualCost(freeTravel, voyageur);
     expect(b.welcomeBonusAmortizedEur).toBeCloseTo(26.67, 2); // 80/3
@@ -179,7 +179,7 @@ describe("P1 — amortissement de la prime de bienvenue (défaut 3 ans)", () => 
 });
 
 /* ============================ PRIORITÉ 2 ============================ */
-describe("P2 — valorisation des miles/points (gated par valuesRewards)", () => {
+describe("P2 : valorisation des miles/points (gated par valuesRewards)", () => {
   // Carte synthétique déterministe (indépendante du catalogue) : 1 pt/€ à 0,012 €.
   const milesCard = makeCard({
     id: "miles-card",
@@ -207,7 +207,7 @@ describe("P2 — valorisation des miles/points (gated par valuesRewards)", () =>
   it("activer valuesRewards réduit le coût de l'Amex et améliore son rang", () => {
     // Sur données réelles, les points ne rendent PAS l'Amex la moins chère
     // (cotisation 252 € vs cartes gratuites) : on teste l'effet directionnel
-    // — coût net plus bas et rang amélioré — pas une position absolue.
+    // (coût net plus bas et rang amélioré) pas une position absolue.
     const amexOn = computeAnnualCost(getCard("amex-gold")!, grosDepensier);
     const amexOff = computeAnnualCost(getCard("amex-gold")!, {
       ...grosDepensier,
@@ -225,7 +225,7 @@ describe("P2 — valorisation des miles/points (gated par valuesRewards)", () =>
 });
 
 /* ============================ PRIORITÉ 3 ============================ */
-describe("P3 — cohérence voyages / part hors zone euro", () => {
+describe("P3 : cohérence voyages / part hors zone euro", () => {
   it("relève (jamais ne baisse) la part hors euro selon la fréquence de voyage", () => {
     expect(effectiveForeignShare({ ...petitBudget, travelOutsideEuropePerYear: 6, foreignSpendingShare: 0.02 })).toBe(0.2);
     expect(effectiveForeignShare({ ...petitBudget, travelOutsideEuropePerYear: 4, foreignSpendingShare: 0.02 })).toBe(0.12);
@@ -247,7 +247,7 @@ describe("P3 — cohérence voyages / part hors zone euro", () => {
 });
 
 /* ============================ PRIORITÉ 4 ============================ */
-describe("P4 — séparation des cartes non éligibles (affichage)", () => {
+describe("P4 : séparation des cartes non éligibles (affichage)", () => {
   it("le tri est inchangé, mais on peut isoler les cartes hors condition de revenu", () => {
     expect(isEligible(freeTravel, petitBudget)).toBe(false);
     const ranked = rankCards(realCards, petitBudget);
@@ -262,7 +262,7 @@ describe("P4 — séparation des cartes non éligibles (affichage)", () => {
 });
 
 /* ============================ PRIORITÉ 5 ============================ */
-describe("P5 — montant moyen de retrait étranger paramétrable", () => {
+describe("P5 : montant moyen de retrait étranger paramétrable", () => {
   it("un retrait moyen plus élevé augmente les frais de retrait facturés", () => {
     const withdrawer: UsageProfile = { ...petitBudget, foreignWithdrawalsPerMonth: 2 };
     const at100 = computeAnnualCost(traditional, withdrawer);
@@ -277,7 +277,7 @@ describe("P5 — montant moyen de retrait étranger paramétrable", () => {
 });
 
 /* ============================ PRIORITÉ 6 ============================ */
-describe("P6 — explication des cas contre-intuitifs (poids des postes)", () => {
+describe("P6 : explication des cas contre-intuitifs (poids des postes)", () => {
   it("pour un voyageur en devises, le change domine le coût d'une Amex premium", () => {
     const foreignShopper: UsageProfile = {
       ...petitBudget,
@@ -296,7 +296,7 @@ describe("P6 — explication des cas contre-intuitifs (poids des postes)", () =>
   });
 });
 
-/* ==================== Profils types — carte en tête ==================== */
+/* ==================== Profils types : carte en tête ==================== */
 describe("carte en tête par profil (parmi les accessibles)", () => {
   it("A sédentaire ⇒ carte gratuite (cotisation 0)", () => {
     const { eligible } = splitByEligibility(rankCards(realCards, petitBudget));
@@ -319,7 +319,7 @@ describe("carte en tête par profil (parmi les accessibles)", () => {
 });
 
 /* ==================== Détail de calcul (3 profils) ==================== */
-describe("computeAnnualCost — détails chiffrés", () => {
+describe("computeAnnualCost : détails chiffrés", () => {
   it("A / carte traditionnelle : cotisation + faible fx", () => {
     const b = computeAnnualCost(traditional, petitBudget);
     expect(b.inputs.annualSpendingEur).toBe(9600);
@@ -343,7 +343,7 @@ describe("computeAnnualCost — détails chiffrés", () => {
 });
 
 /* ==================== rankCards & données réelles ==================== */
-describe("rankCards — tri objectif croissant", () => {
+describe("rankCards : tri objectif croissant", () => {
   it("ordre déterministe (profil B) free < premium < amex < traditional", () => {
     const ranked = rankCards(allTestCards, voyageur);
     expect(ranked.map((r) => r.card.id)).toEqual([

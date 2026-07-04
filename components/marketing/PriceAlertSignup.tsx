@@ -4,7 +4,7 @@
 // Capture d'email par un déclencheur récurrent et légitime : l'alerte tarifaire.
 // « Les tarifs changent ; soyez prévenu si le coût de votre carte augmente. »
 // C'est de la valeur récurrente (pas du spam) qui transforme un visiteur
-// one-shot en contact réactivable — sans quoi chaque euro de trafic est perdu
+// one-shot en contact réactivable, sans quoi chaque euro de trafic est perdu
 // après la première visite.
 //
 // Double opt-in : l'inscription déclenche un email de confirmation ; l'email
@@ -153,7 +153,7 @@ export default function PriceAlertSignup({
           </h3>
           <p className="mt-1 text-sm leading-relaxed text-slate-500">
             Les cotisations et frais changent chaque année. Recevez un email si
-            le coût de {scopeLabel} augmente — ou si une carte moins chère
+            le coût de {scopeLabel} augmente, ou si une carte moins chère
             apparaît. Gratuit, sans engagement.
           </p>
         </div>

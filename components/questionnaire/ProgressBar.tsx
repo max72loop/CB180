@@ -1,5 +1,5 @@
 // components/questionnaire/ProgressBar.tsx
-// Priorité 3 — barre de progression concrète et permanente. Purement présentationnel.
+// Priorité 3 : barre de progression concrète et permanente. Purement présentationnel.
 //
 // Le libellé montre un PAS CONCRET (« Question 3 sur 8 ») plutôt qu'un pourcentage
 // abstrait. Le remplissage suit le nombre de réponses données (`current`) pour

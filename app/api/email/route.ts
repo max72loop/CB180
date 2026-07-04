@@ -1,4 +1,4 @@
-// app/api/email/route.ts — enregistre l'email séparément du profil, relié
+// app/api/email/route.ts : enregistre l'email séparément du profil, relié
 // seulement par un session_id opaque. Consentement marketing explicite.
 
 import { NextRequest, NextResponse } from "next/server";
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "email_invalide" }, { status: 400 });
     }
 
-    // Stockage (table séparée) — seulement si la base est configurée.
+    // Stockage (table séparée), seulement si la base est configurée.
     let stored = false;
     if (isDbConfigured()) {
       await saveEmail(
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       stored = true;
     }
 
-    // Envoi du récapitulatif — seulement si un fournisseur (Resend) est configuré.
+    // Envoi du récapitulatif, seulement si un fournisseur (Resend) est configuré.
     const { sent } = await sendResultEmail(
       email,
       (summary ?? {}) as ResultSummary,

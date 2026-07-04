@@ -1,5 +1,5 @@
 // components/questionnaire/CalculatingScreen.tsx
-// Priorité 8 — écran de transition (quelques secondes) entre la dernière
+// Priorité 8 : écran de transition (quelques secondes) entre la dernière
 // question et le résultat. Aucune publicité : ce temps sert à renforcer
 // l'attente positive et la valeur perçue du résultat. Wording informatif.
 

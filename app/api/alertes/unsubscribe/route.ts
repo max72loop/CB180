@@ -1,4 +1,4 @@
-// app/api/alertes/unsubscribe/route.ts — désinscription en un clic (RGPD).
+// app/api/alertes/unsubscribe/route.ts : désinscription en un clic (RGPD).
 // Le lien figure dans chaque email (bouton + en-tête List-Unsubscribe).
 // Soft delete : la ligne est marquée unsubscribed_at, jamais supprimée en dur
 // pour éviter une ré-inscription non désirée et garder la trace du retrait.

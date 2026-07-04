@@ -1,5 +1,5 @@
 // lib/types.ts
-// Types partagés CB180 — aucune dépendance à React.
+// Types partagés CB180 : aucune dépendance à React.
 // Le moteur (lib/engine.ts) ne consomme QUE ces types.
 
 /** Gamme de la carte. */
@@ -44,7 +44,7 @@ export interface Card {
   free_condition: string | null;
   /** Frais de change hors zone euro, en % (ex. 1.69). */
   fx_fee_percent: number;
-  /** Politique de retrait à l'étranger — texte libre, source d'affichage. */
+  /** Politique de retrait à l'étranger, texte libre, source d'affichage. */
   foreign_withdrawal: string;
   insurances_level: InsurancesLevel;
   cashback: string | null;
@@ -78,7 +78,7 @@ export interface Card {
   /** [moteur] Revenu mensuel net minimum requis, en €. null = aucune condition. */
   min_monthly_income_eur?: number | null;
 
-  // --- Récompenses miles/points (P2) — dérivés à vérifier comme les autres ---
+  // --- Récompenses miles/points (P2), dérivés à vérifier comme les autres ---
   /** [moteur] Points/miles gagnés par euro dépensé. Défaut 0. */
   points_per_euro?: number;
   /** [moteur] Valeur en € d'un point/mile. Défaut 0. */
@@ -148,7 +148,7 @@ export interface CostBreakdown {
   /** Valeur estimée des miles/points (déduite, uniquement si valuesRewards). */
   rewardsValueEur: number;
   /**
-   * Coût annuel NET, vue « année 1 » (prime incluse au prorata) — clé de tri.
+   * Coût annuel NET, vue « année 1 » (prime incluse au prorata), clé de tri.
    * = coût brut − prime amortie − cashback − récompenses.
    */
   netAnnualCostEur: number;

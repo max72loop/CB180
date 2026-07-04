@@ -1,4 +1,4 @@
-// app/api/alertes/route.ts — inscription à une alerte tarifaire (double opt-in).
+// app/api/alertes/route.ts : inscription à une alerte tarifaire (double opt-in).
 // L'email est enregistré NON confirmé ; un lien de confirmation part par email.
 // Consentement marketing explicite OBLIGATOIRE (c'est la finalité de la liste).
 //

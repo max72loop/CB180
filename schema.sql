@@ -1,9 +1,9 @@
--- CB180 — schéma Turso (SQLite / libSQL)
+-- CB180 : schéma Turso (SQLite / libSQL)
 -- Principe RGPD : le profil de réponses et l'email sont dans deux tables
 -- séparées, reliées par un id de session opaque, jamais par une donnée
 -- identifiante. Charger avec :  turso db shell cb180 < schema.sql
 
--- Table 1 — audits anonymisés (profil de réponses + résultat)
+-- Table 1 : audits anonymisés (profil de réponses + résultat)
 CREATE TABLE IF NOT EXISTS audits (
   id            TEXT PRIMARY KEY,          -- uuid de session, opaque
   created_at    TEXT NOT NULL,             -- ISO timestamp
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS audits (
   best_annual_gain    REAL                 -- gain net vs la carte de tête
 );
 
--- Table 2 — emails (séparée, reliée seulement par session_id)
+-- Table 2 : emails (séparée, reliée seulement par session_id)
 CREATE TABLE IF NOT EXISTS emails (
   id          TEXT PRIMARY KEY,            -- uuid propre
   session_id  TEXT,                        -- référence opaque vers audits.id
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS emails (
   consent     INTEGER DEFAULT 0            -- 1 si consentement marketing explicite
 );
 
--- Table 3 — events de funnel (léger, pour mesurer les abandons)
+-- Table 3 : events de funnel (léger, pour mesurer les abandons)
 CREATE TABLE IF NOT EXISTS events (
   id          TEXT PRIMARY KEY,
   session_id  TEXT,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS events (
   created_at  TEXT NOT NULL
 );
 
--- Table 4 — alertes tarifaires (liste opt-in réactivable)
+-- Table 4 : alertes tarifaires (liste opt-in réactivable)
 -- Base légale : consentement explicite, double opt-in. Un email n'est actif
 -- qu'une fois confirmé via le lien reçu (confirmed_at renseigné). Chaque ligne
 -- porte son propre jeton de désinscription pour un retrait en un clic.

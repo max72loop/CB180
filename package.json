@@ -2,7 +2,7 @@
   "name": "cb180",
   "version": "0.1.0",
   "private": true,
-  "description": "CB180 — comparateur et simulateur d'information sur les cartes bancaires françaises.",
+  "description": "CB180 : comparateur et simulateur d'information sur les cartes bancaires françaises.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

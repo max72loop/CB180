@@ -3,7 +3,7 @@ import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
 
 export const metadata = {
-  title: "Comment fonctionne le comparateur — CB180",
+  title: "Comment fonctionne le comparateur : CB180",
 };
 
 // Page exigée par le décret comparateurs (art. L111-5 code de la consommation) :

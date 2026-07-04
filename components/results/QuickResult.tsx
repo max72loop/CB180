@@ -3,7 +3,7 @@
 // components/results/QuickResult.tsx
 // Écran « quick win » du simulateur en deux phases : après SEULEMENT 3 questions
 // (dépenses, part hors zone euro, cotisation actuelle), on affiche immédiatement
-// un écart estimé personnalisé — « SON chiffre » — pour prouver la valeur avant
+// un écart estimé personnalisé, « SON chiffre », pour prouver la valeur avant
 // de demander les 5 questions restantes.
 //
 // Le chiffre est explicitement badgé « Estimation » : il repose sur des
@@ -28,7 +28,7 @@ export default function QuickResult({
   onSeeAll,
 }: QuickResultProps) {
   // Vue récurrente (hors prime de bienvenue) : chiffre honnête, non gonflé par
-  // une prime non récurrente — cohérent avec le hero par défaut des résultats.
+  // une prime non récurrente, cohérent avec le hero par défaut des résultats.
   const currentCost = current.netAnnualCostWithoutBonusEur;
   const bestCost = best?.breakdown.netAnnualCostWithoutBonusEur ?? currentCost;
   const gain = Math.round((currentCost - bestCost) * 100) / 100;

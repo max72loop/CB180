@@ -10,7 +10,7 @@ export default function SiteFooter() {
   return (
     <footer className="border-t border-slate-200 bg-slate-50">
       <div className="mx-auto max-w-6xl px-5 py-12">
-        {/* Bandeau d'alerte tarifaire — capture email récurrente et légitime */}
+        {/* Bandeau d'alerte tarifaire : capture email récurrente et légitime */}
         <div className="mb-10 grid gap-6 rounded-2xl border border-slate-200 bg-white p-6 sm:grid-cols-2 sm:items-center">
           <div>
             <p className="text-base font-semibold text-slate-900">

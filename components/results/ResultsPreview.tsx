@@ -36,7 +36,7 @@ interface ResultsPreviewProps {
   current: CostBreakdown;
   ranked: RankedCard[];
   /**
-   * P5 — false si l'utilisateur a choisi de ne pas renseigner son revenu :
+   * P5, false si l'utilisateur a choisi de ne pas renseigner son revenu :
    * on n'affiche aucun jugement d'éligibilité (conditions inconnues) et toutes
    * les cartes restent dans le classement principal.
    */
@@ -127,7 +127,7 @@ export default function ResultsPreview({
       {/* Bascule des deux vues de coût */}
       <ViewToggle view={view} onChange={setView} />
 
-      {/* Hero — gain annuel honnête vs carte la moins chère */}
+      {/* Hero : gain annuel honnête vs carte la moins chère */}
       {best && (
         <HeroGain
           view={view}
@@ -288,7 +288,7 @@ function ViewToggle({
   );
 }
 
-/** Hero — situation actuelle vs carte la moins chère, gain honnête. */
+/** Hero : situation actuelle vs carte la moins chère, gain honnête. */
 function HeroGain({
   view,
   currentCost,
@@ -505,7 +505,7 @@ function RankedCardRow({
       {/* Transparence affiliée : commission affichée en clair */}
       {card.affiliate.network && card.affiliate.est_commission_eur > 0 && (
         <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
-          Lien affilié — commission estimée versée à CB180 :{" "}
+          Lien affilié, commission estimée versée à CB180 :{" "}
           <span className="font-medium text-slate-700">
             {formatEur(card.affiliate.est_commission_eur)}
           </span>

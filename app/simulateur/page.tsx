@@ -6,7 +6,7 @@ import Simulateur from "@/components/questionnaire/Simulateur";
 import { cards } from "@/lib/cards";
 
 export const metadata = {
-  title: "Simulateur — CB180",
+  title: "Simulateur : CB180",
 };
 
 export default function SimulateurPage() {

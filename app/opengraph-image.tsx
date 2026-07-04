@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 // Image de partage social (Open Graph / Twitter) générée à la volée.
 export const runtime = "edge";
-export const alt = "CB180 — Combien vous coûte vraiment votre carte bancaire ?";
+export const alt = "CB180 : Combien vous coûte vraiment votre carte bancaire ?";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

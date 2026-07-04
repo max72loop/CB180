@@ -1,5 +1,5 @@
 // components/questionnaire/IntroScreen.tsx
-// Priorité 1 — écran d'accroche avant la première question.
+// Priorité 1 : écran d'accroche avant la première question.
 // Pose la promesse et un contrat borné (nb de questions, durée, aucune donnée
 // bancaire) pour augmenter le taux de démarrage. Un seul appel à l'action.
 // Wording : on informe, on ne conseille pas ; on rassure sur la confidentialité.

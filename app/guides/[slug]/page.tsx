@@ -143,7 +143,7 @@ export default async function GuidePage({ params }: Params) {
           )}
           <p className="mt-3 text-xs text-slate-400">
             Classement objectif selon le critère ci-dessus. Le coût réel dépend de
-            vos usages — le simulateur le chiffre précisément.
+            vos usages : le simulateur le chiffre précisément.
           </p>
         </section>
 
@@ -178,7 +178,7 @@ export default async function GuidePage({ params }: Params) {
               href="/simulateur"
               className="mt-6 inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-lg transition-transform hover:-translate-y-0.5"
             >
-              Lancer la simulation — gratuit
+              Lancer la simulation, gratuit
             </Link>
           </div>
         </section>

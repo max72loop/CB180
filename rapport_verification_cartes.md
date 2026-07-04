@@ -1,4 +1,4 @@
-# Rapport de vérification — 15 cartes bancaires (projet Grappi)
+# Rapport de vérification : 15 cartes bancaires (projet Grappi)
 
 **Date de vérification :** 3 juillet 2026
 **Méthode :** chaque valeur chiffrée a été cherchée sur la source officielle de l'émetteur (page produit, brochure ou conditions générales tarifaires). Aucun forum ni blog n'a servi de source à un chiffre. Les valeurs non confirmables officiellement sont mises à `null` ou `0` avec la mention « non confirmé » dans `verif_note`. Distinction systématique zone euro / hors zone euro (devises).
@@ -31,7 +31,7 @@ Chez **N26 Standard**, les paiements étrangers sont gratuits, mais les retraits
 
 Les cartes **American Express** sont les plus coûteuses à l'étranger : 2,80 % de commission de change sur les paiements et, sur les retraits, une avance d'espèces à 2 % (minimum 3 €) qui se cumule avec la commission de change, sans aucun retrait gratuit.
 
-## Primes de bienvenue — forte volatilité
+## Primes de bienvenue : forte volatilité
 
 Les primes récurrentes de base confirmées sont : **Fortuneo Fosfo 30 €**, **Fortuneo Gold 80 €**, **Hello Prime ~80 €** (l'affichage « jusqu'à 280 € » est gonflé par 200 € de bons d'achat conditionnés à la mobilité bancaire). 
 

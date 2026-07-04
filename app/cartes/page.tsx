@@ -40,7 +40,7 @@ export default function CartesIndex() {
           </h1>
           <p className="mt-4 text-slate-600">
             Cotisation, frais de change, retraits à l&apos;étranger et conditions
-            — sur documents tarifaires officiels. Une information factuelle, pas
+            : sur documents tarifaires officiels. Une information factuelle, pas
             un conseil. Pour chiffrer le coût selon <em>vos</em> usages, lancez le
             simulateur.
           </p>
@@ -48,7 +48,7 @@ export default function CartesIndex() {
             href="/simulateur"
             className="mt-6 inline-flex items-center justify-center rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-transform hover:-translate-y-0.5"
           >
-            Lancer la simulation — gratuit
+            Lancer la simulation, gratuit
           </Link>
         </header>
 

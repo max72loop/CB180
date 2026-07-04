@@ -57,7 +57,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description,
     alternates: { canonical: `/cartes/${card.id}` },
     openGraph: {
-      title: `${card.name} — avis et coût réel | CB180`,
+      title: `${card.name} : avis et coût réel | CB180`,
       description,
       type: "article",
     },
@@ -79,7 +79,7 @@ export default async function CartePage({ params }: Params) {
     .slice(0, 4);
 
   // Coût réel : coût annuel net estimé de CETTE carte pour 3 usages types.
-  // Chiffres déterministes (SSG), donc indexables — ils captent « coût réel ».
+  // Chiffres déterministes (SSG), donc indexables : ils captent « coût réel ».
   const scenarioCosts = USAGE_SCENARIOS.map((s) => ({
     scenario: s,
     netAnnual: computeAnnualCost(card, s.profile).netAnnualCostEur,
@@ -198,7 +198,7 @@ export default async function CartePage({ params }: Params) {
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
             La cotisation ne dit pas tout. Voici le coût annuel <em>net</em> estimé de{" "}
-            {card.name} pour trois profils d&apos;usage — cotisation, frais de
+            {card.name} pour trois profils d&apos;usage : cotisation, frais de
             change et de retrait compris, primes et cashback déduits. Chiffres
             calculés sur données officielles, pour un même moteur que le
             simulateur.
@@ -240,7 +240,7 @@ export default async function CartePage({ params }: Params) {
           <MiniSimulateur card={card} />
         </section>
 
-        {/* Alerte tarifaire — capture email récurrente, ciblée sur cette carte */}
+        {/* Alerte tarifaire : capture email récurrente, ciblée sur cette carte */}
         <section className="mt-8">
           <PriceAlertSignup
             card={{ id: card.id, name: card.name }}
@@ -298,12 +298,12 @@ export default async function CartePage({ params }: Params) {
               href="/simulateur"
               className="mt-6 inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-indigo-700 shadow-lg transition-transform hover:-translate-y-0.5"
             >
-              Lancer la simulation — gratuit
+              Lancer la simulation, gratuit
             </Link>
           </div>
         </section>
 
-        {/* Comparaisons — liens internes vers les pages /comparatif */}
+        {/* Comparaisons : liens internes vers les pages /comparatif */}
         <section className="mt-12">
           <h2 className="text-xl font-bold tracking-tight text-slate-900">
             Comparer {card.name} avec…
