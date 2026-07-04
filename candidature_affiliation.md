@@ -1,27 +1,27 @@
-# Grappi, Dossier de candidature affiliation (CA-006)
+# CB180, Dossier de candidature affiliation (CA-006)
 
-Objectif : faire valider Grappi auprès des réseaux et des programmes bancaires. Le site étant partiellement en ligne, on met ça en avant systématiquement. Ordre de priorité : Awin d'abord (historique compte via ABO+), puis Kwanko et Effiliation, puis programmes en direct.
+Objectif : faire valider CB180 auprès des réseaux et des programmes bancaires. Le site étant partiellement en ligne, on met ça en avant systématiquement. Ordre de priorité : Awin d'abord (historique compte via ABO+), puis Kwanko et Effiliation, puis programmes en direct.
 
 ---
 
 ## 1. Fiche d'identité du site (à garder sous la main pour tous les formulaires)
 
-- Nom du site : Grappi
-- URL : https://grappi.co
+- Nom du site : CB180
+- URL : https://cb180.xyz
 - Thématique : comparateur et simulateur d'information sur les cartes bancaires et comptes en France
 - Modèle : outil gratuit d'aide à la décision, information chiffrée objective, transparence sur les liens affiliés
 - Cible : particuliers français cherchant à optimiser le coût et les avantages de leur carte bancaire
 - Zone : France
 - Trafic prévu : lancement en phase de montée, acquisition SEO + communautés finances personnelles + contenu vidéo
 - Modèle de rémunération recherché : CPA (rémunération à l'ouverture de compte validée)
-- Contact : [ton email pro dédié, type contact@grappi.co]
+- Contact : [ton email pro dédié, type contact@cb180.xyz]
 - Société : [micro-entreprise, à compléter avec SIRET une fois créé]
 
 ---
 
 ## 2. Pitch court (champ "description du site", 2 à 3 lignes)
 
-Grappi est un comparateur et simulateur gratuit qui aide les Français à évaluer objectivement le coût réel et les avantages de leur carte bancaire selon leurs usages. Le site présente une information chiffrée transparente et affiche clairement le caractère affilié de ses liens. Il s'adresse à une audience engagée sur les sujets de finances personnelles et d'optimisation bancaire.
+CB180 est un comparateur et simulateur gratuit qui aide les Français à évaluer objectivement le coût réel et les avantages de leur carte bancaire selon leurs usages. Le site présente une information chiffrée transparente et affiche clairement le caractère affilié de ses liens. Il s'adresse à une audience engagée sur les sujets de finances personnelles et d'optimisation bancaire.
 
 ---
 
@@ -29,9 +29,9 @@ Grappi est un comparateur et simulateur gratuit qui aide les Français à évalu
 
 Bonjour,
 
-Je souhaite intégrer votre programme d'affiliation pour le site Grappi (https://grappi.co), un comparateur et simulateur d'information sur les cartes bancaires françaises, actuellement en cours de déploiement et déjà partiellement en ligne.
+Je souhaite intégrer votre programme d'affiliation pour le site CB180 (https://cb180.xyz), un comparateur et simulateur d'information sur les cartes bancaires françaises, actuellement en cours de déploiement et déjà partiellement en ligne.
 
-Grappi propose aux particuliers un outil gratuit qui calcule le coût annuel réel de leur carte actuelle selon leurs usages, puis présente une information chiffrée objective sur les alternatives du marché. Le positionnement repose sur la transparence : les critères de classement sont explicités et le caractère affilié des liens est affiché clairement, conformément aux obligations des comparateurs en ligne.
+CB180 propose aux particuliers un outil gratuit qui calcule le coût annuel réel de leur carte actuelle selon leurs usages, puis présente une information chiffrée objective sur les alternatives du marché. Le positionnement repose sur la transparence : les critères de classement sont explicités et le caractère affilié des liens est affiché clairement, conformément aux obligations des comparateurs en ligne.
 
 L'audience visée, des particuliers actifs sur les sujets d'optimisation bancaire et de finances personnelles, correspond directement au profil de vos futurs clients. L'acquisition passe par le référencement naturel, les communautés spécialisées et le contenu éditorial et vidéo.
 
@@ -70,7 +70,7 @@ Je serais ravi d'échanger sur les modalités de partenariat. Bien cordialement,
 ## 5. Points de vigilance pour maximiser l'acceptation
 
 - Mettre le site partiellement en ligne AVANT de soumettre, avec au minimum : une page d'accueil claire, les mentions légales, la politique de confidentialité et une page expliquant le fonctionnement du comparateur (obligations décret comparateurs). Ces pages rassurent les validateurs.
-- Utiliser une adresse email au nom de domaine (contact@grappi.co), pas une adresse gmail, ça fait sérieux et augmente le taux de validation.
+- Utiliser une adresse email au nom de domaine (contact@cb180.xyz), pas une adresse gmail, ça fait sérieux et augmente le taux de validation.
 - Ne jamais promettre de conseil personnalisé ni employer le mot "courtier" dans la candidature, rester sur "comparateur, information, simulateur" pour cohérence avec le positionnement indicateur (voir wording_iobsp.md).
 - Renseigner honnêtement un trafic en phase de lancement, gonfler les chiffres se retourne contre toi à la validation.
 - Candidater à plusieurs programmes le même jour pour lancer les délais de validation en parallèle (comptent souvent 1 à 3 semaines).

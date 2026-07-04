@@ -32,3 +32,7 @@ next-env.d.ts
 
 # outils/agents locaux
 .claude/
+
+# audits / pages web sauvegardées localement (non versionnés)
+Audit CB180*.html
+Audit CB180*_files/
