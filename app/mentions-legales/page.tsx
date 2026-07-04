@@ -27,8 +27,8 @@ export default function MentionsLegalesPage() {
 
         <Section title="Éditeur du site">
           <p>
-            Le site CB180 est édité par <Todo>nom / raison sociale</Todo>,{" "}
-            <Todo>statut juridique (micro-entreprise, société…)</Todo>.
+            Le site CB180 est édité par <strong>Max Landry</strong>,{" "}
+            entrepreneur individuel (micro-entreprise).
           </p>
           <ul className="mt-2 list-none space-y-1">
             <li>Adresse : <Todo>adresse postale</Todo></li>
@@ -42,7 +42,7 @@ export default function MentionsLegalesPage() {
                 contact@cb180.xyz
               </a>
             </li>
-            <li>Directeur de la publication : <Todo>nom</Todo></li>
+            <li>Directeur de la publication : <strong>Max Landry</strong></li>
           </ul>
         </Section>
 
@@ -56,9 +56,9 @@ export default function MentionsLegalesPage() {
               className="text-indigo-600 hover:underline"
             >
               vercel.com
-            </a>) ; les fonctions serveur sont exécutées en région{" "}
-            <strong>Union européenne (Paris)</strong>.{" "}
-            <Todo>adresse postale et téléphone de l&apos;hébergeur</Todo>
+            </a>), 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis ; les
+            fonctions serveur sont exécutées en région{" "}
+            <strong>Union européenne (Paris)</strong>.
           </p>
           <p className="mt-2">
             La base de données (audits anonymisés et adresses email) est fournie
