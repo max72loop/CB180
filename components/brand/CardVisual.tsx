@@ -13,10 +13,10 @@ import { cardBrand, type CardPatternKind } from "@/lib/card-brand";
 type CardTone = "brand" | "dark" | "emerald" | "slate";
 
 const TONES: Record<CardTone, string> = {
-  brand: "bg-brand",
-  dark: "bg-gradient-to-br from-slate-800 to-slate-950",
-  emerald: "bg-gradient-to-br from-emerald-500 to-teal-700",
-  slate: "bg-gradient-to-br from-slate-500 to-slate-700",
+  brand: "bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-700",
+  dark: "bg-gradient-to-br from-slate-700 via-slate-900 to-slate-950",
+  emerald: "bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-700",
+  slate: "bg-gradient-to-br from-slate-500 via-slate-600 to-slate-700",
 };
 
 interface CardVisualProps {
@@ -102,14 +102,27 @@ export default function CardVisual({
     <div
       aria-hidden
       className={[
-        "relative aspect-[1.586/1] w-full overflow-hidden rounded-2xl p-5 text-white shadow-xl ring-1 ring-white/10",
+        "relative aspect-[1.586/1] w-full overflow-hidden rounded-2xl p-5 text-white shadow-xl ring-1 ring-white/15",
         TONES[tone],
         sheen ? "card-sheen" : "",
         className,
       ].join(" ")}
     >
+      {/* Texture guilloché très discrète (relief « carte imprimée ») */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(115deg, #fff 0 1px, transparent 1px 7px)",
+        }}
+      />
+      {/* Reflet de surface : lumière en haut, ombre en bas (volume) */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
       {/* Halo lumineux d'angle */}
-      <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
+      <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-white/20 blur-2xl" />
+      {/* Liseré interne clair (tranche de la carte) */}
+      <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
 
       <div className="relative flex h-full flex-col justify-between">
         <div className="flex items-start justify-between">

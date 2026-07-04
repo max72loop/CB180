@@ -42,12 +42,7 @@ function Hero() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 sm:py-24 lg:grid-cols-2">
         {/* Colonne texte */}
         <div className="text-center lg:text-left">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-white/80 px-3 py-1 text-xs font-medium text-indigo-700 shadow-sm backdrop-blur">
-            <span className="h-1.5 w-1.5 rounded-full bg-indigo-600" />
-            Information chiffrée, pas de conseil personnalisé
-          </span>
-
-          <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
             Combien vous coûte{" "}
             <span className="text-gradient">vraiment</span> votre carte
             bancaire&nbsp;?
@@ -73,10 +68,6 @@ function Hero() {
               Comment ça marche
             </Link>
           </div>
-
-          <p className="mt-4 text-sm text-slate-500">
-            Anonyme · en fourchettes · aucun nom de banque demandé
-          </p>
         </div>
 
         {/* Colonne visuelle : cartes empilées + pastille de résultat */}
@@ -99,26 +90,76 @@ function HeroVisual() {
         <CardVisual tone="brand" label="Alternative" last4="1802" sheen />
       </div>
 
-      {/* Pastille de résultat, façon extrait de simulation (illustratif) */}
-      <div className="absolute bottom-0 left-0 w-[80%] rounded-2xl border border-slate-100 bg-white/95 p-4 shadow-2xl ring-1 ring-black/5 backdrop-blur sm:w-[72%]">
-        <p className="text-xs font-medium text-slate-500">Écart annuel estimé</p>
-        <div className="mt-1 flex items-baseline gap-2">
-          <span className="text-3xl font-extrabold text-emerald-600">
-            +269&nbsp;€
-          </span>
-          <span className="text-xs font-medium text-slate-400">/ an</span>
+      {/* Pastille de résultat : comparaison chiffrée intégrée aux cartes (illustratif) */}
+      <div className="absolute bottom-1 left-0 w-[84%] overflow-hidden rounded-2xl border border-white/70 bg-white/90 shadow-2xl ring-1 ring-black/5 backdrop-blur-md sm:w-[76%]">
+        <div className="p-4">
+          <div className="flex items-center gap-1.5">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3" aria-hidden>
+                <path d="M10 3a1 1 0 0 1 1 1v9.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 1 1 1.4-1.4L9 13.6V4a1 1 0 0 1 1-1z" />
+              </svg>
+            </span>
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              Écart annuel estimé
+            </span>
+          </div>
+
+          <div className="mt-1.5 flex items-baseline gap-1.5">
+            <span className="text-4xl font-extrabold tracking-tight tabular-nums text-emerald-600">
+              +269&nbsp;€
+            </span>
+            <span className="text-xs font-medium text-slate-400">/ an</span>
+          </div>
+
+          {/* La comparaison qui explique l'écart : actuel vs la moins chère */}
+          <div className="mt-3 space-y-2" aria-hidden>
+            <CompareBar
+              label="Votre carte"
+              amount="≈ 318 €"
+              width="100%"
+              barClass="bg-slate-300"
+              valueClass="text-slate-500"
+            />
+            <CompareBar
+              label="La moins chère"
+              amount="≈ 49 €"
+              width="16%"
+              barClass="bg-emerald-500"
+              valueClass="text-emerald-600"
+            />
+          </div>
         </div>
-        {/* Mini graphique à barres décoratif */}
-        <div className="mt-3 flex items-end gap-1.5" aria-hidden>
-          <span className="h-8 w-full rounded-sm bg-slate-200" />
-          <span className="h-6 w-full rounded-sm bg-slate-200" />
-          <span className="h-10 w-full rounded-sm bg-indigo-200" />
-          <span className="h-4 w-full rounded-sm bg-emerald-200" />
-          <span className="h-3 w-full rounded-sm bg-emerald-400" />
-        </div>
-        <p className="mt-2 text-[11px] leading-tight text-slate-400">
-          Exemple illustratif · recalculé selon vos réponses
+
+        <p className="border-t border-slate-100 bg-slate-50/70 px-4 py-2 text-[11px] leading-tight text-slate-400">
+          Exemple illustratif, recalculé selon vos réponses.
         </p>
+      </div>
+    </div>
+  );
+}
+
+/** Barre de comparaison de la pastille hero : libellé, montant, jauge. */
+function CompareBar({
+  label,
+  amount,
+  width,
+  barClass,
+  valueClass,
+}: {
+  label: string;
+  amount: string;
+  width: string;
+  barClass: string;
+  valueClass: string;
+}) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between text-[10px] font-medium">
+        <span className="text-slate-500">{label}</span>
+        <span className={`tabular-nums ${valueClass}`}>{amount}</span>
+      </div>
+      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+        <div className={`h-full rounded-full ${barClass}`} style={{ width }} />
       </div>
     </div>
   );
