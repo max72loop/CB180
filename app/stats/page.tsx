@@ -162,9 +162,13 @@ function Funnel({ stats }: { stats: DashboardStats }) {
   const steps = [
     { label: "Arrivée sur le simulateur", value: ev.get("arrivee") ?? 0 },
     { label: "Questionnaire démarré", value: ev.get("start_quiz") ?? 0 },
+    { label: "Estimation express affichée", value: ev.get("quickwin") ?? 0 },
+    { label: "Affinage lancé", value: ev.get("affiner") ?? 0 },
+    { label: "Questionnaire complété (8/8)", value: ev.get("complete") ?? 0 },
     { label: "Résultat obtenu", value: stats.audits },
     { label: "Clic sur une offre", value: stats.clicks },
   ];
+  const lastStep = steps[steps.length - 1];
   const top = steps[0].value || Math.max(...steps.map((s) => s.value), 1);
 
   return (
@@ -222,7 +226,7 @@ function Funnel({ stats }: { stats: DashboardStats }) {
         <p className="mt-4 text-sm text-slate-600">
           Conversion globale (arrivée → clic offre) :{" "}
           <span className="font-semibold text-slate-900">
-            {pct(steps[3].value, steps[0].value)}
+            {pct(lastStep.value, steps[0].value)}
           </span>
         </p>
       )}

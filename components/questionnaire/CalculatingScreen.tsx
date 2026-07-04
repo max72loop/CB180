@@ -3,7 +3,12 @@
 // question et le résultat. Aucune publicité : ce temps sert à renforcer
 // l'attente positive et la valeur perçue du résultat. Wording informatif.
 
-export default function CalculatingScreen() {
+interface CalculatingScreenProps {
+  /** Nombre de cartes du panel comparé (dérivé du catalogue, évite la dérive). */
+  cardCount: number;
+}
+
+export default function CalculatingScreen({ cardCount }: CalculatingScreenProps) {
   return (
     <div
       className="flex flex-1 flex-col items-center justify-center text-center"
@@ -37,8 +42,8 @@ export default function CalculatingScreen() {
         On calcule votre audit…
       </h2>
       <p className="mt-2 max-w-xs text-sm leading-relaxed text-slate-600">
-        On chiffre le coût réel de votre situation et on le compare aux 15 cartes
-        du marché, poste par poste.
+        On chiffre le coût réel de votre situation et on le compare aux{" "}
+        {cardCount} cartes du marché, poste par poste.
       </p>
       <p className="mt-6 text-xs font-medium text-slate-400">
         Classement établi objectivement, sans « recommandé pour vous ».

@@ -5,8 +5,10 @@
 // Wording : on informe, on ne conseille pas ; on rassure sur la confidentialité.
 
 interface IntroScreenProps {
-  /** Nombre total de questions annoncé (source de vérité : QUESTIONS.length). */
-  questionCount: number;
+  /** Nombre de questions du quick win (première estimation), annoncé en clair. */
+  quickCount: number;
+  /** Nombre de cartes du panel comparé (dérivé du catalogue, évite la dérive). */
+  cardCount: number;
   onStart: () => void;
 }
 
@@ -32,7 +34,8 @@ function ContractChip({
 }
 
 export default function IntroScreen({
-  questionCount,
+  quickCount,
+  cardCount,
   onStart,
 }: IntroScreenProps) {
   return (
@@ -43,12 +46,12 @@ export default function IntroScreen({
             Simulateur gratuit et anonyme
           </p>
           <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900">
-            Découvrez en 2 minutes si votre carte vous coûte de l&apos;argent
+            Découvrez en 30 secondes si votre carte vous coûte de l&apos;argent
           </h1>
           <p className="text-base leading-relaxed text-slate-600">
-            On chiffre le coût réel de votre carte actuelle et on le compare, en
-            toute transparence, à 15 cartes du marché. Une information claire,
-            pas un conseil.
+            {quickCount} questions suffisent pour un premier écart chiffré. On le
+            compare, en toute transparence, à {cardCount} cartes du marché. Une
+            information claire, pas un conseil.
           </p>
         </div>
 
@@ -61,7 +64,7 @@ export default function IntroScreen({
               </svg>
             }
           >
-            {questionCount} questions, environ 2 minutes
+            {quickCount} questions pour une première estimation (≈ 30 s)
           </ContractChip>
           <ContractChip
             icon={

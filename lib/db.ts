@@ -139,7 +139,9 @@ export async function unsubscribeAlertByToken(token: string): Promise<boolean> {
 export type FunnelEvent =
   | "arrivee"
   | "start_quiz"
-  | "complete"
+  | "quickwin" // écart estimé express affiché (après 3 questions)
+  | "affiner" // clic sur « Affiner mon estimation »
+  | "complete" // les 8 questions renseignées (résultat complet)
   | "click_affilie";
 
 /** Log d'un event de funnel. */

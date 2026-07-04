@@ -167,6 +167,79 @@ export const QUESTIONS: Question[] = [
   },
 ];
 
+/**
+ * Simulateur en deux phases (réduction de friction).
+ *
+ * Phase QUICK WIN : 3 questions seulement (dépenses, part hors zone euro,
+ * cotisation actuelle) → un premier écart estimé, « SON chiffre », en < 30 s.
+ * Ces 3 questions suffisent au moteur car le reste peut être défauté sans
+ * fabriquer d'économie (cf. DEFAULT_DEFERRED_ANSWERS).
+ */
+export const QUICK_WIN_IDS: QuestionId[] = [
+  "monthlySpending",
+  "foreignShare",
+  "currentFee",
+];
+
+/**
+ * Phase AFFINAGE : les 5 questions restantes, dans un ordre engageant (profil
+ * d'abord, revenu en dernier une fois l'utilisateur investi).
+ */
+export const REFINE_IDS: QuestionId[] = [
+  "profileType",
+  "travelFrequency",
+  "foreignWithdrawals",
+  "rewardsInterest",
+  "income",
+];
+
+/**
+ * Hypothèses par défaut pour les 5 questions NON posées en phase quick win.
+ * Choix PRUDENTS : ils ne fabriquent aucune économie, pour que l'estimation
+ * express soit une base honnête que l'affinage vient préciser.
+ *  - travel « jamais » : ne relève pas la part hors euro déjà déclarée.
+ *  - retraits « jamais » : n'ajoute de frais ni à la situation actuelle ni aux cartes.
+ *  - récompenses « non » : miles/cashback comptés seulement si l'utilisateur les veut.
+ *  - revenu « non renseigné » : aucun filtre d'éligibilité au stade express.
+ *  - profil « autre » : inerte dans le calcul du coût (usage informatif seul).
+ */
+export const DEFAULT_DEFERRED_ANSWERS: Partial<Record<QuestionId, string>> = {
+  travelFrequency: "t1", // Jamais → 0 voyage/an
+  foreignWithdrawals: "w1", // Jamais → 0 retrait/mois
+  rewardsInterest: "r2", // Non → valuesRewards false
+  income: INCOME_SKIP_OPTION_ID, // « Je préfère ne pas répondre »
+  profileType: "p5", // Autre (inerte pour le moteur)
+};
+
+/** True si les 3 questions du quick win ont une réponse (calcul express possible). */
+export function quickWinComplete(answers: Answers): boolean {
+  return QUICK_WIN_IDS.every((id) => answers[id] != null);
+}
+
+/** Nombre de questions du quick win déjà répondues (barre de progression express). */
+export function quickWinAnsweredCount(answers: Answers): number {
+  return QUICK_WIN_IDS.filter((id) => answers[id] != null).length;
+}
+
+/**
+ * Complète un jeu de réponses PARTIEL avec les défauts des questions différées,
+ * sans écraser une réponse déjà donnée. Les 3 questions du quick win doivent
+ * être présentes (garanti par `quickWinComplete`).
+ */
+export function answersWithDefaults(answers: Answers): Answers {
+  return { ...DEFAULT_DEFERRED_ANSWERS, ...answers };
+}
+
+/**
+ * Construit un profil moteur à partir de réponses PARTIELLES : les questions
+ * non répondues prennent leur défaut prudent. Utilisé pour le chiffre express
+ * (3 réponses) comme pour tout état intermédiaire de l'affinage. Le même moteur
+ * pur tourne ensuite, que le profil vienne de 3 ou de 8 réponses réelles.
+ */
+export function answersToProfileLenient(answers: Answers): UsageProfile {
+  return answersToProfile(answersWithDefaults(answers));
+}
+
 /** Slug de fourchette (analytics) de l'option retenue pour une question. */
 export function selectedBand(qid: QuestionId, answers: Answers): string {
   const question = QUESTIONS.find((q) => q.id === qid);

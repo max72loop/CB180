@@ -370,10 +370,10 @@ describe("rankCards — tri objectif croissant", () => {
     expect(free.savingsVsCurrentEur).toBeGreaterThan(0);
   });
 
-  it("charge le catalogue complet (15) et le classe en ordre croissant", () => {
-    expect(realCards.length).toBe(15);
+  it("charge le catalogue complet (18) et le classe en ordre croissant", () => {
+    expect(realCards.length).toBe(18);
     const ranked = rankCards(realCards, voyageur);
-    expect(ranked.length).toBe(15);
+    expect(ranked.length).toBe(18);
     for (let i = 1; i < ranked.length; i++) {
       expect(ranked[i].breakdown.netAnnualCostEur).toBeGreaterThanOrEqual(
         ranked[i - 1].breakdown.netAnnualCostEur,

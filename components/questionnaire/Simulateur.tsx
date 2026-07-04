@@ -1,18 +1,25 @@
 "use client";
 
 // components/questionnaire/Simulateur.tsx
-// Orchestrateur du simulateur : machine à phases
-//   accroche → questions → calcul → résultats
-// puis aperçu résultats. État 100 % en mémoire React (useReducer), aucun
-// stockage navigateur persistant (contrainte RGPD / cahier des charges) :
-// un retour sur la page pendant la session ne réinitialise pas les réponses (P7).
+// Orchestrateur du simulateur en DEUX PHASES (réduction de friction) :
+//
+//   intro → quick win (3 questions) → calcul court → écart estimé « SON chiffre »
+//         → [Affiner] → affinage (5 questions) → calcul → résultats complets
+//         └ ou [Voir le classement] → résultats complets directement
+//
+// Le même moteur pur (lib/engine) tourne sur un profil construit par
+// answersToProfileLenient : 3 réponses réelles + défauts prudents, puis 8 réelles.
+// État 100 % en mémoire React (useReducer), aucune persistance navigateur (RGPD).
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import Link from "next/link";
 import {
   QUESTIONS,
-  answersToProfile,
+  QUICK_WIN_IDS,
+  REFINE_IDS,
+  answersToProfileLenient,
   answeredCount,
+  quickWinAnsweredCount,
   isComplete,
   isIncomeDisclosed,
   selectedBand,
@@ -27,6 +34,7 @@ import IntroScreen from "./IntroScreen";
 import ProgressBar from "./ProgressBar";
 import QuestionStep from "./QuestionStep";
 import CalculatingScreen from "./CalculatingScreen";
+import QuickResult from "@/components/results/QuickResult";
 import ResultsPreview from "@/components/results/ResultsPreview";
 
 interface SimulateurProps {
@@ -34,33 +42,29 @@ interface SimulateurProps {
 }
 
 /**
- * Priorité 4 — ordre d'AFFICHAGE des questions (présentation uniquement).
- * On commence par les questions faciles et engageantes (dépenses, profil) et on
- * place le revenu vers la fin, une fois l'utilisateur déjà engagé. N'affecte ni
- * les identifiants ni le mapping : `answersToProfile` retrouve chaque réponse
- * par son id, indépendamment de cet ordre.
+ * Ordre d'AFFICHAGE : d'abord les 3 questions du quick win, puis les 5 de
+ * l'affinage. Source unique dérivée de lib/answers ; `answersToProfileLenient`
+ * retrouve chaque réponse par son id, indépendamment de cet ordre.
  */
-const DISPLAY_ORDER: QuestionId[] = [
-  "monthlySpending",
-  "profileType",
-  "foreignShare",
-  "travelFrequency",
-  "foreignWithdrawals",
-  "rewardsInterest",
-  "currentFee",
-  "income",
-];
+const DISPLAY_ORDER: QuestionId[] = [...QUICK_WIN_IDS, ...REFINE_IDS];
+/** Nombre de questions du quick win (frontière quick / affinage). */
+const QUICK_COUNT = QUICK_WIN_IDS.length;
+const LAST_STEP = DISPLAY_ORDER.length - 1;
+const TOTAL_QUESTIONS = DISPLAY_ORDER.length;
 
 /** Index d'affichage de la question « part hors euro » (pour la correction P9). */
 const FOREIGN_SHARE_STEP = DISPLAY_ORDER.indexOf("foreignShare");
 
-type Phase = "intro" | "question" | "calculating" | "results";
+type Phase = "intro" | "question" | "calculating" | "quickResult" | "results";
+/** Destination après l'écran de calcul : chiffre express ou résultats complets. */
+type CalcTarget = "quick" | "full";
 
 interface State {
   phase: Phase;
-  /** Index dans DISPLAY_ORDER (0..DISPLAY_ORDER.length-1). */
+  /** Index dans DISPLAY_ORDER (0..LAST_STEP). */
   step: number;
   answers: Answers;
+  calcTarget: CalcTarget;
 }
 
 type Action =
@@ -69,18 +73,23 @@ type Action =
   | { type: "advance" }
   | { type: "back" }
   | { type: "goto"; step: number }
+  | { type: "startRefine" }
+  | { type: "seeAll" }
   | { type: "calcDone" }
   | { type: "edit" }
   | { type: "restart" };
 
-const LAST_STEP = DISPLAY_ORDER.length - 1;
 /** Délai laissant voir la sélection confirmée avant de passer à l'écran suivant. */
 const ADVANCE_DELAY_MS = 420;
-/** Durée de l'écran de calcul avant l'affichage du résultat (P8). */
+/** Durée de l'écran de calcul avant les résultats complets (P8). */
 const CALC_DELAY_MS = 2200;
+/** Calcul express plus court : la preuve de valeur doit arriver vite (< 30 s). */
+const QUICK_CALC_DELAY_MS = 1100;
 
 /** Log d'un event de funnel, silencieux (le stockage est optionnel côté UX). */
-function logFunnelEvent(eventType: "arrivee" | "start_quiz") {
+function logFunnelEvent(
+  eventType: "arrivee" | "start_quiz" | "quickwin" | "affiner" | "complete",
+) {
   fetch("/api/event", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -99,12 +108,16 @@ function reducer(state: State, action: Action): State {
         answers: { ...state.answers, [action.qid]: action.optionId },
       };
     case "advance":
-      // Dernière question atteinte ⇒ écran de calcul (P8), puis résultats.
-      if (state.step >= LAST_STEP) return { ...state, phase: "calculating" };
+      // Fin de l'affinage ⇒ calcul complet ; fin du quick win ⇒ calcul express.
+      if (state.step >= LAST_STEP)
+        return { ...state, phase: "calculating", calcTarget: "full" };
+      if (state.step === QUICK_COUNT - 1)
+        return { ...state, phase: "calculating", calcTarget: "quick" };
       return { ...state, step: state.step + 1 };
     case "back":
-      // Première question ⇒ retour à l'écran d'accroche.
+      // Première question ⇒ accroche ; première question d'affinage ⇒ chiffre express.
       if (state.step <= 0) return { ...state, phase: "intro", step: 0 };
+      if (state.step === QUICK_COUNT) return { ...state, phase: "quickResult" };
       return { ...state, step: state.step - 1 };
     case "goto":
       return {
@@ -112,22 +125,31 @@ function reducer(state: State, action: Action): State {
         phase: "question",
         step: Math.min(Math.max(action.step, 0), LAST_STEP),
       };
-    case "calcDone":
+    case "startRefine":
+      // Depuis le chiffre express : révéler les 5 questions restantes.
+      return { ...state, phase: "question", step: QUICK_COUNT };
+    case "seeAll":
+      // Depuis le chiffre express : aller droit aux résultats (profil défauté).
       return { ...state, phase: "results" };
+    case "calcDone":
+      return {
+        ...state,
+        phase: state.calcTarget === "quick" ? "quickResult" : "results",
+      };
     case "edit":
-      // Depuis les résultats : revenir corriger la dernière question.
+      // Depuis les résultats complets : revenir corriger la dernière question.
       return { ...state, phase: "question", step: LAST_STEP };
     case "restart":
-      return { phase: "intro", step: 0, answers: {} };
+      return { phase: "intro", step: 0, answers: {}, calcTarget: "quick" };
     default:
       return state;
   }
 }
 
 /**
- * Priorité 9 — garde-fou de cohérence LÉGER (au plus un). Si l'utilisateur
- * déclare voyager souvent hors Europe mais quasiment aucune dépense en devises,
- * on propose une micro-confirmation NON bloquante. Renvoie le message ou null.
+ * Priorité 9 — garde-fou de cohérence LÉGER. Si l'utilisateur déclare voyager
+ * souvent hors Europe (question d'affinage) mais quasiment aucune dépense en
+ * devises (question express), on propose une micro-confirmation NON bloquante.
  */
 function coherenceWarning(answers: Answers): string | null {
   const travel = selectedBand("travelFrequency", answers);
@@ -145,6 +167,7 @@ export default function Simulateur({ cards }: SimulateurProps) {
     phase: "intro",
     step: 0,
     answers: {},
+    calcTarget: "quick",
   });
   const [advancing, setAdvancing] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -153,9 +176,12 @@ export default function Simulateur({ cards }: SimulateurProps) {
   const coherenceAckd = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audited = useRef(false);
+  const quickwinLogged = useRef(false);
+  const completeLogged = useRef(false);
 
   const currentQid = DISPLAY_ORDER[state.step];
   const question = QUESTIONS.find((q) => q.id === currentQid);
+  const inRefine = state.step >= QUICK_COUNT;
   const onResults = state.phase === "results";
   const incomeDisclosed = isIncomeDisclosed(state.answers);
 
@@ -222,20 +248,35 @@ export default function Simulateur({ cards }: SimulateurProps) {
     if (timer.current) clearTimeout(timer.current);
     setAdvancing(false);
     setCoherenceMsg(null);
+    // Depuis le chiffre express : revenir à la dernière question du quick win.
+    if (state.phase === "quickResult") {
+      dispatch({ type: "goto", step: QUICK_COUNT - 1 });
+      return;
+    }
     dispatch({ type: "back" });
-  }, []);
+  }, [state.phase]);
 
   const startQuestionnaire = useCallback(() => {
     logFunnelEvent("start_quiz");
     dispatch({ type: "start" });
   }, []);
 
-  // Calcul dérivé (moteur pur) mémoïsé sur les réponses. P5 : on n'applique
-  // jamais de filtre d'éligibilité (onlyEligible: false) ; si le revenu n'est pas
-  // renseigné, l'affichage masque en plus les mentions de conditions de revenu.
-  const results = useMemo(() => {
-    if (!isComplete(state.answers)) return null;
-    const profile = answersToProfile(state.answers);
+  const startRefine = useCallback(() => {
+    logFunnelEvent("affiner");
+    dispatch({ type: "startRefine" });
+  }, []);
+
+  const seeAllCards = useCallback(() => {
+    dispatch({ type: "seeAll" });
+  }, []);
+
+  // Calcul dérivé (moteur pur) mémoïsé sur les réponses. Dès que les 3 questions
+  // du quick win sont répondues, on peut chiffrer avec un profil « lenient »
+  // (défauts prudents pour le reste). Le calcul se raffine automatiquement à
+  // chaque réponse d'affinage. P5 : jamais de filtre d'éligibilité ici.
+  const engine = useMemo(() => {
+    if (quickWinAnsweredCount(state.answers) < QUICK_COUNT) return null;
+    const profile = answersToProfileLenient(state.answers);
     return {
       current: computeCurrentSituationCost(profile),
       ranked: rankCards(cards, profile, { onlyEligible: false }),
@@ -245,22 +286,38 @@ export default function Simulateur({ cards }: SimulateurProps) {
   // Écran de calcul (P8) : temporisation avant de révéler le résultat.
   useEffect(() => {
     if (state.phase !== "calculating") return;
-    const id = setTimeout(() => dispatch({ type: "calcDone" }), CALC_DELAY_MS);
+    const delay = state.calcTarget === "quick" ? QUICK_CALC_DELAY_MS : CALC_DELAY_MS;
+    const id = setTimeout(() => dispatch({ type: "calcDone" }), delay);
     return () => clearTimeout(id);
+  }, [state.phase, state.calcTarget]);
+
+  // Funnel : « quickwin » à l'affichage du chiffre express, une seule fois.
+  useEffect(() => {
+    if (state.phase !== "quickResult" || quickwinLogged.current) return;
+    quickwinLogged.current = true;
+    logFunnelEvent("quickwin");
   }, [state.phase]);
 
-  // À l'arrivée sur les résultats : enregistre l'audit anonymisé (fourchettes
-  // + résultat), une seule fois. Fire-and-forget : un échec réseau/DB ne casse
-  // jamais le parcours utilisateur.
+  // À l'arrivée sur les résultats complets : « complete » si les 8 questions
+  // sont réellement renseignées (pas via le raccourci « Voir le classement »),
+  // puis enregistrement de l'audit anonymisé (fourchettes + résultat), une seule
+  // fois. Fire-and-forget : un échec réseau/DB ne casse jamais le parcours.
   useEffect(() => {
-    if (!onResults || !results || audited.current) return;
+    if (!onResults || !engine) return;
+
+    if (isComplete(state.answers) && !completeLogged.current) {
+      completeLogged.current = true;
+      logFunnelEvent("complete");
+    }
+
+    if (audited.current) return;
     audited.current = true;
     fetch("/api/audit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         profile: answersToAuditProfile(state.answers),
-        result: buildAuditResult(results.current, results.ranked),
+        result: buildAuditResult(engine.current, engine.ranked),
       }),
     })
       .then((r) => (r.ok ? r.json() : null))
@@ -270,11 +327,13 @@ export default function Simulateur({ cards }: SimulateurProps) {
       .catch(() => {
         /* silencieux : le stockage est optionnel côté UX */
       });
-  }, [onResults, results, state.answers]);
+  }, [onResults, engine, state.answers]);
 
   const handleRestart = useCallback(() => {
     audited.current = false;
     coherenceAckd.current = false;
+    quickwinLogged.current = false;
+    completeLogged.current = false;
     setSessionId(null);
     setCoherenceMsg(null);
     dispatch({ type: "restart" });
@@ -285,7 +344,7 @@ export default function Simulateur({ cards }: SimulateurProps) {
     dispatch({ type: "edit" });
   }, []);
 
-  const showBack = state.phase === "question";
+  const showBack = state.phase === "question" || state.phase === "quickResult";
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 py-6">
@@ -310,7 +369,8 @@ export default function Simulateur({ cards }: SimulateurProps) {
 
       {state.phase === "intro" && (
         <IntroScreen
-          questionCount={QUESTIONS.length}
+          quickCount={QUICK_COUNT}
+          cardCount={cards.length}
           onStart={startQuestionnaire}
         />
       )}
@@ -318,9 +378,10 @@ export default function Simulateur({ cards }: SimulateurProps) {
       {state.phase === "question" && question && (
         <div className="flex flex-1 flex-col">
           <ProgressBar
-            current={answeredCount(state.answers)}
+            // Phase quick win : progression sur 3 ; affinage : sur 8 (parcours complet).
+            current={inRefine ? answeredCount(state.answers) : quickWinAnsweredCount(state.answers)}
             step={state.step + 1}
-            total={QUESTIONS.length}
+            total={inRefine ? TOTAL_QUESTIONS : QUICK_COUNT}
           />
 
           <div key={state.step} className="animate-step mt-8 flex-1">
@@ -364,12 +425,23 @@ export default function Simulateur({ cards }: SimulateurProps) {
         </div>
       )}
 
-      {state.phase === "calculating" && <CalculatingScreen />}
+      {state.phase === "calculating" && (
+        <CalculatingScreen cardCount={cards.length} />
+      )}
 
-      {onResults && results && (
+      {state.phase === "quickResult" && engine && (
+        <QuickResult
+          current={engine.current}
+          best={engine.ranked[0] ?? null}
+          onRefine={startRefine}
+          onSeeAll={seeAllCards}
+        />
+      )}
+
+      {onResults && engine && (
         <ResultsPreview
-          current={results.current}
-          ranked={results.ranked}
+          current={engine.current}
+          ranked={engine.ranked}
           incomeDisclosed={incomeDisclosed}
           sessionId={sessionId}
           onRestart={handleRestart}
