@@ -1,10 +1,10 @@
 import Link from "next/link";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import CardVisual from "@/components/brand/CardVisual";
+import CardVisual, { ProductCardVisual } from "@/components/brand/CardVisual";
 import { publicCards } from "@/lib/cards";
 import { GUIDES } from "@/lib/guides";
-import { feeLabel, fxLabel, toneForTier } from "@/lib/card-display";
+import { feeLabel, fxLabel, verifiedDate } from "@/lib/card-display";
 
 // Landing CB180, conforme au wording IOBSP : information chiffrée objective,
 // jamais « recommandé pour vous », « souscrivez » ou « courtier ».
@@ -42,16 +42,22 @@ function Hero() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 sm:py-24 lg:grid-cols-2">
         {/* Colonne texte */}
         <div className="text-center lg:text-left">
-          <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-            Combien vous coûte{" "}
-            <span className="text-gradient">vraiment</span> votre carte
-            bancaire&nbsp;?
+          {/* Punchline de catégorie : le différenciateur, posé d'emblée */}
+          <p className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 lg:mx-0">
+            <CheckIcon className="h-3.5 w-3.5" />
+            Le seul comparateur qui ne vend aucune carte
+          </p>
+
+          <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+            Votre carte vous coûte peut-être{" "}
+            <span className="text-gradient">200&nbsp;€ de trop</span> par
+            an&nbsp;?
           </h1>
 
           <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-600 lg:mx-0">
-            Trois questions pour un premier chiffre, cinq de plus pour l&apos;affiner.
-            CB180 calcule le coût annuel réel de votre carte actuelle et le
-            compare, objectivement, aux alternatives du marché français.
+            Voyez combien vous pourriez récupérer, en 3 questions (30&nbsp;s).
+            CB180 calcule le coût annuel réel de votre carte et le compare,
+            objectivement, aux alternatives du marché français.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row lg:justify-start">
@@ -408,32 +414,52 @@ function FeaturedCards() {
         </div>
 
         <ul className="mt-8 grid gap-6 sm:grid-cols-3">
-          {featured.map((card) => (
-            <li key={card.id}>
-              <Link
-                href={`/cartes/${card.id}`}
-                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-600/5"
-              >
-                <div className="p-4">
-                  <CardVisual
-                    tone={toneForTier(card.tier)}
-                    label={card.network}
-                    className="w-full"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col px-4 pb-4">
-                  <h3 className="font-semibold text-slate-900">{card.name}</h3>
-                  <p className="text-sm text-slate-500">{card.issuer}</p>
-                  <div className="mt-auto flex items-center justify-between pt-4 text-sm">
-                    <span className="font-semibold text-slate-900">
-                      {feeLabel(card)}
-                    </span>
-                    <span className="text-slate-400">change {fxLabel(card)}</span>
+          {featured.map((card) => {
+            const verified = verifiedDate(card);
+            return (
+              <li key={card.id}>
+                <Link
+                  href={`/cartes/${card.id}`}
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-600/5"
+                >
+                  <div className="p-4">
+                    <ProductCardVisual card={card} className="w-full" />
                   </div>
-                </div>
-              </Link>
-            </li>
-          ))}
+                  <div className="flex flex-1 flex-col px-4 pb-4">
+                    <h3 className="font-semibold text-slate-900">{card.name}</h3>
+                    <p className="text-sm text-slate-500">{card.issuer}</p>
+
+                    <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
+                      <div>
+                        <dt className="text-xs text-slate-400">Cotisation</dt>
+                        <dd className="font-medium text-slate-800">{feeLabel(card)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-slate-400">Change hors €</dt>
+                        <dd className="font-medium text-slate-800">{fxLabel(card)}</dd>
+                      </div>
+                    </dl>
+
+                    <div className="mt-auto flex items-center justify-between pt-4">
+                      {verified ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                          <CheckIcon className="h-3.5 w-3.5" />
+                          Vérifié le {verified}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-slate-400">
+                          Données indicatives
+                        </span>
+                      )}
+                      <span className="text-sm font-semibold text-indigo-600 group-hover:text-indigo-700">
+                        Voir la fiche →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         <Link
@@ -591,11 +617,11 @@ function FinalCta() {
       <div className="pointer-events-none absolute -right-10 bottom-0 h-64 w-64 rounded-full bg-fuchsia-300/20 blur-3xl" />
       <div className="relative mx-auto max-w-3xl px-5 py-20 text-center">
         <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Chiffrez le coût réel de votre carte
+          Voyez ce que vous pourriez récupérer
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-indigo-100">
-          Quelques minutes, en fourchettes et sans donnée identifiante. Vous
-          repartez avec un montant, pas avec un avis.
+          3 questions, 30 secondes, sans donnée identifiante. Vous repartez avec
+          un montant, pas avec un avis.
         </p>
         <Link
           href="/simulateur"
