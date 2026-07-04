@@ -65,7 +65,7 @@ function Dashboard({ stats }: { stats: DashboardStats }) {
   return (
     <main className="mx-auto max-w-3xl px-5 py-10">
       <header className="mb-8">
-        <Logo size={28} />
+        <Logo size={26} />
         <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-900">
           Tableau de bord
         </h1>

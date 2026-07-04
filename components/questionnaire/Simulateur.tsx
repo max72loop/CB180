@@ -362,7 +362,7 @@ export default function Simulateur({ cards }: SimulateurProps) {
           )}
         </div>
         <Link href="/" aria-label="Accueil CB180" className="justify-self-center">
-          <Logo size={26} />
+          <Logo size={22} />
         </Link>
         <div />
       </div>
