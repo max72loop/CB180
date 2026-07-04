@@ -892,7 +892,7 @@ export function getCard(id: string): Card | undefined {
 | Fortuneo Gold | 0 | 0 | 0 / 0 / ∞ | 80 | 2 200 | - | ✅ |
 | Fortuneo World Elite | 0 | 0 | 0 / 0 / ∞ | 0 | 4 000 | - | ✅ |
 | Hello Prime | 60 | 0 | 0 / 0 / ∞ | 80 | 1 500 | - | ✅ |
-| Monabanq Uniq+ | 108 | 0 | 0 / 0 / ∞ | 0 | - | - | ✅ |
+| Monabanq Uniq+ | 144 | 0 | 0 / 0 / ∞ | 0 | - | - | ✅ |
 | Revolut Standard | 0 | 1 | 2 % / 0 / 2 | 20 | - | 0,1 × n.p. | ✅ |
 | Revolut Premium | 131,88 | 0 | 2 % / 0 / 4 | 20 | - | 0,25 × n.p. | ✅ |
 | N26 Standard | 0 | 0 | 1,7 % / 0 / 0 | 0 | - | - | ✅ |
