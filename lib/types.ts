@@ -56,6 +56,13 @@ export interface Card {
   source_url: string;
   to_verify?: boolean;
   verif_note?: string;
+  /**
+   * Chemin d'une image officielle de la carte, servie depuis /public
+   * (ex. "/cartes/revolut-standard.webp"). Fournie via les kits d'affiliation
+   * (Awin/Kwanko) sous licence. Si absente, un visuel rendu fidèle à la marque
+   * (lib/card-brand.ts) est affiché à la place.
+   */
+  image?: string;
 
   // --- Dérivés numériques pour le moteur (optionnels) ---
   /** [moteur] Frais % appliqué à un retrait étranger facturé. Défaut 0. */

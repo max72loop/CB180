@@ -8,7 +8,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import CardVisual from "@/components/brand/CardVisual";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
 import { getCard, publicCards } from "@/lib/cards";
 import {
   INSURANCE_LABEL,
@@ -17,7 +17,6 @@ import {
   fxLabel,
   incomeLabel,
   parseComparisonSlug,
-  toneForTier,
   welcomeLabel,
 } from "@/lib/card-display";
 import type { Card } from "@/lib/types";
@@ -106,11 +105,7 @@ export default async function ComparatifPage({ params }: Params) {
         <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-8">
           {[a, b].map((c) => (
             <div key={c.id} className="text-center">
-              <CardVisual
-                tone={toneForTier(c.tier)}
-                label={c.network}
-                className="mx-auto max-w-[220px]"
-              />
+              <ProductCardVisual card={c} className="mx-auto max-w-[220px]" />
               <Link
                 href={`/cartes/${c.id}`}
                 className="mt-3 inline-block text-sm font-semibold text-slate-900 hover:text-indigo-700"

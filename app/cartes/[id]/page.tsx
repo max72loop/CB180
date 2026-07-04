@@ -8,7 +8,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import CardVisual from "@/components/brand/CardVisual";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
 import MiniSimulateur from "@/components/questionnaire/MiniSimulateur";
 import { getCard, publicCards } from "@/lib/cards";
 import { formatEur } from "@/lib/format";
@@ -22,7 +22,6 @@ import {
   feeLabel,
   fxLabel,
   incomeLabel,
-  toneForTier,
   verifiedDate,
   welcomeLabel,
 } from "@/lib/card-display";
@@ -111,11 +110,11 @@ export default async function CartePage({ params }: Params) {
         <div className="mt-6 grid items-center gap-8 lg:grid-cols-2">
           <div className="relative">
             <div className="brand-glow pointer-events-none absolute -inset-6 -z-10 opacity-50 blur-xl" />
-            <CardVisual
-              tone={toneForTier(card.tier)}
-              label={card.network}
+            <ProductCardVisual
+              card={card}
               className="mx-auto max-w-sm"
               sheen
+              priority
             />
           </div>
 

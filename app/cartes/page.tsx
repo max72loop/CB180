@@ -6,12 +6,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import CardVisual from "@/components/brand/CardVisual";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
 import { publicCards } from "@/lib/cards";
 import {
   feeLabel,
   fxLabel,
-  toneForTier,
   verifiedDate,
 } from "@/lib/card-display";
 
@@ -63,11 +62,7 @@ export default function CartesIndex() {
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-600/5"
                 >
                   <div className="p-4">
-                    <CardVisual
-                      tone={toneForTier(card.tier)}
-                      label={card.network}
-                      className="w-full"
-                    />
+                    <ProductCardVisual card={card} className="w-full" />
                   </div>
                   <div className="flex flex-1 flex-col px-4 pb-4">
                     <h2 className="font-semibold text-slate-900">{card.name}</h2>
