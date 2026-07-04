@@ -27,7 +27,7 @@ export default function SiteFooter() {
 
         <div className="grid gap-8 sm:grid-cols-3">
           <div className="space-y-3">
-            <Logo size={28} />
+            <Logo size={24} />
             <p className="text-sm leading-relaxed text-slate-500">
               Comparateur et simulateur d&apos;information sur les cartes
               bancaires françaises.

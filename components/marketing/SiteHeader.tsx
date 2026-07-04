@@ -9,7 +9,7 @@ export default function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/70 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
         <Link href="/" aria-label="Accueil CB180">
-          <Logo size={28} />
+          <Logo size={24} />
         </Link>
 
         <nav className="flex items-center gap-5">
