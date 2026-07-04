@@ -12,6 +12,7 @@
 
 import type { CostBreakdown, RankedCard } from "@/lib/types";
 import { formatEur, formatSignedEur } from "@/lib/format";
+import ShareResult from "@/components/results/ShareResult";
 
 interface QuickResultProps {
   current: CostBreakdown;
@@ -58,6 +59,9 @@ export default function QuickResult({
               <span className="font-semibold">{best!.card.name}</span>, ressort à{" "}
               <span className="font-semibold">{formatEur(bestCost)}/an</span>.
             </p>
+            <div className="mt-4 border-t border-emerald-200 pt-4">
+              <ShareResult gainEur={gain} />
+            </div>
           </div>
         ) : (
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">

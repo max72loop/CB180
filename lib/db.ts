@@ -142,7 +142,8 @@ export type FunnelEvent =
   | "quickwin" // écart estimé express affiché (après 3 questions)
   | "affiner" // clic sur « Affiner mon estimation »
   | "complete" // les 8 questions renseignées (résultat complet)
-  | "click_affilie";
+  | "click_affilie"
+  | "partage"; // partage du chiffre d'économie (boucle virale)
 
 /** Log d'un event de funnel. */
 export async function logEvent(

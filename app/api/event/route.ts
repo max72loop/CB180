@@ -13,6 +13,7 @@ const ALLOWED: FunnelEvent[] = [
   "affiner",
   "complete",
   "click_affilie",
+  "partage",
 ];
 
 export async function POST(req: NextRequest) {

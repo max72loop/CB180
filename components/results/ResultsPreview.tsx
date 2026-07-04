@@ -18,6 +18,8 @@
 import { useMemo, useState } from "react";
 import { costComposition, splitByEligibility } from "@/lib/engine";
 import { MiniCard } from "@/components/brand/CardVisual";
+import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
+import ShareResult from "@/components/results/ShareResult";
 import type { Card, CostBreakdown, CostShare, RankedCard } from "@/lib/types";
 import { formatEur, formatEurCents, formatSignedEur } from "@/lib/format";
 
@@ -133,6 +135,7 @@ export default function ResultsPreview({
           view={view}
           currentCost={currentCost}
           best={best}
+          sessionId={sessionId}
         />
       )}
 
@@ -215,6 +218,20 @@ export default function ResultsPreview({
         }}
       />
 
+      {/* Rétention : l'alerte tarifaire, mécanisme de ré-engagement, promue au
+          moment du résultat plutôt qu'enfouie ailleurs (audit, chantier 05). */}
+      {best && (
+        <section className="space-y-3">
+          <p className="text-sm leading-relaxed text-slate-600">
+            La mieux placée aujourd&apos;hui selon vos réponses&nbsp;:{" "}
+            <span className="font-semibold text-slate-900">{best.card.name}</span>
+            . Mais les cotisations et frais changent chaque année. On garde
+            l&apos;œil pour vous.
+          </p>
+          <PriceAlertSignup card={best.card} source="results" />
+        </section>
+      )}
+
       <div className="space-y-3 border-t border-slate-200 pt-6">
         <button
           type="button"
@@ -293,10 +310,12 @@ function HeroGain({
   view,
   currentCost,
   best,
+  sessionId,
 }: {
   view: CostView;
   currentCost: number;
   best: RankedCard;
+  sessionId: string | null;
 }) {
   const bestCost = costForView(best.breakdown, view);
   const gain = Math.round((currentCost - bestCost) * 100) / 100;
@@ -357,6 +376,12 @@ function HeroGain({
       <p className="mt-3 text-xs text-slate-500">
         Estimation basée uniquement sur les fourchettes que vous avez saisies.
       </p>
+      {/* Boucle virale : le chiffre est le contenu de partage (audit, chantier 05) */}
+      {improves && (
+        <div className="mt-4 border-t border-emerald-200 pt-4">
+          <ShareResult gainEur={gain} sessionId={sessionId} />
+        </div>
+      )}
     </section>
   );
 }
