@@ -291,8 +291,9 @@ export default async function CartePage({ params }: Params) {
               Cette carte vaut-elle le coup pour <em>vous</em> ?
             </h2>
             <p className="mx-auto mt-2 max-w-lg text-indigo-100">
-              En 8 questions, CB180 calcule le coût annuel de cette carte selon
-              vos usages et le compare à votre situation actuelle.
+              En 3 questions, CB180 estime le coût annuel de cette carte selon
+              vos usages et le compare à votre situation actuelle. Cinq questions
+              de plus affinent le chiffre.
             </p>
             <Link
               href="/simulateur"

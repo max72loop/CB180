@@ -171,8 +171,9 @@ export default async function GuidePage({ params }: Params) {
               Laquelle vous coûte le moins cher ?
             </h2>
             <p className="mx-auto mt-2 max-w-lg text-indigo-100">
-              En 8 questions, CB180 chiffre le coût annuel de ces cartes selon vos
-              usages et le compare à votre situation actuelle.
+              En 3 questions, CB180 chiffre le coût annuel de ces cartes selon vos
+              usages et le compare à votre situation actuelle. Cinq questions de
+              plus affinent le résultat.
             </p>
             <Link
               href="/simulateur"

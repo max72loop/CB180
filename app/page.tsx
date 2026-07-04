@@ -54,9 +54,9 @@ function Hero() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-slate-600 lg:mx-0">
-            Répondez à 8 questions. CB180 calcule le coût annuel chiffré de votre
-            carte actuelle et le compare, objectivement, aux alternatives du
-            marché français.
+            Trois questions pour un premier chiffre, cinq de plus pour l&apos;affiner.
+            CB180 calcule le coût annuel réel de votre carte actuelle et le
+            compare, objectivement, aux alternatives du marché français.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row lg:justify-start">
@@ -198,8 +198,8 @@ function ValueProps() {
 function HowItWorks() {
   const steps = [
     {
-      title: "Vos usages, en 8 questions",
-      body: "Dépenses, part hors zone euro, retraits, cotisation actuelle… en fourchettes, sans donnée identifiante.",
+      title: "Un premier chiffre en 3 questions",
+      body: "Dépenses, part hors zone euro, cotisation actuelle : trois réponses en fourchettes suffisent. Cinq questions de plus l'affinent, sans donnée identifiante.",
     },
     {
       title: "Le calcul du coût annuel net",
