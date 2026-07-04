@@ -28,7 +28,7 @@ export default function ProgressBar({ current, step, total }: ProgressBarProps) 
         </span>
       </div>
       <div
-        className="h-2 w-full overflow-hidden rounded-full bg-slate-200"
+        className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200"
         role="progressbar"
         aria-valuenow={answered}
         aria-valuemin={0}

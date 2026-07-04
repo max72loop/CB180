@@ -347,17 +347,24 @@ export default function Simulateur({ cards }: SimulateurProps) {
   const showBack = state.phase === "question" || state.phase === "quickResult";
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 py-6">
-      {/* En-tête : retour à gauche (convention), marque au centre */}
-      <div className="mb-6 grid grid-cols-3 items-center">
+    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col px-5 py-6 md:px-8 md:py-8">
+      {/* En-tête fin et collant : retour toujours visible à gauche, marque au centre. */}
+      <div className="sticky top-0 z-10 -mx-5 mb-6 grid grid-cols-3 items-center bg-white/85 px-5 py-2 backdrop-blur md:-mx-8 md:px-8">
         <div className="justify-self-start">
           {showBack && (
             <button
               type="button"
               onClick={goBack}
-              className="rounded-lg px-1 py-1 text-sm font-medium text-slate-500 hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+              className="-ml-1 flex items-center gap-1 rounded-lg px-2 py-1.5 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
             >
-              ← Retour
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
+                <path
+                  fillRule="evenodd"
+                  d="M12.7 4.3a1 1 0 010 1.4L8.4 10l4.3 4.3a1 1 0 01-1.4 1.4l-5-5a1 1 0 010-1.4l5-5a1 1 0 011.4 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Retour
             </button>
           )}
         </div>
@@ -368,11 +375,13 @@ export default function Simulateur({ cards }: SimulateurProps) {
       </div>
 
       {state.phase === "intro" && (
-        <IntroScreen
-          quickCount={QUICK_COUNT}
-          cardCount={cards.length}
-          onStart={startQuestionnaire}
-        />
+        <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
+          <IntroScreen
+            quickCount={QUICK_COUNT}
+            cardCount={cards.length}
+            onStart={startQuestionnaire}
+          />
+        </div>
       )}
 
       {state.phase === "question" && question && (
@@ -384,17 +393,19 @@ export default function Simulateur({ cards }: SimulateurProps) {
             total={inRefine ? TOTAL_QUESTIONS : QUICK_COUNT}
           />
 
-          <div key={state.step} className="animate-step mt-8 flex-1">
+          <div key={state.step} className="animate-step mt-8 flex-1 md:mt-12">
             <QuestionStep
               question={question}
               selectedOptionId={state.answers[question.id]}
               disabled={advancing}
+              keyboardEnabled={!coherenceMsg}
+              onBack={goBack}
               onSelect={(optionId) => handleSelect(question.id, optionId)}
             />
 
             {/* P9 : micro-confirmation de cohérence, non bloquante */}
             {coherenceMsg && (
-              <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
+              <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 md:max-w-xl">
                 <p className="text-sm text-amber-900">
                   {coherenceMsg} Est-ce exact ? Cela nous aide à affiner votre
                   résultat.
@@ -419,34 +430,41 @@ export default function Simulateur({ cards }: SimulateurProps) {
             )}
           </div>
 
-          <p className="mt-8 text-center text-xs text-slate-500">
+          {/* Rassurance mobile (le desktop l'affiche dans la colonne intitulé). */}
+          <p className="mt-8 text-center text-xs text-slate-500 md:hidden">
             Aucune donnée identifiante, aucun nom de banque demandé.
           </p>
         </div>
       )}
 
       {state.phase === "calculating" && (
-        <CalculatingScreen cardCount={cards.length} />
+        <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
+          <CalculatingScreen cardCount={cards.length} />
+        </div>
       )}
 
       {state.phase === "quickResult" && engine && (
-        <QuickResult
-          current={engine.current}
-          best={engine.ranked[0] ?? null}
-          onRefine={startRefine}
-          onSeeAll={seeAllCards}
-        />
+        <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
+          <QuickResult
+            current={engine.current}
+            best={engine.ranked[0] ?? null}
+            onRefine={startRefine}
+            onSeeAll={seeAllCards}
+          />
+        </div>
       )}
 
       {onResults && engine && (
-        <ResultsPreview
-          current={engine.current}
-          ranked={engine.ranked}
-          incomeDisclosed={incomeDisclosed}
-          sessionId={sessionId}
-          onRestart={handleRestart}
-          onEdit={handleEdit}
-        />
+        <div className="mx-auto w-full max-w-md">
+          <ResultsPreview
+            current={engine.current}
+            ranked={engine.ranked}
+            incomeDisclosed={incomeDisclosed}
+            sessionId={sessionId}
+            onRestart={handleRestart}
+            onEdit={handleEdit}
+          />
+        </div>
       )}
     </main>
   );
