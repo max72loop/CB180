@@ -10,6 +10,7 @@ import SiteFooter from "@/components/marketing/SiteFooter";
 import { MiniCard } from "@/components/brand/CardVisual";
 import { BANKS, cardsForBank, getBank } from "@/lib/banks";
 import { feeLabel, fxLabel, toneForTier, verifiedDate } from "@/lib/card-display";
+import { SITE_URL } from "@/lib/site";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -42,7 +43,7 @@ export default async function BanquePage({ params }: Params) {
   if (!bank) notFound();
 
   const cards = cardsForBank(bank);
-  const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cb180.fr";
+  const SITE = SITE_URL;
   const breadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

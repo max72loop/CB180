@@ -5,6 +5,7 @@
 // désactivé proprement (sent: false) et l'UI adapte son message.
 
 import "server-only";
+import { SITE_URL } from "@/lib/site";
 
 export interface ResultSummary {
   topCardName?: string;
@@ -12,7 +13,7 @@ export interface ResultSummary {
   currentCostEur?: number;
 }
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cb180.fr";
+const SITE = SITE_URL;
 
 const eur = (n?: number) =>
   n == null

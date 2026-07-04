@@ -6,8 +6,9 @@ import { publicCards } from "@/lib/cards";
 import { comparisonSlug } from "@/lib/card-display";
 import { GUIDES } from "@/lib/guides";
 import { BANKS } from "@/lib/banks";
+import { SITE_URL } from "@/lib/site";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cb180.fr";
+const SITE = SITE_URL;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPaths = [

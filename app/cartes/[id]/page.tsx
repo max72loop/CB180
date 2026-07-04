@@ -23,6 +23,7 @@ import {
   welcomeLabel,
 } from "@/lib/card-display";
 import type { Card } from "@/lib/types";
+import { SITE_URL } from "@/lib/site";
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -282,7 +283,7 @@ function Fact({ label, value }: { label: string; value: string }) {
 
 /** Données structurées : produit financier + fil d'Ariane. */
 function JsonLd({ card }: { card: Card }) {
-  const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cb180.fr";
+  const SITE = SITE_URL;
   const financialProduct = {
     "@context": "https://schema.org",
     "@type": "FinancialProduct",

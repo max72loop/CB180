@@ -21,6 +21,7 @@ import {
   welcomeLabel,
 } from "@/lib/card-display";
 import type { Card } from "@/lib/types";
+import { SITE_URL } from "@/lib/site";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -242,7 +243,7 @@ function Cell({ value, best }: { value: string; best?: boolean }) {
 
 /** Données structurées : fil d'Ariane de la comparaison. */
 function JsonLd({ a, b }: { a: Card; b: Card }) {
-  const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cb180.fr";
+  const SITE = SITE_URL;
   const breadcrumb = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

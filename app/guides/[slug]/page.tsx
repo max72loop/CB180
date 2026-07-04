@@ -18,6 +18,7 @@ import {
   verifiedDate,
 } from "@/lib/card-display";
 import type { Card } from "@/lib/types";
+import { SITE_URL } from "@/lib/site";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -204,7 +205,7 @@ export default async function GuidePage({ params }: Params) {
 
 /** Données structurées : FAQPage + fil d'Ariane. */
 function JsonLd({ guide }: { guide: Guide }) {
-  const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cb180.fr";
+  const SITE = SITE_URL;
   const faqPage = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

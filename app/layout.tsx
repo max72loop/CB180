@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 
 // Inter pour le texte courant, Sora (géométrique) pour les titres — auto-hébergées.
 const inter = Inter({
@@ -14,9 +15,6 @@ const sora = Sora({
   variable: "--font-sora",
   display: "swap",
 });
-
-// Domaine de production (surchargable via env), pour les URLs canoniques et OG.
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cb180.fr";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

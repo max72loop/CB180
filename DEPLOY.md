@@ -34,7 +34,7 @@ PR obtiennent une preview).
 
 | Variable | Valeur | Requis |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | l'URL publique finale (ex. `https://cb180.fr`, ou l'URL `*.vercel.app` au début) | **oui** (canoniques, sitemap, OG) |
+| `NEXT_PUBLIC_SITE_URL` | l'URL publique finale (ex. `https://cb180.xyz`, ou l'URL `*.vercel.app` au début) | **oui** (canoniques, sitemap, OG) |
 | `TURSO_DATABASE_URL` | depuis `turso db show cb180 --url` | pour l'analytics |
 | `TURSO_AUTH_TOKEN` | depuis `turso db tokens create cb180` | pour l'analytics |
 | `ADMIN_KEY` | une chaîne secrète (accès à `/stats`) | pour l'analytics |
