@@ -138,6 +138,7 @@ export async function unsubscribeAlertByToken(token: string): Promise<boolean> {
 
 export type FunnelEvent =
   | "arrivee"
+  | "hero_sim" // interaction avec le micro-simulateur du hero (hook interactif)
   | "start_quiz"
   | "quickwin" // écart estimé express affiché (après 3 questions)
   | "affiner" // clic sur « Affiner mon estimation »

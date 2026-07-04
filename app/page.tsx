@@ -2,6 +2,7 @@ import Link from "next/link";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
 import CardVisual from "@/components/brand/CardVisual";
+import HeroSimulator from "@/components/marketing/HeroSimulator";
 import { publicCards } from "@/lib/cards";
 import { GUIDES } from "@/lib/guides";
 import { feeLabel, fxLabel, toneForTier } from "@/lib/card-display";
@@ -79,48 +80,10 @@ function Hero() {
           </p>
         </div>
 
-        {/* Colonne visuelle : cartes empilées + pastille de résultat */}
-        <HeroVisual />
+        {/* Colonne visuelle : micro-simulateur interactif (chiffre live) */}
+        <HeroSimulator cards={publicCards()} />
       </div>
     </section>
-  );
-}
-
-/** Illustration produit : deux cartes qui flottent + une carte « résultat ». */
-function HeroVisual() {
-  return (
-    <div className="relative mx-auto aspect-square w-full max-w-md">
-      {/* Carte du fond (sombre), légèrement pivotée */}
-      <div className="floaty-slow absolute left-2 top-6 w-[68%] rotate-[-8deg]">
-        <CardVisual tone="dark" label="Carte actuelle" last4="4417" />
-      </div>
-      {/* Carte de marque au premier plan */}
-      <div className="floaty absolute right-1 top-0 w-[72%] rotate-[6deg]">
-        <CardVisual tone="brand" label="Alternative" last4="1802" sheen />
-      </div>
-
-      {/* Pastille de résultat, façon extrait de simulation (illustratif) */}
-      <div className="absolute bottom-0 left-0 w-[80%] rounded-2xl border border-slate-100 bg-white/95 p-4 shadow-2xl ring-1 ring-black/5 backdrop-blur sm:w-[72%]">
-        <p className="text-xs font-medium text-slate-500">Écart annuel estimé</p>
-        <div className="mt-1 flex items-baseline gap-2">
-          <span className="text-3xl font-extrabold text-emerald-600">
-            +269&nbsp;€
-          </span>
-          <span className="text-xs font-medium text-slate-400">/ an</span>
-        </div>
-        {/* Mini graphique à barres décoratif */}
-        <div className="mt-3 flex items-end gap-1.5" aria-hidden>
-          <span className="h-8 w-full rounded-sm bg-slate-200" />
-          <span className="h-6 w-full rounded-sm bg-slate-200" />
-          <span className="h-10 w-full rounded-sm bg-indigo-200" />
-          <span className="h-4 w-full rounded-sm bg-emerald-200" />
-          <span className="h-3 w-full rounded-sm bg-emerald-400" />
-        </div>
-        <p className="mt-2 text-[11px] leading-tight text-slate-400">
-          Exemple illustratif · recalculé selon vos réponses
-        </p>
-      </div>
-    </div>
   );
 }
 

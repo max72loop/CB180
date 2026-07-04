@@ -8,6 +8,7 @@ export const runtime = "nodejs";
 
 const ALLOWED: FunnelEvent[] = [
   "arrivee",
+  "hero_sim",
   "start_quiz",
   "quickwin",
   "affiner",
