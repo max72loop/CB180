@@ -15,7 +15,7 @@
 // L'audit est déjà enregistré par le parent (fire-and-forget). Ici : capture email
 // (stockage séparé du profil) et event de clic affilié.
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { costComposition, splitByEligibility } from "@/lib/engine";
 import { MiniCard } from "@/components/brand/CardVisual";
 import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
@@ -51,6 +51,18 @@ interface ResultsPreviewProps {
 const VIEW_LABEL: Record<CostView, string> = {
   recurring: "Chaque année",
   year1: "La 1ʳᵉ année",
+};
+
+/** Intitulés et couleurs des postes de coût, partagés révélation ⇄ détail. */
+const POST_LABEL: Record<CostShare["post"], string> = {
+  cotisation: "Cotisation",
+  change: "Change",
+  retrait: "Retrait",
+};
+const POST_COLOR: Record<CostShare["post"], string> = {
+  cotisation: "bg-slate-400",
+  change: "bg-indigo-500",
+  retrait: "bg-amber-500",
 };
 
 /** Coût net d'un breakdown pour la vue active. */
@@ -98,8 +110,11 @@ export default function ResultsPreview({
   onEdit,
 }: ResultsPreviewProps) {
   // Vue récurrente par défaut : chiffre honnête qui n'est pas gonflé par une
-  // prime de bienvenue non récurrente.
+  // prime de bienvenue non récurrente. La bascule ne pilote QUE le classement
+  // détaillé (acte 3) ; la révélation (actes 1-2) reste sur le récurrent, stable.
   const [view, setView] = useState<CostView>("recurring");
+  // Dévoilement progressif du classement : d'abord les premières cartes.
+  const [showAllCards, setShowAllCards] = useState(false);
 
   const { eligible, ineligible } = useMemo(() => {
     const sorted = sortForView(ranked, view);
@@ -108,35 +123,31 @@ export default function ResultsPreview({
     return splitByEligibility(sorted);
   }, [ranked, view, incomeDisclosed]);
 
-  const best = eligible[0] ?? null;
-  const currentCost = costForView(current, view);
+  // Carte de référence de la RÉVÉLATION : la moins chère en récurrent, choisie
+  // indépendamment de la bascule pour que le grand chiffre ne bouge pas quand on
+  // explore les vues du tableau.
+  const bestRecurring = useMemo(() => {
+    const pool = incomeDisclosed ? ranked.filter((r) => r.eligible) : ranked;
+    return (
+      [...pool].sort(
+        (a, b) =>
+          a.breakdown.netAnnualCostWithoutBonusEur -
+          b.breakdown.netAnnualCostWithoutBonusEur,
+      )[0] ?? null
+    );
+  }, [ranked, incomeDisclosed]);
+
+  const INITIAL_VISIBLE = 3;
+  const visibleEligible = showAllCards
+    ? eligible
+    : eligible.slice(0, INITIAL_VISIBLE);
+  const hiddenCount = eligible.length - visibleEligible.length;
 
   return (
-    <div className="space-y-7">
-      <header className="space-y-1">
-        <p className="text-sm font-medium text-indigo-600">
-          Résultat de la simulation
-        </p>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-          Voici votre information chiffrée
-        </h2>
-        <p className="text-sm leading-relaxed text-slate-500">
-          Une information objective, pas un conseil. Le classement est trié par
-          coût, sans « recommandé pour vous ».
-        </p>
-      </header>
-
-      {/* Bascule des deux vues de coût */}
-      <ViewToggle view={view} onChange={setView} />
-
-      {/* Hero : gain annuel honnête vs carte la moins chère */}
-      {best && (
-        <HeroGain
-          view={view}
-          currentCost={currentCost}
-          best={best}
-          sessionId={sessionId}
-        />
+    <div className="space-y-8">
+      {/* ─── Actes 1 & 2 : la révélation (grand chiffre + décomposition) ─── */}
+      {bestRecurring && (
+        <Reveal current={current} best={bestRecurring} sessionId={sessionId} />
       )}
 
       {!incomeDisclosed && (
@@ -147,26 +158,35 @@ export default function ResultsPreview({
         </p>
       )}
 
-      {/* Classement des cartes accessibles */}
-      <section className="space-y-3">
-        <div className="flex items-baseline justify-between gap-2">
-          <h3 className="text-lg font-semibold text-slate-900">
-            {incomeDisclosed && ineligible.length > 0
-              ? "Cartes accessibles avec votre revenu"
-              : "Cartes triées par coût annuel"}
-          </h3>
-          <span className="shrink-0 text-xs text-slate-400">
-            {VIEW_LABEL[view].toLowerCase()}
-          </span>
+      {/* ─── Acte 3 : le classement détaillé, en dévoilement progressif ─── */}
+      <section className="space-y-4 border-t border-slate-200 pt-7">
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-indigo-600">
+            Le détail, poste par poste
+          </p>
+          <div className="flex items-baseline justify-between gap-2">
+            <h3 className="text-lg font-semibold text-slate-900">
+              {incomeDisclosed && ineligible.length > 0
+                ? "Cartes accessibles avec votre revenu"
+                : "Cartes triées par coût annuel"}
+            </h3>
+            <span className="shrink-0 text-xs text-slate-400">
+              {VIEW_LABEL[view].toLowerCase()}
+            </span>
+          </div>
+          <p className="text-xs leading-relaxed text-slate-500">
+            Une information objective, pas un conseil : classement trié par coût (
+            {view === "year1" ? "1ʳᵉ année, prime incluse" : "récurrent, hors prime"}
+            ), sans « recommandé pour vous ». Les liens affiliés n&apos;influencent
+            pas cet ordre.
+          </p>
         </div>
-        <p className="text-xs leading-relaxed text-slate-500">
-          Classement établi objectivement selon le coût annuel (
-          {view === "year1" ? "1ʳᵉ année, prime incluse" : "récurrent, hors prime"}
-          ). Les liens affiliés n&apos;influencent pas cet ordre.
-        </p>
+
+        {/* Bascule des deux vues de coût : pilote le tri du tableau. */}
+        <ViewToggle view={view} onChange={setView} />
 
         <ol className="space-y-3">
-          {eligible.map((row, index) => (
+          {visibleEligible.map((row, index) => (
             <RankedCardRow
               key={row.card.id}
               row={row}
@@ -179,6 +199,16 @@ export default function ResultsPreview({
             />
           ))}
         </ol>
+
+        {hiddenCount > 0 && (
+          <button
+            type="button"
+            onClick={() => setShowAllCards(true)}
+            className="w-full rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+          >
+            Voir les {hiddenCount} autres cartes du panel
+          </button>
+        )}
       </section>
 
       {/* Cartes non éligibles : regroupées à part, dégradées, jamais retirées */}
@@ -212,23 +242,25 @@ export default function ResultsPreview({
       <EmailCapture
         sessionId={sessionId}
         summary={{
-          topCardName: best?.card.name,
-          gainEur: best?.savingsVsCurrentEur,
+          topCardName: bestRecurring?.card.name,
+          gainEur: bestRecurring?.savingsVsCurrentEur,
           currentCostEur: current.netAnnualCostEur,
         }}
       />
 
       {/* Rétention : l'alerte tarifaire, mécanisme de ré-engagement, promue au
           moment du résultat plutôt qu'enfouie ailleurs (audit, chantier 05). */}
-      {best && (
+      {bestRecurring && (
         <section className="space-y-3">
           <p className="text-sm leading-relaxed text-slate-600">
             La mieux placée aujourd&apos;hui selon vos réponses&nbsp;:{" "}
-            <span className="font-semibold text-slate-900">{best.card.name}</span>
+            <span className="font-semibold text-slate-900">
+              {bestRecurring.card.name}
+            </span>
             . Mais les cotisations et frais changent chaque année. On garde
             l&apos;œil pour vous.
           </p>
-          <PriceAlertSignup card={best.card} source="results" />
+          <PriceAlertSignup card={bestRecurring.card} source="results" />
         </section>
       )}
 
@@ -305,84 +337,238 @@ function ViewToggle({
   );
 }
 
-/** Hero : situation actuelle vs carte la moins chère, gain honnête. */
-function HeroGain({
-  view,
-  currentCost,
+/** Détecte la préférence système « animations réduites » (accessibilité). */
+function usePrefersReducedMotion(): boolean {
+  const [reduce, setReduce] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduce(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return reduce;
+}
+
+/** Compteur animé 0 → target (easeOutCubic), instantané si motion réduite. */
+function useCountUp(target: number, durationMs = 1100): number {
+  const reduce = usePrefersReducedMotion();
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (reduce) {
+      setValue(target);
+      return;
+    }
+    let raf = 0;
+    let start: number | null = null;
+    const tick = (ts: number) => {
+      if (start === null) start = ts;
+      const t = Math.min(1, (ts - start) / durationMs);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setValue(target * eased);
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else setValue(target);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, durationMs, reduce]);
+  return value;
+}
+
+/**
+ * La révélation, en deux temps forts.
+ *  · Acte 1 : un seul grand chiffre animé — « vous pourriez économiser X €/an ».
+ *  · Acte 2 : la décomposition poste par poste (barres empilées comparées).
+ * Toujours en vue récurrente : le chiffre honnête, jamais gonflé par une prime
+ * de bienvenue non récurrente. Wording IOBSP : un écart chiffré conditionnel,
+ * jamais « recommandé pour vous ».
+ */
+function Reveal({
+  current,
   best,
   sessionId,
 }: {
-  view: CostView;
-  currentCost: number;
+  current: CostBreakdown;
   best: RankedCard;
   sessionId: string | null;
 }) {
-  const bestCost = costForView(best.breakdown, view);
+  const currentCost = current.netAnnualCostWithoutBonusEur;
+  const bestCost = best.breakdown.netAnnualCostWithoutBonusEur;
   const gain = Math.round((currentCost - bestCost) * 100) / 100;
   const improves = gain > 0;
-  // Part de prime comptée uniquement en vue 1ʳᵉ année (non récurrente).
-  const bonus = best.breakdown.welcomeBonusAmortizedEur;
-  const bonusInYear1 = view === "year1" && bonus > 0;
+  const counted = useCountUp(improves ? gain : currentCost);
 
   return (
-    <section
-      className={[
-        "rounded-2xl border p-5",
-        improves
-          ? "border-emerald-200 bg-emerald-50"
-          : "border-slate-200 bg-slate-50",
-      ].join(" ")}
-    >
-      {improves ? (
-        <>
-          <p className="text-sm text-slate-600">
-            Écart avec la carte la moins chère du panel
-          </p>
-          <p className="mt-1 text-4xl font-bold text-emerald-700">
-            {formatSignedEur(gain)}
-            <span className="text-base font-semibold text-emerald-600"> / an</span>
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-slate-700">
-            Votre situation actuelle est estimée à{" "}
-            <span className="font-semibold">{formatEur(currentCost)}/an</span>. La
-            carte la moins chère, <span className="font-semibold">{best.card.name}</span>
-            , ressort à <span className="font-semibold">{formatEur(bestCost)}/an</span>{" "}
-            avec vos réponses.
-          </p>
-        </>
-      ) : (
-        <>
-          <p className="text-sm text-slate-600">
-            Sur ce critère, aucune carte du panel ne fait mieux que votre
-            situation actuelle
-          </p>
-          <p className="mt-1 text-2xl font-bold text-slate-900">
-            {formatEur(currentCost)}/an aujourd&apos;hui
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-slate-700">
-            La moins chère du panel, {best.card.name}, ressort à{" "}
-            {formatEur(bestCost)}/an. L&apos;écart n&apos;est pas en votre faveur
-            selon les paramètres saisis.
-          </p>
-        </>
-      )}
-      {bonusInYear1 && (
-        <p className="mt-3 rounded-lg bg-white/70 px-3 py-2 text-xs text-slate-600">
-          Ce chiffre inclut {formatEur(bonus)} de prime de bienvenue amortie la
-          1ʳᵉ année. Elle ne se répète pas : voyez « Chaque année » pour le coût
-          récurrent.
+    <div className="space-y-6">
+      {/* ─ Acte 1 : le grand chiffre, au-dessus de la ligne de flottaison ─ */}
+      <section
+        className={[
+          "animate-step overflow-hidden rounded-3xl border p-6 text-center md:p-8",
+          improves
+            ? "border-emerald-200 bg-gradient-to-b from-emerald-50 to-white"
+            : "border-slate-200 bg-slate-50",
+        ].join(" ")}
+      >
+        <p className="text-sm font-medium text-slate-500">
+          Résultat de votre simulation
         </p>
-      )}
-      <p className="mt-3 text-xs text-slate-500">
-        Estimation basée uniquement sur les fourchettes que vous avez saisies.
-      </p>
-      {/* Boucle virale : le chiffre est le contenu de partage (audit, chantier 05) */}
-      {improves && (
-        <div className="mt-4 border-t border-emerald-200 pt-4">
-          <ShareResult gainEur={gain} sessionId={sessionId} />
-        </div>
-      )}
+        {improves ? (
+          <>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+              Vous pourriez économiser
+            </p>
+            <p className="mt-1 text-6xl font-extrabold tracking-tight text-emerald-600 tabular-nums md:text-7xl">
+              {formatEur(Math.round(counted))}
+            </p>
+            <p className="mt-1 text-base font-semibold text-emerald-700">par an</p>
+            <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-slate-600">
+              En passant de votre carte actuelle (
+              <span className="font-semibold text-slate-800">
+                {formatEur(currentCost)}/an
+              </span>
+              ) à la moins chère du panel,{" "}
+              <span className="font-semibold text-slate-800">{best.card.name}</span>{" "}
+              ({formatEur(bestCost)}/an), selon vos réponses.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Votre carte est déjà bien placée
+            </p>
+            <p className="mt-1 text-5xl font-extrabold tracking-tight text-slate-900 tabular-nums md:text-6xl">
+              {formatEur(Math.round(counted))}
+            </p>
+            <p className="mt-1 text-base font-semibold text-slate-500">par an</p>
+            <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-slate-600">
+              Aucune carte du panel ne fait mieux que votre situation actuelle
+              selon vos réponses. La moins chère,{" "}
+              <span className="font-semibold text-slate-800">{best.card.name}</span>
+              , ressort à {formatEur(bestCost)}/an.
+            </p>
+          </>
+        )}
+
+        <p className="mx-auto mt-4 max-w-sm text-xs text-slate-400">
+          Estimation fondée uniquement sur les fourchettes que vous avez saisies.
+          Une information chiffrée, pas un conseil.
+        </p>
+
+        {/* Boucle virale : le chiffre est le contenu de partage (audit, chantier 05) */}
+        {improves && (
+          <div className="mt-5 border-t border-emerald-200 pt-5">
+            <ShareResult gainEur={gain} sessionId={sessionId} />
+          </div>
+        )}
+      </section>
+
+      {/* ─ Acte 2 : la décomposition poste par poste ─ */}
+      {improves && <ComparisonBars current={current} best={best} />}
+    </div>
+  );
+}
+
+/**
+ * Acte 2 : deux barres empilées (votre carte actuelle vs la moins chère),
+ * décomposées poste par poste (cotisation, change, retrait) à la MÊME échelle,
+ * pour rendre l'écart visible d'un coup d'œil avant le tableau détaillé.
+ */
+function ComparisonBars({
+  current,
+  best,
+}: {
+  current: CostBreakdown;
+  best: RankedCard;
+}) {
+  const maxGross = Math.max(current.grossCostEur, best.breakdown.grossCostEur, 1);
+  return (
+    <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
+      <div className="space-y-1">
+        <h3 className="text-base font-semibold text-slate-900">
+          D&apos;où vient l&apos;écart
+        </h3>
+        <p className="text-xs leading-relaxed text-slate-500">
+          Décomposition poste par poste, à la même échelle. Le montant affiché est
+          le coût net annuel, primes et cashback déduits.
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        <CompareRow
+          label="Votre carte actuelle"
+          net={current.netAnnualCostWithoutBonusEur}
+          shares={costComposition(current)}
+          maxGross={maxGross}
+        />
+        <CompareRow
+          label={best.card.name}
+          accent
+          net={best.breakdown.netAnnualCostWithoutBonusEur}
+          shares={costComposition(best.breakdown)}
+          maxGross={maxGross}
+        />
+      </div>
+
+      {/* Légende commune des postes. */}
+      <ul className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-slate-500">
+        {(["cotisation", "change", "retrait"] as CostShare["post"][]).map((p) => (
+          <li key={p} className="flex items-center gap-1.5">
+            <span
+              className={`h-2.5 w-2.5 rounded-full ${POST_COLOR[p]}`}
+              aria-hidden
+            />
+            {POST_LABEL[p]}
+          </li>
+        ))}
+      </ul>
     </section>
+  );
+}
+
+/** Une ligne de comparaison : intitulé, coût net, barre empilée à l'échelle. */
+function CompareRow({
+  label,
+  net,
+  shares,
+  maxGross,
+  accent = false,
+}: {
+  label: string;
+  net: number;
+  shares: CostShare[];
+  maxGross: number;
+  accent?: boolean;
+}) {
+  const visible = shares.filter((s) => s.amountEur > 0);
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-2">
+        <span
+          className={
+            accent
+              ? "truncate text-sm font-semibold text-slate-900"
+              : "truncate text-sm font-medium text-slate-600"
+          }
+        >
+          {label}
+        </span>
+        <span className="shrink-0 text-sm font-bold text-slate-900 tabular-nums">
+          {formatEur(net)}
+          <span className="text-xs font-normal text-slate-500"> / an</span>
+        </span>
+      </div>
+      <div className="mt-1.5 flex h-3.5 w-full overflow-hidden rounded-full bg-slate-100">
+        {visible.map((s) => (
+          <div
+            key={s.post}
+            className={POST_COLOR[s.post]}
+            style={{ width: `${(s.amountEur / maxGross) * 100}%` }}
+            title={`${POST_LABEL[s.post]} ${formatEur(s.amountEur)}`}
+            aria-hidden
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -561,16 +747,6 @@ function RankedCardRow({
 
 /** Barre de composition du coût brut (cotisation / change / retrait). */
 function CompositionBar({ shares }: { shares: CostShare[] }) {
-  const POST_LABEL: Record<CostShare["post"], string> = {
-    cotisation: "Cotisation",
-    change: "Change",
-    retrait: "Retrait",
-  };
-  const POST_COLOR: Record<CostShare["post"], string> = {
-    cotisation: "bg-slate-400",
-    change: "bg-indigo-500",
-    retrait: "bg-amber-500",
-  };
   const visible = shares.filter((s) => s.amountEur > 0);
   if (visible.length === 0) return null;
   const top = visible[0];
