@@ -40,6 +40,25 @@ CREATE TABLE IF NOT EXISTS events (
   created_at  TEXT NOT NULL
 );
 
+-- Table 4 — alertes tarifaires (liste opt-in réactivable)
+-- Base légale : consentement explicite, double opt-in. Un email n'est actif
+-- qu'une fois confirmé via le lien reçu (confirmed_at renseigné). Chaque ligne
+-- porte son propre jeton de désinscription pour un retrait en un clic.
+CREATE TABLE IF NOT EXISTS alertes (
+  id              TEXT PRIMARY KEY,        -- uuid propre
+  email           TEXT NOT NULL,           -- adresse suivie (stockée en minuscules)
+  card_id         TEXT,                    -- carte suivie ; NULL = toutes les cartes
+  source          TEXT,                    -- contexte d'inscription ("fiche" | "footer" | ...)
+  created_at      TEXT NOT NULL,           -- ISO timestamp de l'inscription
+  confirmed_at    TEXT,                    -- double opt-in : rempli au clic de confirmation
+  unsubscribed_at TEXT,                    -- rempli au désabonnement (soft delete)
+  confirm_token   TEXT NOT NULL,           -- jeton opaque du lien de confirmation
+  unsub_token     TEXT NOT NULL            -- jeton opaque du lien de désinscription
+);
+
 -- Index utiles pour l'analyse
 CREATE INDEX IF NOT EXISTS idx_audits_created ON audits(created_at);
 CREATE INDEX IF NOT EXISTS idx_events_type ON events(event_type);
+CREATE INDEX IF NOT EXISTS idx_alertes_email ON alertes(email);
+CREATE INDEX IF NOT EXISTS idx_alertes_confirm ON alertes(confirm_token);
+CREATE INDEX IF NOT EXISTS idx_alertes_unsub ON alertes(unsub_token);

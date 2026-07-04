@@ -80,6 +80,62 @@ export async function saveEmail(
   });
 }
 
+/** Données d'inscription à une alerte tarifaire. */
+export interface AlertSubscription {
+  email: string;
+  /** Carte suivie ; null pour un suivi de toutes les cartes. */
+  cardId: string | null;
+  /** Contexte d'inscription ("fiche" | "footer" | ...), pour l'analyse. */
+  source: string | null;
+}
+
+/**
+ * Inscrit une alerte tarifaire (double opt-in). La ligne est créée non
+ * confirmée ; elle ne devient active qu'au clic sur le lien de confirmation.
+ * Renvoie les deux jetons opaques (confirmation et désinscription).
+ */
+export async function subscribeAlert(
+  sub: AlertSubscription,
+): Promise<{ confirmToken: string; unsubToken: string }> {
+  const confirmToken = randomUUID();
+  const unsubToken = randomUUID();
+  await getDb().execute({
+    sql: `INSERT INTO alertes (
+      id, email, card_id, source, created_at, confirm_token, unsub_token
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    args: [
+      randomUUID(),
+      sub.email.trim().toLowerCase(),
+      sub.cardId,
+      sub.source,
+      new Date().toISOString(),
+      confirmToken,
+      unsubToken,
+    ],
+  });
+  return { confirmToken, unsubToken };
+}
+
+/** Confirme une alerte via son jeton. True si une ligne encore active a été confirmée. */
+export async function confirmAlertByToken(token: string): Promise<boolean> {
+  const res = await getDb().execute({
+    sql: `UPDATE alertes SET confirmed_at = ?
+          WHERE confirm_token = ? AND confirmed_at IS NULL AND unsubscribed_at IS NULL`,
+    args: [new Date().toISOString(), token],
+  });
+  return res.rowsAffected > 0;
+}
+
+/** Désabonne une alerte via son jeton (soft delete). True si une ligne a été désabonnée. */
+export async function unsubscribeAlertByToken(token: string): Promise<boolean> {
+  const res = await getDb().execute({
+    sql: `UPDATE alertes SET unsubscribed_at = ?
+          WHERE unsub_token = ? AND unsubscribed_at IS NULL`,
+    args: [new Date().toISOString(), token],
+  });
+  return res.rowsAffected > 0;
+}
+
 export type FunnelEvent =
   | "arrivee"
   | "start_quiz"
@@ -125,6 +181,8 @@ export interface DashboardStats {
   clicks: number;
   emails: number;
   emailsConsent: number;
+  alerts: number;
+  alertsConfirmed: number;
   auditsLast7d: number;
   avgCurrentCost: number | null;
   avgBestGain: number | null;
@@ -144,6 +202,21 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const clicks = await db.execute(
     "SELECT COUNT(*) AS n FROM events WHERE event_type = 'click_affilie'",
   );
+  // Alertes actives (non désabonnées) et part confirmée (double opt-in).
+  // Toléré si la table n'existe pas encore (base non ré-initialisée).
+  let alertsN = 0;
+  let alertsConfirmedN = 0;
+  try {
+    const alerts = await db.execute(
+      `SELECT COUNT(*) AS n,
+              COALESCE(SUM(CASE WHEN confirmed_at IS NOT NULL THEN 1 ELSE 0 END), 0) AS c
+       FROM alertes WHERE unsubscribed_at IS NULL`,
+    );
+    alertsN = num(alerts.rows[0].n);
+    alertsConfirmedN = num(alerts.rows[0].c);
+  } catch {
+    /* table alertes absente : compteurs à 0 */
+  }
   const last7d = await db.execute(
     "SELECT COUNT(*) AS n FROM audits WHERE created_at >= date('now', '-7 days')",
   );
@@ -164,6 +237,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     clicks: num(clicks.rows[0].n),
     emails: num(emails.rows[0].n),
     emailsConsent: num(emails.rows[0].c),
+    alerts: alertsN,
+    alertsConfirmed: alertsConfirmedN,
     auditsLast7d: num(last7d.rows[0].n),
     avgCurrentCost:
       averages.rows[0].ac == null ? null : num(averages.rows[0].ac),

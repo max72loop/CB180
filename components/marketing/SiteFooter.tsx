@@ -4,11 +4,27 @@
 
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
+import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
 
 export default function SiteFooter() {
   return (
     <footer className="border-t border-slate-200 bg-slate-50">
       <div className="mx-auto max-w-6xl px-5 py-12">
+        {/* Bandeau d'alerte tarifaire — capture email récurrente et légitime */}
+        <div className="mb-10 grid gap-6 rounded-2xl border border-slate-200 bg-white p-6 sm:grid-cols-2 sm:items-center">
+          <div>
+            <p className="text-base font-semibold text-slate-900">
+              Les tarifs des cartes changent chaque année
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-slate-500">
+              Recevez une alerte par email si le coût d&apos;une carte augmente,
+              ou si une option moins chère apparaît. Gratuit, désinscription en
+              un clic.
+            </p>
+          </div>
+          <PriceAlertSignup source="footer" />
+        </div>
+
         <div className="grid gap-8 sm:grid-cols-3">
           <div className="space-y-3">
             <Logo size={28} />

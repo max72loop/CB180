@@ -10,6 +10,7 @@ import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
 import { ProductCardVisual } from "@/components/brand/CardVisual";
 import MiniSimulateur from "@/components/questionnaire/MiniSimulateur";
+import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
 import { getCard, publicCards } from "@/lib/cards";
 import { formatEur } from "@/lib/format";
 import { computeAnnualCost } from "@/lib/engine";
@@ -237,6 +238,14 @@ export default async function CartePage({ params }: Params) {
         {/* Widget de simulation embarqué, scopé sur cette carte */}
         <section className="mt-8">
           <MiniSimulateur card={card} />
+        </section>
+
+        {/* Alerte tarifaire — capture email récurrente, ciblée sur cette carte */}
+        <section className="mt-8">
+          <PriceAlertSignup
+            card={{ id: card.id, name: card.name }}
+            source="fiche"
+          />
         </section>
 
         {/* Note de vérification (traçabilité) */}

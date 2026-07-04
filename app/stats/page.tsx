@@ -92,6 +92,19 @@ function Dashboard({ stats }: { stats: DashboardStats }) {
         />
       </div>
 
+      {/* Alertes tarifaires (liste réactivable, double opt-in) */}
+      <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <MiniStat label="Alertes actives" value={nf.format(stats.alerts)} />
+        <MiniStat
+          label="dont confirmées"
+          value={nf.format(stats.alertsConfirmed)}
+        />
+        <MiniStat
+          label="Taux de confirmation"
+          value={pct(stats.alertsConfirmed, stats.alerts)}
+        />
+      </div>
+
       {/* Gains moyens calculés */}
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <MiniStat

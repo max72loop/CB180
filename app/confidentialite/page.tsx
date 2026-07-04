@@ -51,10 +51,15 @@ export default function ConfidentialitePage() {
             </li>
             <li>
               Si vous le choisissez, votre <strong>adresse email</strong>, pour
-              recevoir votre résultat ou être prévenu si une carte moins chère
-              apparaît. Elle est facultative, soumise à consentement, et stockée{" "}
-              <strong>séparément</strong> de vos réponses (reliée uniquement par un
-              identifiant de session opaque).
+              recevoir votre résultat, ou pour vous inscrire à une{" "}
+              <strong>alerte tarifaire</strong> (être prévenu si le coût d&apos;une
+              carte augmente ou si une carte moins chère apparaît). Elle est
+              facultative, soumise à consentement, et stockée{" "}
+              <strong>séparément</strong> de vos réponses. L&apos;inscription à
+              une alerte se fait en <strong>double opt-in</strong> : elle
+              n&apos;est active qu&apos;après confirmation via un lien reçu par
+              email, et chaque message comporte un lien de{" "}
+              <strong>désinscription en un clic</strong>.
             </li>
           </ul>
         </Section>

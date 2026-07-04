@@ -42,9 +42,9 @@ const schema = readFileSync(join(root, "schema.sql"), "utf8");
 
 console.log(`→ Connexion à ${url}`);
 await db.executeMultiple(schema);
-console.log("✓ Schéma chargé (audits, emails, events).");
+console.log("✓ Schéma chargé (audits, emails, events, alertes).");
 
-for (const table of ["audits", "emails", "events"]) {
+for (const table of ["audits", "emails", "events", "alertes"]) {
   const res = await db.execute(`SELECT COUNT(*) AS n FROM ${table}`);
   console.log(`  ${table} : ${res.rows[0].n} ligne(s)`);
 }
