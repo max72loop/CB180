@@ -1,91 +1,174 @@
-// components/questionnaire/QuestionStep.tsx
-// Une question par écran : intitulé, aide, options en gros boutons tactiles.
-// Présentationnel : ne gère pas l'état, remonte la sélection au parent.
-// Accessibilité : groupe de type radio (choix unique), focus clavier visible.
+"use client";
 
+// components/questionnaire/QuestionStep.tsx
+// Une question par écran. Layout ADAPTATIF via une seule structure :
+//   • mobile  : intitulé puis cartes-réponses empilées, pleine largeur.
+//   • desktop : deux colonnes (intitulé + aide + rassurance à gauche, cartes à
+//     droite) grâce aux breakpoints `md:`, sans parcours dupliqué.
+//
+// Navigation 100 % au clic/tap, ET clavier optionnel sur desktop (jamais imposé,
+// aucune saisie) : touches 1-9 pour choisir, ↑/↓ pour déplacer le focus, Entrée
+// pour valider, ←/Échap pour revenir. Le clavier ne fait que sélectionner des
+// options existantes — il n'introduit aucun champ de saisie.
+//
+// Présentationnel : ne gère pas l'état des réponses, remonte la sélection.
+
+import { useEffect, useState } from "react";
 import type { Question } from "@/lib/answers";
+import AnswerCard from "./AnswerCard";
 
 interface QuestionStepProps {
   question: Question;
   selectedOptionId?: string;
   onSelect: (optionId: string) => void;
+  /** Retour arrière (déclenché aussi par ← / Échap au clavier). */
+  onBack?: () => void;
   /** Désactive les options pendant la transition d'auto-avance. */
   disabled?: boolean;
+  /** Active les raccourcis clavier (désactivés pendant une micro-confirmation). */
+  keyboardEnabled?: boolean;
 }
 
 export default function QuestionStep({
   question,
   selectedOptionId,
   onSelect,
+  onBack,
   disabled = false,
+  keyboardEnabled = true,
 }: QuestionStepProps) {
   const titleId = `q-${question.id}-title`;
+  const options = question.options;
+  // Index ciblé par les flèches (−1 = aucun tant que l'utilisateur n'a pas navigué).
+  const [focusIdx, setFocusIdx] = useState(-1);
+
+  // Réinitialise le focus clavier à chaque changement de question.
+  useEffect(() => {
+    setFocusIdx(-1);
+  }, [question.id]);
+
+  // Raccourcis clavier globaux (desktop) : ne captent rien tant qu'ils sont
+  // désactivés ou qu'une transition est en cours. Aucun effet sur mobile (pas de
+  // clavier physique), donc inoffensif.
+  useEffect(() => {
+    if (!keyboardEnabled || disabled) return;
+
+    function onKeyDown(e: KeyboardEvent) {
+      // Ne pas interférer avec une éventuelle saisie (aucune sur cet écran, garde-fou).
+      const target = e.target as HTMLElement | null;
+      if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+
+      // Touches 1-9 : sélection directe de l'option correspondante.
+      if (/^[1-9]$/.test(e.key)) {
+        const idx = Number(e.key) - 1;
+        if (idx < options.length) {
+          e.preventDefault();
+          setFocusIdx(idx);
+          onSelect(options[idx].id);
+        }
+        return;
+      }
+
+      switch (e.key) {
+        case "ArrowDown":
+        case "ArrowRight":
+          e.preventDefault();
+          setFocusIdx((i) => Math.min((i < 0 ? -1 : i) + 1, options.length - 1));
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setFocusIdx((i) => Math.max((i < 0 ? options.length : i) - 1, 0));
+          break;
+        case "ArrowLeft":
+          // Flèche gauche = retour (cohérent avec le bouton « ← Retour »).
+          if (onBack) {
+            e.preventDefault();
+            onBack();
+          }
+          break;
+        case "Enter":
+        case " ":
+          if (focusIdx >= 0 && focusIdx < options.length) {
+            e.preventDefault();
+            onSelect(options[focusIdx].id);
+          }
+          break;
+        case "Escape":
+          if (onBack) {
+            e.preventDefault();
+            onBack();
+          }
+          break;
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [keyboardEnabled, disabled, options, focusIdx, onSelect, onBack]);
+
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <h2 id={titleId} className="text-2xl font-bold tracking-tight text-slate-900">
-          {question.title}
-        </h2>
-        {question.help && (
-          <p className="text-sm leading-relaxed text-slate-500">
-            {question.help}
+    <div className="md:grid md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:gap-12 lg:gap-16">
+      {/* Colonne intitulé (gauche sur desktop, en tête sur mobile) */}
+      <div className="md:sticky md:top-28 md:self-start">
+        <div className="space-y-2">
+          <h2
+            id={titleId}
+            className="text-2xl font-bold tracking-tight text-slate-900 md:text-[1.75rem] md:leading-snug"
+          >
+            {question.title}
+          </h2>
+          {question.help && (
+            <p className="text-sm leading-relaxed text-slate-500">
+              {question.help}
+            </p>
+          )}
+        </div>
+
+        {/* Rassurance + astuce clavier : desktop uniquement (mobile : géré ailleurs). */}
+        <div className="mt-8 hidden md:block">
+          <p className="text-xs leading-relaxed text-slate-400">
+            Aucune donnée identifiante, aucun nom de banque demandé.
           </p>
-        )}
+          <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-400">
+            <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[0.65rem] font-semibold text-slate-500">
+              1-{Math.min(options.length, 9)}
+            </kbd>
+            <span>ou</span>
+            <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[0.65rem] font-semibold text-slate-500">
+              ↑
+            </kbd>
+            <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[0.65rem] font-semibold text-slate-500">
+              ↓
+            </kbd>
+            <span>puis</span>
+            <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[0.65rem] font-semibold text-slate-500">
+              Entrée
+            </kbd>
+          </p>
+        </div>
       </div>
 
-      <ul role="radiogroup" aria-labelledby={titleId} className="space-y-3">
-        {question.options.map((option) => {
-          const selected = option.id === selectedOptionId;
-          return (
-            <li key={option.id}>
-              <button
-                type="button"
-                role="radio"
-                aria-checked={selected}
-                disabled={disabled}
-                onClick={() => onSelect(option.id)}
-                className={[
-                  "flex w-full min-h-[64px] items-center justify-between rounded-2xl border px-5 py-4 text-left transition-colors",
-                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2",
-                  "disabled:cursor-default",
-                  selected
-                    ? "border-indigo-600 bg-indigo-50 ring-2 ring-indigo-600"
-                    : "border-slate-200 bg-white hover:border-indigo-300 hover:bg-slate-50 active:bg-slate-100",
-                ].join(" ")}
-              >
-                <span>
-                  <span className="block text-base font-semibold text-slate-900">
-                    {option.label}
-                  </span>
-                  {option.hint && (
-                    <span className="block text-sm text-slate-500">
-                      {option.hint}
-                    </span>
-                  )}
-                </span>
-                <span
-                  className={[
-                    "ml-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border",
-                    selected
-                      ? "border-indigo-600 bg-indigo-600 text-white"
-                      : "border-slate-300",
-                  ].join(" ")}
-                  aria-hidden
-                >
-                  {selected && (
-                    <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 011.4-1.4l3.3 3.3 6.8-6.8a1 1 0 011.4 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  )}
-                </span>
-              </button>
-            </li>
-          );
-        })}
+      {/* Colonne options (droite sur desktop, sous l'intitulé sur mobile) */}
+      <ul
+        role="radiogroup"
+        aria-labelledby={titleId}
+        className="mt-6 space-y-3 md:mt-0"
+      >
+        {options.map((option, i) => (
+          <li key={option.id}>
+            <AnswerCard
+              qid={question.id}
+              optionId={option.id}
+              label={option.label}
+              hint={option.hint}
+              index={i + 1}
+              selected={option.id === selectedOptionId}
+              focused={i === focusIdx}
+              disabled={disabled}
+              onSelect={() => onSelect(option.id)}
+            />
+          </li>
+        ))}
       </ul>
     </div>
   );
