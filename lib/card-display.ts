@@ -77,6 +77,47 @@ export function parseComparisonSlug(slug: string): [string, string] | null {
   return [parts[0], parts[1]];
 }
 
+/**
+ * FAQ factuelle propre à une carte, dérivée de ses champs vérifiés. Cible les
+ * requêtes longue traîne « frais X retrait étranger », « X condition de revenu »,
+ * « X frais à l'étranger », etc. Réponses strictement descriptives (IOBSP) :
+ * aucun jugement, aucun « recommandé ». Alimente aussi le JSON-LD FAQPage.
+ */
+export function cardFaq(card: Card): { q: string; a: string }[] {
+  const faq: { q: string; a: string }[] = [];
+
+  faq.push({
+    q: `${card.name} a-t-elle des frais à l'étranger ?`,
+    a:
+      card.fx_fee_percent === 0
+        ? `Non : ${card.name} n'applique aucun frais de change sur les paiements hors zone euro (${fxLabel(card)}). Le taux de change du réseau ${card.network} s'applique néanmoins.`
+        : `Oui : ${card.name} applique des frais de change de ${fxLabel(card)} sur les paiements hors zone euro, en plus du taux de change du réseau ${card.network}.`,
+  });
+
+  faq.push({
+    q: `Quels sont les frais de retrait à l'étranger de ${card.name} ?`,
+    a: `${card.foreign_withdrawal} Ces conditions figurent dans la tarification officielle de ${card.issuer}.`,
+  });
+
+  faq.push({
+    q: `Quelle condition de revenu pour ${card.name} ?`,
+    a:
+      card.min_monthly_income_eur == null
+        ? `${card.name} n'affiche pas de condition de revenu à la souscription. L'ouverture reste soumise à l'acceptation de ${card.issuer}.`
+        : `${card.name} demande un revenu net d'environ ${incomeLabel(card).replace("≥ ", "")} pour être éligible, selon les conditions de ${card.issuer}.`,
+  });
+
+  faq.push({
+    q: `Combien coûte ${card.name} par an ?`,
+    a:
+      card.annual_fee_eur === 0
+        ? `La cotisation de ${card.name} est de 0 €${card.free_condition ? ` (${card.free_condition})` : ""}. Le coût réel dépend ensuite de vos usages (change, retraits) : le simulateur le chiffre.`
+        : `La cotisation de ${card.name} est de ${feeLabel(card)}. Le coût réel total dépend en plus de vos usages à l'étranger : le simulateur le chiffre.`,
+  });
+
+  return faq;
+}
+
 /** Date de vérification lisible « JJ/MM/AAAA » ou null si non vérifiée. */
 export function verifiedDate(card: Card): string | null {
   const iso = card.last_verified;

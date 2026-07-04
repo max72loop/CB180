@@ -9,11 +9,15 @@ import { notFound } from "next/navigation";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
 import CardVisual from "@/components/brand/CardVisual";
+import MiniSimulateur from "@/components/questionnaire/MiniSimulateur";
 import { getCard, publicCards } from "@/lib/cards";
 import { formatEur } from "@/lib/format";
+import { computeAnnualCost } from "@/lib/engine";
+import { USAGE_SCENARIOS } from "@/lib/scenarios";
 import {
   INSURANCE_LABEL,
   TIER_LABEL,
+  cardFaq,
   comparisonSlug,
   feeLabel,
   fxLabel,
@@ -46,14 +50,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!card) return { title: "Carte introuvable" };
 
   const fee = card.annual_fee_eur === 0 ? "gratuite" : feeLabel(card);
-  const description = `${card.name} (${card.issuer}) : cotisation ${fee}, frais de change hors zone euro ${fxLabel(card)}. Coût et conditions sur données officielles. Comparez selon vos usages avec CB180.`;
+  const description = `${card.name} (${card.issuer}) : avis factuel et coût réel. Cotisation ${fee}, frais de change hors zone euro ${fxLabel(card)}, conditions sur données officielles. Chiffrez le coût selon vos usages avec le simulateur CB180.`;
 
   return {
-    title: `${card.name} : coût et frais`,
+    title: `${card.name} : avis et coût réel`,
     description,
     alternates: { canonical: `/cartes/${card.id}` },
     openGraph: {
-      title: `${card.name} — coût réel et frais | CB180`,
+      title: `${card.name} — avis et coût réel | CB180`,
       description,
       type: "article",
     },
@@ -74,10 +78,20 @@ export default async function CartePage({ params }: Params) {
     .sort((a, b) => a.annual_fee_eur - b.annual_fee_eur || a.name.localeCompare(b.name))
     .slice(0, 4);
 
+  // Coût réel : coût annuel net estimé de CETTE carte pour 3 usages types.
+  // Chiffres déterministes (SSG), donc indexables — ils captent « coût réel ».
+  const scenarioCosts = USAGE_SCENARIOS.map((s) => ({
+    scenario: s,
+    netAnnual: computeAnnualCost(card, s.profile).netAnnualCostEur,
+  }));
+
+  // FAQ factuelle propre à la carte (longue traîne + JSON-LD FAQPage).
+  const faq = cardFaq(card);
+
   return (
     <>
       <SiteHeader />
-      <JsonLd card={card} />
+      <JsonLd card={card} faq={faq} />
 
       <main className="mx-auto max-w-5xl px-5 py-10">
         {/* Fil d'Ariane */}
@@ -177,6 +191,55 @@ export default async function CartePage({ params }: Params) {
           </dl>
         </section>
 
+        {/* Coût réel : notre analyse chiffrée selon 3 usages types (indexable) */}
+        <section className="mt-12">
+          <h2 className="text-xl font-bold tracking-tight text-slate-900">
+            {card.name} : le coût réel selon vos usages
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
+            La cotisation ne dit pas tout. Voici le coût annuel <em>net</em> estimé de{" "}
+            {card.name} pour trois profils d&apos;usage — cotisation, frais de
+            change et de retrait compris, primes et cashback déduits. Chiffres
+            calculés sur données officielles, pour un même moteur que le
+            simulateur.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            {scenarioCosts.map(({ scenario, netAnnual }) => (
+              <div
+                key={scenario.id}
+                className="rounded-2xl border border-slate-200 bg-white p-5"
+              >
+                <p className="text-sm font-semibold text-slate-900">
+                  {scenario.label}
+                </p>
+                <p className="mt-1 text-3xl font-extrabold text-slate-900">
+                  {netAnnual <= 0 ? formatEur(0) : formatEur(netAnnual)}
+                  <span className="text-sm font-medium text-slate-400">/an</span>
+                </p>
+                {netAnnual < 0 && (
+                  <p className="text-xs font-medium text-emerald-600">
+                    soit un gain net de {formatEur(Math.abs(netAnnual))}/an
+                  </p>
+                )}
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  {scenario.description}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-slate-400">
+            Estimations sur hypothèses explicites (retrait étranger moyen 100 €,
+            prime de bienvenue amortie sur 3 ans). Un coût négatif signifie que
+            la carte « rapporte » sur l&apos;horizon retenu. Votre cas exact peut
+            différer : ajustez-le ci-dessous.
+          </p>
+        </section>
+
+        {/* Widget de simulation embarqué, scopé sur cette carte */}
+        <section className="mt-8">
+          <MiniSimulateur card={card} />
+        </section>
+
         {/* Note de vérification (traçabilité) */}
         {card.verif_note && (
           <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
@@ -255,6 +318,30 @@ export default async function CartePage({ params }: Params) {
           </ul>
         </section>
 
+        {/* FAQ factuelle propre à la carte (longue traîne) */}
+        {faq.length > 0 && (
+          <section className="mt-12">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900">
+              {card.name} : questions fréquentes
+            </h2>
+            <div className="mt-4 divide-y divide-slate-200 border-y border-slate-200">
+              {faq.map((item) => (
+                <details key={item.q} className="group py-4">
+                  <summary className="flex cursor-pointer items-center justify-between gap-4 text-left font-semibold text-slate-900 marker:content-['']">
+                    {item.q}
+                    <span className="shrink-0 text-slate-400 transition-transform group-open:rotate-180">
+                      ⌄
+                    </span>
+                  </summary>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
+
         <p className="mt-8 text-xs leading-relaxed text-slate-500">
           CB180 est un site d&apos;information et de comparaison, non
           intermédiaire en opérations de banque. Cette fiche ne constitue ni un
@@ -281,8 +368,8 @@ function Fact({ label, value }: { label: string; value: string }) {
   );
 }
 
-/** Données structurées : produit financier + fil d'Ariane. */
-function JsonLd({ card }: { card: Card }) {
+/** Données structurées : produit financier + fil d'Ariane + FAQ. */
+function JsonLd({ card, faq }: { card: Card; faq: { q: string; a: string }[] }) {
   const SITE = SITE_URL;
   const financialProduct = {
     "@context": "https://schema.org",
@@ -313,6 +400,18 @@ function JsonLd({ card }: { card: Card }) {
       },
     ],
   };
+  const faqPage =
+    faq.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }
+      : null;
   return (
     <>
       <script
@@ -323,6 +422,12 @@ function JsonLd({ card }: { card: Card }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
+      {faqPage && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPage) }}
+        />
+      )}
     </>
   );
 }

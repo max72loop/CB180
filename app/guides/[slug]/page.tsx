@@ -147,6 +147,22 @@ export default async function GuidePage({ params }: Params) {
           </p>
         </section>
 
+        {/* Corps éditorial : sections de fond (E-E-A-T / profondeur SEO) */}
+        {guide.sections && guide.sections.length > 0 && (
+          <div className="mt-12 space-y-8">
+            {guide.sections.map((section) => (
+              <section key={section.h}>
+                <h2 className="text-xl font-bold tracking-tight text-slate-900">
+                  {section.h}
+                </h2>
+                <p className="mt-3 leading-relaxed text-slate-600">
+                  {section.body}
+                </p>
+              </section>
+            ))}
+          </div>
+        )}
+
         {/* CTA simulateur */}
         <section className="mt-10 overflow-hidden rounded-2xl bg-brand relative">
           <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/15 blur-2xl" />

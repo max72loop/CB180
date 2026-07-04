@@ -4,6 +4,7 @@
 // par coût. Aucun jugement « recommandé pour vous » : on filtre et on trie.
 
 import type { Card } from "./types";
+import guidesContent from "../data/guides-content.json";
 
 export interface Guide {
   slug: string;
@@ -19,6 +20,12 @@ export interface Guide {
   match: (c: Card) => boolean;
   /** Tri d'affichage (défaut : cotisation puis nom). */
   sort?: (a: Card, b: Card) => number;
+  /**
+   * Corps éditorial : sections de fond (titre + paragraphe) affichées sous la
+   * liste des cartes. Donne au guide une vraie profondeur (E-E-A-T) au-delà du
+   * simple filtre. Wording IOBSP : descriptif et factuel, jamais prescriptif.
+   */
+  sections?: { h: string; body: string }[];
   /** Questions/réponses pour le bloc FAQ (données structurées FAQPage). */
   faq: { q: string; a: string }[];
 }
@@ -31,7 +38,12 @@ const byFxThenFee = (a: Card, b: Card) =>
   a.annual_fee_eur - b.annual_fee_eur ||
   a.name.localeCompare(b.name);
 
-export const GUIDES: Guide[] = [
+/**
+ * Guides « historiques », définis intégralement en TS (prédicat + éditorial court).
+ * Les guides plus récents séparent le corps éditorial (data/guides-content.json)
+ * du prédicat de sélection (EDITORIAL_PREDICATES ci-dessous), fusionnés par slug.
+ */
+const CORE_GUIDES: Guide[] = [
   {
     slug: "carte-sans-frais-etranger",
     title: "Carte bancaire sans frais à l'étranger",
@@ -129,6 +141,116 @@ export const GUIDES: Guide[] = [
     ],
   },
 ];
+
+/** Sélection « sans frais de retrait » : la banque émettrice ne facture rien. */
+const noForeignWithdrawalFee = (c: Card) =>
+  (c.foreign_withdrawal_fee_percent ?? 0) === 0 &&
+  (c.foreign_withdrawal_flat_eur ?? 0) === 0;
+
+/** Émetteurs qualifiés de néobanques (100 % mobiles, sans agence). */
+const isNeobank = (c: Card) => /Revolut|N26/.test(c.issuer);
+
+/**
+ * Prédicat de sélection + tri de chaque guide « éditorial », associé par slug au
+ * corps rédactionnel de data/guides-content.json. Le prédicat porte l'objectivité
+ * réglementaire (on filtre des faits) ; l'éditorial porte la profondeur SEO.
+ */
+const EDITORIAL_PREDICATES: Record<
+  string,
+  { match: (c: Card) => boolean; sort?: (a: Card, b: Card) => number }
+> = {
+  "carte-avec-assurances-voyage": {
+    match: (c) =>
+      c.insurances_level === "premier_gold" || c.insurances_level === "elite",
+    sort: byFeeThenName,
+  },
+  "carte-sans-frais-retrait-etranger": {
+    match: noForeignWithdrawalFee,
+    sort: byFeeThenName,
+  },
+  "carte-pour-les-etats-unis": {
+    match: (c) => c.fx_fee_percent === 0 && noForeignWithdrawalFee(c),
+    sort: byFeeThenName,
+  },
+  "carte-gold-gratuite": {
+    match: (c) =>
+      c.annual_fee_eur === 0 &&
+      (c.tier === "intermediaire" ||
+        c.tier === "premium" ||
+        c.tier === "haut_de_gamme"),
+    sort: byFxThenFee,
+  },
+  "carte-mastercard-gratuite": {
+    match: (c) => c.network.includes("Mastercard") && c.annual_fee_eur === 0,
+    sort: byFxThenFee,
+  },
+  "carte-visa-gratuite": {
+    match: (c) => c.network.includes("Visa") && c.annual_fee_eur === 0,
+    sort: byFxThenFee,
+  },
+  "carte-avec-cashback": {
+    match: (c) => c.cashback != null,
+    sort: byFeeThenName,
+  },
+  "carte-avec-miles-aeriens": {
+    match: (c) => c.miles_program != null,
+    sort: byFeeThenName,
+  },
+  "carte-avec-prime-de-bienvenue": {
+    match: (c) => c.welcome_bonus_eur > 0,
+    sort: byFeeThenName,
+  },
+  "carte-neobanque": {
+    match: isNeobank,
+    sort: byFeeThenName,
+  },
+  "carte-pour-etudiant": {
+    match: (c) =>
+      c.annual_fee_eur === 0 &&
+      c.min_monthly_income_eur == null &&
+      c.tier === "entree",
+    sort: byFxThenFee,
+  },
+  "carte-premium-haut-de-gamme": {
+    match: (c) => c.tier === "premium" || c.tier === "haut_de_gamme",
+    sort: byFeeThenName,
+  },
+};
+
+interface GuideContent {
+  slug: string;
+  title: string;
+  metaDescription: string;
+  criterion: string;
+  intro: string;
+  sections: { h: string; body: string }[];
+  faq: { q: string; a: string }[];
+}
+
+/** Fusionne l'éditorial JSON avec son prédicat pour produire des Guide complets. */
+const EDITORIAL_GUIDES: Guide[] = (
+  guidesContent.guides as GuideContent[]
+).map((content) => {
+  const pred = EDITORIAL_PREDICATES[content.slug];
+  if (!pred) {
+    throw new Error(
+      `Guide « ${content.slug} » sans prédicat de sélection (EDITORIAL_PREDICATES).`,
+    );
+  }
+  return {
+    slug: content.slug,
+    title: content.title,
+    metaDescription: content.metaDescription,
+    intro: content.intro,
+    criterion: content.criterion,
+    match: pred.match,
+    sort: pred.sort,
+    sections: content.sections,
+    faq: content.faq,
+  };
+});
+
+export const GUIDES: Guide[] = [...CORE_GUIDES, ...EDITORIAL_GUIDES];
 
 export function getGuide(slug: string): Guide | undefined {
   return GUIDES.find((g) => g.slug === slug);
