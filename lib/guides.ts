@@ -54,7 +54,9 @@ const CORE_GUIDES: Guide[] = [
     criterion:
       "Frais de change à 0 % ET aucun frais de retrait en devises. Classement par cotisation croissante.",
     match: (c) =>
-      c.fx_fee_percent === 0 && (c.foreign_withdrawal_fee_percent ?? 0) === 0,
+      c.fx_fee_percent === 0 &&
+      (c.foreign_withdrawal_fee_percent ?? 0) === 0 &&
+      (c.foreign_withdrawal_flat_eur ?? 0) === 0,
     sort: byFeeThenName,
     faq: [
       {
@@ -105,6 +107,7 @@ const CORE_GUIDES: Guide[] = [
     match: (c) =>
       c.fx_fee_percent === 0 &&
       (c.foreign_withdrawal_fee_percent ?? 0) === 0 &&
+      (c.foreign_withdrawal_flat_eur ?? 0) === 0 &&
       (c.insurances_level === "premier_gold" || c.insurances_level === "elite"),
     sort: byFeeThenName,
     faq: [

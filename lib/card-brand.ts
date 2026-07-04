@@ -135,6 +135,27 @@ export const CARD_BRAND: Record<string, CardBrand> = {
     chip: "gold",
     pattern: "airfrance",
   },
+  "nickel-standard": {
+    background: "linear-gradient(135deg,#ff6a3d 0%,#e23900 100%)",
+    foreground: WHITE,
+    wordmark: "Nickel",
+    chip: "gold",
+    pattern: "diagonal",
+  },
+  "nickel-chrome": {
+    background: "linear-gradient(135deg,#cdd2d9 0%,#7c828b 100%)",
+    foreground: "#1a1d22",
+    wordmark: "Nickel",
+    chip: "silver",
+    pattern: "guilloche",
+  },
+  "nickel-metal": {
+    background: "linear-gradient(135deg,#3a3d42 0%,#101114 100%)",
+    foreground: WHITE,
+    wordmark: "Nickel",
+    chip: "silver",
+    pattern: "guilloche",
+  },
 };
 
 /** Replis génériques par gamme, si une carte n'est pas dans la table ci-dessus. */
