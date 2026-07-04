@@ -8,7 +8,7 @@
 
 import Image from "next/image";
 import type { Card } from "@/lib/types";
-import { cardBrand } from "@/lib/card-brand";
+import { cardBrand, type CardPatternKind } from "@/lib/card-brand";
 
 type CardTone = "brand" | "dark" | "emerald" | "slate";
 
@@ -145,6 +145,84 @@ export default function CardVisual({
 }
 
 /**
+ * Motif de fond distinctif d'une carte (original, dessiné en CSS/SVG). `ink` est
+ * une encre translucide adaptée au fond (claire sur carte sombre, sombre sur
+ * carte claire) ; `accent` colore les éléments de marque. Purement décoratif.
+ */
+function CardPattern({
+  kind,
+  ink,
+  accent = "rgba(255,255,255,0.4)",
+}: {
+  kind: CardPatternKind;
+  ink: string;
+  accent?: string;
+}) {
+  const box = "pointer-events-none absolute inset-0";
+  switch (kind) {
+    case "diagonal":
+      return (
+        <div
+          className={box}
+          style={{
+            background: `repeating-linear-gradient(45deg, transparent 0 12px, ${ink} 12px 19px)`,
+          }}
+        />
+      );
+    case "guilloche":
+      return (
+        <div
+          className={box}
+          style={{
+            background: `repeating-linear-gradient(90deg, transparent 0 4px, ${ink} 4px 5px)`,
+          }}
+        />
+      );
+    case "waves":
+      return (
+        <svg className={box} viewBox="0 0 100 63" preserveAspectRatio="none" aria-hidden>
+          <g fill="none" stroke="currentColor" strokeWidth="1.1" opacity="0.14">
+            <path d="M100 14 A 62 62 0 0 1 34 63" />
+            <path d="M100 30 A 46 46 0 0 1 52 63" />
+            <path d="M100 46 A 30 30 0 0 1 70 63" />
+          </g>
+        </svg>
+      );
+    case "geo":
+      return (
+        <svg className={box} viewBox="0 0 100 63" preserveAspectRatio="none" aria-hidden>
+          <polygon points="100,0 100,36 58,0" fill={accent} opacity="0.4" />
+          <polygon points="0,63 0,30 44,63" fill="currentColor" opacity="0.07" />
+        </svg>
+      );
+    case "edge":
+      return (
+        <svg className={box} viewBox="0 0 100 63" preserveAspectRatio="none" aria-hidden>
+          <rect x="0" y="0" width="6" height="63" fill={accent} />
+          <rect x="7.5" y="0" width="1.4" height="63" fill={accent} opacity="0.45" />
+        </svg>
+      );
+    case "airfrance":
+      return (
+        <>
+          <div
+            className={box}
+            style={{
+              background: `repeating-linear-gradient(90deg, transparent 0 4px, ${ink} 4px 5px)`,
+            }}
+          />
+          <svg className={box} viewBox="0 0 100 63" preserveAspectRatio="none" aria-hidden>
+            <rect x="0" y="7" width="100" height="6.5" fill="#002157" opacity="0.9" />
+            <rect x="0" y="13.5" width="100" height="1.6" fill="#e00034" />
+          </svg>
+        </>
+      );
+    default:
+      return null;
+  }
+}
+
+/**
  * Visuel d'une carte NOMMÉE, pour les fiches / listes de produits réels.
  *
  * - Si `card.image` est renseignée : affiche l'image officielle (sous licence
@@ -189,6 +267,9 @@ export function ProductCardVisual({
   }
 
   const brand = cardBrand(card);
+  // Encre du motif adaptée au fond : sombre sur carte claire, claire sur sombre.
+  const onLight = brand.foreground !== "#ffffff";
+  const ink = onLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.06)";
   return (
     <div
       role="img"
@@ -200,6 +281,7 @@ export function ProductCardVisual({
       ].join(" ")}
       style={{ background: brand.background, color: brand.foreground }}
     >
+      <CardPattern kind={brand.pattern} ink={ink} accent={brand.accent} />
       <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
 
       <div className="relative flex h-full flex-col justify-between">
