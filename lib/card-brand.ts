@@ -164,6 +164,51 @@ export const CARD_BRAND: Record<string, CardBrand> = {
     pattern: "edge",
     accent: "rgba(255,255,255,0.4)",
   },
+  "wise-card": {
+    background: "linear-gradient(135deg,#9fe870 0%,#5bc236 100%)",
+    foreground: "#163300",
+    wordmark: "Wise",
+    chip: "gold",
+    pattern: "geo",
+    accent: "rgba(22,51,0,0.25)",
+  },
+  "bforbank-visa": {
+    background: "linear-gradient(135deg,#2b2f36 0%,#0c0e12 100%)",
+    foreground: WHITE,
+    wordmark: "BforBank",
+    chip: "silver",
+    pattern: "edge",
+    accent: "#12b3a6",
+  },
+  "revolut-metal": {
+    background: "linear-gradient(135deg,#4a4f57 0%,#17191e 100%)",
+    foreground: WHITE,
+    wordmark: "Revolut",
+    chip: "silver",
+    pattern: "diagonal",
+  },
+  "n26-you": {
+    background: "linear-gradient(135deg,#1fb6a6 0%,#0c7d72 100%)",
+    foreground: WHITE,
+    wordmark: "N26",
+    chip: "silver",
+    pattern: "edge",
+    accent: "rgba(255,255,255,0.55)",
+  },
+  "amex-platinum": {
+    background: "linear-gradient(135deg,#e7e9ec 0%,#a9b0b8 100%)",
+    foreground: "#1f2937",
+    wordmark: "American Express",
+    chip: "silver",
+    pattern: "guilloche",
+  },
+  "hellobank-one": {
+    background: "linear-gradient(135deg,#4fd1a5 0%,#00a878 100%)",
+    foreground: WHITE,
+    wordmark: "Hello bank!",
+    chip: "gold",
+    pattern: "diagonal",
+  },
 };
 
 /** Replis génériques par gamme, si une carte n'est pas dans la table ci-dessus. */
