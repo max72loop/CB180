@@ -1,7 +1,7 @@
 {
   "project": "CB180",
   "version": "1.0",
-  "note": "Catalogue 18 cartes. 16 cartes VERIFIEES sur source officielle (13 le 2026-07-03, 3 Nickel le 2026-07-04) (voir cards_v1_verified.json et rapport_verification_cartes.md pour URL/dates/citations). 2 cartes de reference generiques restent indicatives (to_verify: true). Les champs [moteur] traduisent les politiques officielles dans la semantique du moteur (retraits EN DEVISES, quota au nombre a ~100 EUR/retrait). Primes = base recurrente confirmee (null non confirme -> 0).",
+  "note": "Catalogue 19 cartes. 17 cartes VERIFIEES sur source officielle (13 le 2026-07-03, 3 Nickel le 2026-07-04, Trade Republic le 2026-07-05) (voir cards_v1_verified.json et rapport_verification_cartes.md pour URL/dates/citations). 2 cartes de reference generiques restent indicatives (to_verify: true). Les champs [moteur] traduisent les politiques officielles dans la semantique du moteur (retraits EN DEVISES, quota au nombre a ~100 EUR/retrait). Primes = base recurrente confirmee (null non confirme -> 0).",
   "cards": [
     {
       "id": "boursobank-welcome",
@@ -515,6 +515,42 @@
       "foreign_withdrawal_fee_percent": 0,
       "foreign_withdrawal_flat_eur": 0,
       "free_foreign_withdrawals_per_month": 0,
+      "cashback_rate_percent": 0,
+      "cashback_cap_eur": null,
+      "min_monthly_income_eur": null
+    },
+    {
+      "id": "trade-republic-card",
+      "name": "Trade Republic Carte",
+      "issuer": "Trade Republic",
+      "network": "Visa",
+      "tier": "entree",
+      "monthly_fee_eur": 0,
+      "annual_fee_eur": 0,
+      "free_condition": "Carte virtuelle gratuite ; carte physique Classic 5 EUR une fois (frais d'envoi), Mirror 50 EUR. Sans condition de revenu.",
+      "fx_fee_percent": 0,
+      "foreign_withdrawal": "Paiements en devises sans frais (taux de change Visa, sans majoration). Retraits gratuits et illimites dans le monde au-dela de 100 EUR par retrait, 1 EUR en dessous.",
+      "insurances_level": "none",
+      "cashback": "Saveback : 1% des paiements reverse sur un plan d'epargne (max 15 EUR/mois)",
+      "miles_program": null,
+      "welcome_bonus_eur": 0,
+      "affiliate": {
+        "network": "programme direct",
+        "est_commission_eur": 30,
+        "status": "à candidater"
+      },
+      "target_profiles": [
+        "digital_natif",
+        "petit_budget",
+        "optimiseur_gratuit"
+      ],
+      "last_verified": "2026-07-05",
+      "source_url": "https://traderepublic.com/fr-fr/carte",
+      "to_verify": false,
+      "verif_note": "Carte Visa debit Trade Republic (Trade Republic Bank GmbH, IBAN DE). fx=0 : paiements en devises au taux Visa sans majoration. Retraits gratuits illimites au-dela de 100 EUR/retrait (1 EUR en dessous) -> avec un retrait moyen suppose de 100 EUR, cout retrait = 0. Saveback = 1% des paiements (plafond 15 EUR/mois soit 180 EUR/an) MAIS verse sur un plan d'epargne (investissement, pas du cash) et conditionne a un plan d'epargne actif -> non credite au moteur par prudence, comme les RevPoints Revolut ; a repasser a cashback_rate_percent=1 si la methodologie evolue. Commission d'affiliation non confirmee (pas de programme CPA public identifie). Aucune assurance sur la carte. Prime=0.",
+      "foreign_withdrawal_fee_percent": 0,
+      "foreign_withdrawal_flat_eur": 0,
+      "free_foreign_withdrawals_per_month": 99,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
       "min_monthly_income_eur": null

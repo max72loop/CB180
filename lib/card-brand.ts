@@ -156,6 +156,14 @@ export const CARD_BRAND: Record<string, CardBrand> = {
     chip: "silver",
     pattern: "guilloche",
   },
+  "trade-republic-card": {
+    background: "linear-gradient(135deg,#1c1c1c 0%,#000000 100%)",
+    foreground: WHITE,
+    wordmark: "Trade Republic",
+    chip: "silver",
+    pattern: "edge",
+    accent: "rgba(255,255,255,0.4)",
+  },
 };
 
 /** Replis génériques par gamme, si une carte n'est pas dans la table ci-dessus. */
