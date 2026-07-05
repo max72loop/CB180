@@ -39,6 +39,22 @@ import ResultsPreview from "@/components/results/ResultsPreview";
 
 interface SimulateurProps {
   cards: Card[];
+  /**
+   * Réponses pré-remplies (pages profil : PVT, expat…). Le parcours démarre sur
+   * ce jeu de réponses plutôt que vide ; « recommencer » y revient.
+   */
+  initialAnswers?: Answers;
+  /**
+   * Phase d'entrée. Les pages profil atterrissent directement sur « quickResult »
+   * (le chiffre d'abord) plutôt que sur l'intro générique.
+   */
+  initialPhase?: Phase;
+  /**
+   * Journalisation funnel + audit anonymisé (défaut true sur /simulateur).
+   * Désactivée sur les pages profil pré-remplies pour ne pas mélanger leur
+   * trafic au funnel générique (un suivi dédié pourra être ajouté ensuite).
+   */
+  analytics?: boolean;
 }
 
 /**
@@ -77,7 +93,7 @@ type Action =
   | { type: "seeAll" }
   | { type: "calcDone" }
   | { type: "edit" }
-  | { type: "restart" };
+  | { type: "reset"; state: State };
 
 /** Délai laissant voir la sélection confirmée avant de passer à l'écran suivant. */
 const ADVANCE_DELAY_MS = 420;
@@ -139,8 +155,9 @@ function reducer(state: State, action: Action): State {
     case "edit":
       // Depuis les résultats complets : revenir corriger la dernière question.
       return { ...state, phase: "question", step: LAST_STEP };
-    case "restart":
-      return { phase: "intro", step: 0, answers: {}, calcTarget: "quick" };
+    case "reset":
+      // Retour à l'état initial (vide sur /simulateur, pré-rempli sur une page profil).
+      return action.state;
     default:
       return state;
   }
@@ -162,13 +179,32 @@ function coherenceWarning(answers: Answers): string | null {
   return null;
 }
 
-export default function Simulateur({ cards }: SimulateurProps) {
-  const [state, dispatch] = useReducer(reducer, {
-    phase: "intro",
-    step: 0,
-    answers: {},
-    calcTarget: "quick",
-  });
+export default function Simulateur({
+  cards,
+  initialAnswers,
+  initialPhase = "intro",
+  analytics = true,
+}: SimulateurProps) {
+  // État initial dérivé des props : vide sur /simulateur, pré-rempli sur une
+  // page profil. Mémoïsé pour servir aussi de cible au « recommencer ».
+  const initialState = useMemo<State>(
+    () => ({
+      phase: initialPhase,
+      step: 0,
+      answers: initialAnswers ?? {},
+      calcTarget: "quick",
+    }),
+    [initialPhase, initialAnswers],
+  );
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  /** Journalisation funnel, muette si l'analytics est désactivée (pages profil). */
+  const emit = useCallback(
+    (eventType: Parameters<typeof logFunnelEvent>[0]) => {
+      if (analytics) logFunnelEvent(eventType);
+    },
+    [analytics],
+  );
   const [advancing, setAdvancing] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   // P9 : message de cohérence en attente + mémoire d'acquittement (une fois suffit).
@@ -197,8 +233,8 @@ export default function Simulateur({ cards }: SimulateurProps) {
   useEffect(() => {
     if (arrived.current) return;
     arrived.current = true;
-    logFunnelEvent("arrivee");
-  }, []);
+    emit("arrivee");
+  }, [emit]);
 
   /** Lance la temporisation d'auto-avance vers l'écran suivant. */
   const scheduleAdvance = useCallback(() => {
@@ -257,14 +293,14 @@ export default function Simulateur({ cards }: SimulateurProps) {
   }, [state.phase]);
 
   const startQuestionnaire = useCallback(() => {
-    logFunnelEvent("start_quiz");
+    emit("start_quiz");
     dispatch({ type: "start" });
-  }, []);
+  }, [emit]);
 
   const startRefine = useCallback(() => {
-    logFunnelEvent("affiner");
+    emit("affiner");
     dispatch({ type: "startRefine" });
-  }, []);
+  }, [emit]);
 
   const seeAllCards = useCallback(() => {
     dispatch({ type: "seeAll" });
@@ -295,19 +331,19 @@ export default function Simulateur({ cards }: SimulateurProps) {
   useEffect(() => {
     if (state.phase !== "quickResult" || quickwinLogged.current) return;
     quickwinLogged.current = true;
-    logFunnelEvent("quickwin");
-  }, [state.phase]);
+    emit("quickwin");
+  }, [state.phase, emit]);
 
   // À l'arrivée sur les résultats complets : « complete » si les 8 questions
   // sont réellement renseignées (pas via le raccourci « Voir le classement »),
   // puis enregistrement de l'audit anonymisé (fourchettes + résultat), une seule
   // fois. Fire-and-forget : un échec réseau/DB ne casse jamais le parcours.
   useEffect(() => {
-    if (!onResults || !engine) return;
+    if (!onResults || !engine || !analytics) return;
 
     if (isComplete(state.answers) && !completeLogged.current) {
       completeLogged.current = true;
-      logFunnelEvent("complete");
+      emit("complete");
     }
 
     if (audited.current) return;
@@ -327,7 +363,7 @@ export default function Simulateur({ cards }: SimulateurProps) {
       .catch(() => {
         /* silencieux : le stockage est optionnel côté UX */
       });
-  }, [onResults, engine, state.answers]);
+  }, [onResults, engine, state.answers, analytics, emit]);
 
   const handleRestart = useCallback(() => {
     audited.current = false;
@@ -336,8 +372,8 @@ export default function Simulateur({ cards }: SimulateurProps) {
     completeLogged.current = false;
     setSessionId(null);
     setCoherenceMsg(null);
-    dispatch({ type: "restart" });
-  }, []);
+    dispatch({ type: "reset", state: initialState });
+  }, [initialState]);
 
   const handleEdit = useCallback(() => {
     audited.current = false;
