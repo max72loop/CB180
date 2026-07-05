@@ -10,7 +10,7 @@
 //  2. Gain annuel honnête : écart avec la carte la moins chère, vue récurrente par
 //     défaut, avec mention de la part de prime non récurrente.
 //  3. Cartes non éligibles regroupées à part (splitByEligibility), jamais retirées.
-//  4. Commissions d'affiliation affichées en clair + composition du coût (costComposition).
+//  4. Caractère affilié des liens indiqué (sans montant) + composition du coût (costComposition).
 //
 // L'audit est déjà enregistré par le parent (fire-and-forget). Ici : capture email
 // (stockage séparé du profil) et event de clic affilié.
@@ -150,6 +150,8 @@ export default function ResultsPreview({
         <Reveal current={current} best={bestRecurring} sessionId={sessionId} />
       )}
 
+      {/* Le détail garde une largeur de lecture confortable sous la révélation. */}
+      <div className="mx-auto w-full max-w-2xl space-y-8">
       {!incomeDisclosed && (
         <p className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-600">
           Revenu non renseigné : toutes les cartes sont affichées sans
@@ -286,6 +288,7 @@ export default function ResultsPreview({
           banque et évaluez votre situation personnelle.
         </p>
       </div>
+      </div>
     </div>
   );
 }
@@ -399,11 +402,17 @@ function Reveal({
   const counted = useCountUp(improves ? gain : currentCost);
 
   return (
-    <div className="space-y-6">
+    <div
+      className={
+        improves
+          ? "space-y-6 md:grid md:grid-cols-2 md:items-start md:gap-6 md:space-y-0"
+          : "space-y-6"
+      }
+    >
       {/* ─ Acte 1 : le grand chiffre, au-dessus de la ligne de flottaison ─ */}
       <section
         className={[
-          "animate-step overflow-hidden rounded-3xl border p-6 text-center md:p-8",
+          "animate-step flex flex-col justify-center overflow-hidden rounded-3xl border p-6 text-center md:p-8",
           improves
             ? "border-emerald-200 bg-gradient-to-b from-emerald-50 to-white"
             : "border-slate-200 bg-slate-50",
@@ -713,14 +722,10 @@ function RankedCardRow({
         </div>
       </details>
 
-      {/* Transparence affiliée : commission affichée en clair */}
-      {card.affiliate.network && card.affiliate.est_commission_eur > 0 && (
+      {/* Transparence affiliée : caractère affilié du lien, sans montant. */}
+      {card.affiliate.network && (
         <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
-          Lien affilié, commission estimée versée à CB180 :{" "}
-          <span className="font-medium text-slate-700">
-            {formatEur(card.affiliate.est_commission_eur)}
-          </span>
-          . N&apos;influence pas le classement.
+          Lien affilié. N&apos;influence pas le classement.
         </p>
       )}
 

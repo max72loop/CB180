@@ -60,6 +60,26 @@ export function welcomeLabel(card: Card): string {
 }
 
 /**
+ * Atouts COURTS d'une carte pour un affichage compact (tags), dérivés de ses
+ * champs vérifiés et ordonnés du plus DIFFÉRENCIANT au moins (condition de
+ * revenu, assurances, retraits, prime, change) : dans une liste de bonnes
+ * cartes, les traits rares ressortent avant ceux que tout le monde partage.
+ * Descriptif (IOBSP), jamais prescriptif. `max` borne le nombre renvoyé.
+ */
+export function cardHighlights(card: Card, max = 2): string[] {
+  const out: string[] = [];
+  if (card.min_monthly_income_eur == null) out.push("Sans condition de revenu");
+  if (card.insurances_level === "premier_gold" || card.insurances_level === "elite")
+    out.push("Assurances voyage incluses");
+  const freeFw = card.free_foreign_withdrawals_per_month ?? 0;
+  if (freeFw >= 100) out.push("Retraits illimités à l'étranger");
+  else if (freeFw > 0) out.push(`${freeFw} retraits gratuits/mois à l'étranger`);
+  if (card.welcome_bonus_eur > 0) out.push(`Prime ${formatEur(card.welcome_bonus_eur)}`);
+  if (card.fx_fee_percent === 0) out.push("0 % de frais de change");
+  return out.slice(0, max);
+}
+
+/**
  * Slug canonique d'une comparaison de deux cartes : ids triés + « -vs- »,
  * pour qu'une même paire n'ait qu'une seule URL (pas de doublon A-vs-B / B-vs-A).
  */

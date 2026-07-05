@@ -104,8 +104,8 @@ export default function MentionsLegalesPage() {
               <strong>Relations et rémunération.</strong> Certains liens sortants
               sont <strong>affiliés</strong> : une commission peut être versée à
               l&apos;éditeur si vous ouvrez une carte via un lien. Cette
-              commission estimée est <strong>affichée en clair</strong> sur chaque
-              fiche et <strong>n&apos;influence pas le classement</strong>.
+              rémunération <strong>n&apos;influence pas le classement</strong>,
+              établi objectivement selon le coût annuel net.
             </li>
             <li>
               <strong>Périmètre.</strong> Le comparateur porte sur une{" "}

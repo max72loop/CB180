@@ -270,16 +270,12 @@ export default async function CartePage({ params }: Params) {
           </section>
         )}
 
-        {/* Transparence affiliée */}
-        {card.affiliate.est_commission_eur > 0 && (
+        {/* Transparence affiliée : caractère affilié du lien, sans montant. */}
+        {card.affiliate.network != null && (
           <p className="mt-6 rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs text-slate-500">
-            Transparence : si vous ouvrez cette carte via notre lien, une
-            commission estimée de{" "}
-            <span className="font-medium text-slate-700">
-              {formatEur(card.affiliate.est_commission_eur)}
-            </span>{" "}
-            peut être versée à CB180. Elle n&apos;influence pas le classement,
-            établi objectivement selon le coût annuel.
+            Si vous ouvrez cette carte via notre lien, il s&apos;agit d&apos;un
+            lien affilié. Il n&apos;influence pas le classement, établi
+            objectivement selon le coût annuel.
           </p>
         )}
 

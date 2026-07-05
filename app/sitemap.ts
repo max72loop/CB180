@@ -6,6 +6,7 @@ import { publicCards } from "@/lib/cards";
 import { comparisonSlug } from "@/lib/card-display";
 import { GUIDES } from "@/lib/guides";
 import { BANKS } from "@/lib/banks";
+import { PROFILS } from "@/lib/profils";
 import { SITE_URL } from "@/lib/site";
 
 const SITE = SITE_URL;
@@ -43,6 +44,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
+  // Landing pages par profil (intentions d'achat contextuelles : PVT, expat…).
+  const profilEntries: MetadataRoute.Sitemap = PROFILS.map((p) => ({
+    url: `${SITE}/profils/${p.slug}`,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
   const pub = publicCards();
 
   const cardEntries: MetadataRoute.Sitemap = pub.map((card) => ({
@@ -68,6 +76,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticEntries,
     ...guideEntries,
     ...bankEntries,
+    ...profilEntries,
     ...cardEntries,
     ...comparisonEntries,
   ];
