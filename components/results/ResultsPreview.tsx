@@ -10,7 +10,7 @@
 //  2. Gain annuel honnête : écart avec la carte la moins chère, vue récurrente par
 //     défaut, avec mention de la part de prime non récurrente.
 //  3. Cartes non éligibles regroupées à part (splitByEligibility), jamais retirées.
-//  4. Commissions d'affiliation affichées en clair + composition du coût (costComposition).
+//  4. Caractère affilié des liens indiqué (sans montant) + composition du coût (costComposition).
 //
 // L'audit est déjà enregistré par le parent (fire-and-forget). Ici : capture email
 // (stockage séparé du profil) et event de clic affilié.
@@ -722,14 +722,10 @@ function RankedCardRow({
         </div>
       </details>
 
-      {/* Transparence affiliée : commission affichée en clair */}
-      {card.affiliate.network && card.affiliate.est_commission_eur > 0 && (
+      {/* Transparence affiliée : caractère affilié du lien, sans montant. */}
+      {card.affiliate.network && (
         <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
-          Lien affilié, commission estimée versée à CB180 :{" "}
-          <span className="font-medium text-slate-700">
-            {formatEur(card.affiliate.est_commission_eur)}
-          </span>
-          . N&apos;influence pas le classement.
+          Lien affilié. N&apos;influence pas le classement.
         </p>
       )}
 

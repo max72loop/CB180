@@ -88,8 +88,7 @@ export default function CommentCaMarchePage() {
         <Section title="Le financement et les liens affiliés">
           <p>
             Certains liens sont affiliés : si vous ouvrez une carte via un lien,
-            l&apos;émetteur peut verser une commission à CB180. Cette commission
-            est <strong>affichée en clair</strong> sur chaque carte et{" "}
+            l&apos;émetteur peut verser une commission à CB180. Cette rémunération{" "}
             <strong>n&apos;influence pas le classement</strong>, qui reste trié par
             coût annuel net. Aucune donnée n&apos;est transmise aux établissements :
             c&apos;est vous qui cliquez, de votre propre initiative.

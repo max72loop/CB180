@@ -210,8 +210,8 @@ function ValueProps() {
     },
     {
       icon: <EyeIcon className="h-6 w-6 text-white" />,
-      title: "Transparence radicale",
-      body: "Les liens sont affiliés et la commission est affichée en clair. Elle n'influence jamais le classement.",
+      title: "Un financement clair",
+      body: "Certains liens sont affiliés. Ils n'influencent jamais le classement, qui reste trié par coût annuel net.",
     },
   ];
   return (
@@ -364,9 +364,7 @@ function ExampleResult() {
               </div>
             </dl>
             <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
-              Lien affilié, commission estimée versée à CB180 :{" "}
-              <span className="font-medium text-slate-700">80 €</span>.
-              N&apos;influence pas le classement.
+              Lien affilié. N&apos;influence pas le classement.
             </p>
           </div>
         </div>
@@ -522,7 +520,7 @@ function Transparency() {
   const points = [
     "Le classement est établi selon un seul critère objectif : le coût annuel net.",
     "Le même calcul, avec les mêmes hypothèses, s'applique à toutes les cartes.",
-    "Les liens affiliés sont identifiés et la commission estimée est affichée en clair.",
+    "Les liens affiliés sont clairement identifiés comme tels.",
     "La rémunération n'influe pas sur l'ordre du classement, et nous le disons.",
     "Les données proviennent des documents tarifaires publics, avec une date de dernière vérification par carte.",
   ];
@@ -573,7 +571,7 @@ function Faq() {
     },
     {
       q: "Comment CB180 est-il financé ?",
-      a: "Par des liens affiliés : si vous ouvrez une carte via un lien, l'émetteur peut verser une commission. Elle est affichée en clair et n'influence pas le classement, qui reste trié par coût annuel net.",
+      a: "Par des liens affiliés : si vous ouvrez une carte via un lien, l'émetteur peut verser une commission. Elle n'influence pas le classement, qui reste trié par coût annuel net.",
     },
     {
       q: "Les chiffres sont-ils à jour ?",
