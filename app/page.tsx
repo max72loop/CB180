@@ -65,7 +65,7 @@ function Hero() {
               href="/simulateur"
               className="inline-flex w-full items-center justify-center rounded-xl bg-brand px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-indigo-600/25 transition-transform hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 sm:w-auto"
             >
-              Lancer la simulation, gratuit
+              Lancer la simulation
             </Link>
             <Link
               href="/comment-ca-marche"
