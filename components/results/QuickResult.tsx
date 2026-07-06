@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import type { CostBreakdown, RankedCard } from "@/lib/types";
 import { formatEur, formatSignedEur } from "@/lib/format";
 import ShareResult from "@/components/results/ShareResult";
+import { shareCompoFromBreakdown } from "@/lib/share";
 
 interface QuickResultProps {
   current: CostBreakdown;
@@ -176,7 +177,10 @@ export default function QuickResult({
             )}
 
             <div className="mt-4 border-t border-emerald-200 pt-4">
-              <ShareResult gainEur={gain} />
+              <ShareResult
+                gainEur={gain}
+                composition={shareCompoFromBreakdown(current)}
+              />
             </div>
           </div>
         ) : (

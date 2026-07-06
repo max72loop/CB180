@@ -11,21 +11,32 @@
 
 import { useState } from "react";
 import { SITE_URL } from "@/lib/site";
+import { buildShareSlug, type ShareCompo } from "@/lib/share";
 
 interface ShareResultProps {
   /** Économie annuelle estimée, en euros (vs la carte la moins chère). */
   gainEur: number;
+  /**
+   * Décomposition du coût actuel (cotisation / change / retrait). Transmise dans
+   * le lien de partage pour que l'image Open Graph dessine le radar de coût.
+   * Optionnelle : sans elle, le partage retombe sur le visuel « montant seul ».
+   */
+  composition?: ShareCompo | null;
   sessionId?: string | null;
 }
 
-export default function ShareResult({ gainEur, sessionId }: ShareResultProps) {
+export default function ShareResult({
+  gainEur,
+  composition,
+  sessionId,
+}: ShareResultProps) {
   const [copied, setCopied] = useState(false);
 
   // Partage réservé à une économie réelle et positive (sinon rien à claironner).
   const amount = Math.round(gainEur);
   if (amount <= 0) return null;
 
-  const url = `${SITE_URL}/partage/${amount}`;
+  const url = `${SITE_URL}/partage/${buildShareSlug(amount, composition)}`;
   const text = `J'économise ${amount} €/an sur ma carte bancaire, calculé par CB180. Et vous, combien ?`;
 
   function logShare() {

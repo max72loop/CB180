@@ -20,6 +20,7 @@ import { costComposition, splitByEligibility } from "@/lib/engine";
 import { MiniCard } from "@/components/brand/CardVisual";
 import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
 import ShareResult from "@/components/results/ShareResult";
+import { shareCompoFromBreakdown } from "@/lib/share";
 import type { Card, CostBreakdown, CostShare, RankedCard } from "@/lib/types";
 import { formatEur, formatEurCents, formatSignedEur } from "@/lib/format";
 
@@ -466,7 +467,11 @@ function Reveal({
         {/* Boucle virale : le chiffre est le contenu de partage (audit, chantier 05) */}
         {improves && (
           <div className="mt-5 border-t border-emerald-200 pt-5">
-            <ShareResult gainEur={gain} sessionId={sessionId} />
+            <ShareResult
+              gainEur={gain}
+              composition={shareCompoFromBreakdown(current)}
+              sessionId={sessionId}
+            />
           </div>
         )}
       </section>
