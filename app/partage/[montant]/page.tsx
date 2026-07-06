@@ -9,13 +9,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-
-/** Borne le montant partagé à une fourchette crédible (évite les URLs absurdes). */
-function parseMontant(raw: string): number | null {
-  const n = Math.round(Number(raw));
-  if (!Number.isFinite(n) || n <= 0 || n > 3000) return null;
-  return n;
-}
+import { parseShareSlug } from "@/lib/share";
 
 export async function generateMetadata({
   params,
@@ -23,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ montant: string }>;
 }): Promise<Metadata> {
   const { montant } = await params;
-  const amount = parseMontant(montant);
+  const { amount } = parseShareSlug(montant);
   // Le titre est complété par le gabarit « %s : CB180 » du layout racine.
   const title = amount
     ? `Économiser ${amount} €/an sur sa carte bancaire`
@@ -45,7 +39,7 @@ export default async function PartagePage({
   params: Promise<{ montant: string }>;
 }) {
   const { montant } = await params;
-  const amount = parseMontant(montant);
+  const { amount } = parseShareSlug(montant);
 
   return (
     <>
