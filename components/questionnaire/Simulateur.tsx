@@ -4,11 +4,11 @@
 // Orchestrateur du simulateur en DEUX PHASES (réduction de friction) :
 //
 //   intro → quick win (3 questions) → calcul court → écart estimé « SON chiffre »
-//         → [Affiner] → affinage (5 questions) → calcul → résultats complets
+//         → [Affiner] → affinage (3 questions) → calcul → résultats complets
 //         └ ou [Voir le classement] → résultats complets directement
 //
 // Le même moteur pur (lib/engine) tourne sur un profil construit par
-// answersToProfileLenient : 3 réponses réelles + défauts prudents, puis 8 réelles.
+// answersToProfileLenient : 3 réponses réelles + défauts prudents, puis 6 réelles.
 // État 100 % en mémoire React (useReducer), aucune persistance navigateur (RGPD).
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
@@ -16,13 +16,11 @@ import Link from "next/link";
 import {
   QUESTIONS,
   QUICK_WIN_IDS,
-  REFINE_IDS,
+  DISPLAY_ORDER,
   answersToProfileLenient,
-  answeredCount,
   quickWinAnsweredCount,
   isComplete,
   isIncomeDisclosed,
-  selectedBand,
   type Answers,
   type QuestionId,
 } from "@/lib/answers";
@@ -31,7 +29,6 @@ import { computeCurrentSituationCost, rankCards } from "@/lib/engine";
 import type { Card } from "@/lib/types";
 import { Logo } from "@/components/brand/Logo";
 import IntroScreen from "./IntroScreen";
-import ProgressBar from "./ProgressBar";
 import QuestionStep from "./QuestionStep";
 import CalculatingScreen from "./CalculatingScreen";
 import QuickResult from "@/components/results/QuickResult";
@@ -57,19 +54,9 @@ interface SimulateurProps {
   analytics?: boolean;
 }
 
-/**
- * Ordre d'AFFICHAGE : d'abord les 3 questions du quick win, puis les 5 de
- * l'affinage. Source unique dérivée de lib/answers ; `answersToProfileLenient`
- * retrouve chaque réponse par son id, indépendamment de cet ordre.
- */
-const DISPLAY_ORDER: QuestionId[] = [...QUICK_WIN_IDS, ...REFINE_IDS];
 /** Nombre de questions du quick win (frontière quick / affinage). */
 const QUICK_COUNT = QUICK_WIN_IDS.length;
 const LAST_STEP = DISPLAY_ORDER.length - 1;
-const TOTAL_QUESTIONS = DISPLAY_ORDER.length;
-
-/** Index d'affichage de la question « part hors euro » (pour la correction P9). */
-const FOREIGN_SHARE_STEP = DISPLAY_ORDER.indexOf("foreignShare");
 
 type Phase = "intro" | "question" | "calculating" | "quickResult" | "results";
 /** Destination après l'écran de calcul : chiffre express ou résultats complets. */
@@ -163,22 +150,6 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-/**
- * Priorité 9 : garde-fou de cohérence LÉGER. Si l'utilisateur déclare voyager
- * souvent hors Europe (question d'affinage) mais quasiment aucune dépense en
- * devises (question express), on propose une micro-confirmation NON bloquante.
- */
-function coherenceWarning(answers: Answers): string | null {
-  const travel = selectedBand("travelFrequency", answers);
-  const share = selectedBand("foreignShare", answers);
-  const travelsOften = travel === "4_6_par_an" || travel === "plus_6_par_an";
-  const almostNoForeign = share === "moins_5pct";
-  if (travelsOften && almostNoForeign) {
-    return "Vous voyagez souvent hors d'Europe mais indiquez presque aucune dépense en devises.";
-  }
-  return null;
-}
-
 export default function Simulateur({
   cards,
   initialAnswers,
@@ -207,9 +178,6 @@ export default function Simulateur({
   );
   const [advancing, setAdvancing] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  // P9 : message de cohérence en attente + mémoire d'acquittement (une fois suffit).
-  const [coherenceMsg, setCoherenceMsg] = useState<string | null>(null);
-  const coherenceAckd = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audited = useRef(false);
   const quickwinLogged = useRef(false);
@@ -217,7 +185,6 @@ export default function Simulateur({
 
   const currentQid = DISPLAY_ORDER[state.step];
   const question = QUESTIONS.find((q) => q.id === currentQid);
-  const inRefine = state.step >= QUICK_COUNT;
   const onResults = state.phase === "results";
   const incomeDisclosed = isIncomeDisclosed(state.answers);
 
@@ -245,45 +212,19 @@ export default function Simulateur({
     }, ADVANCE_DELAY_MS);
   }, []);
 
-  // Sélection : on enregistre (highlight visible), on vérifie la cohérence (P9),
-  // puis on avance après un court délai, sauf si une confirmation est requise.
+  // Sélection : on enregistre (highlight visible), puis on avance après un court délai.
   const handleSelect = useCallback(
     (qid: QuestionId, optionId: string) => {
       if (advancing) return;
       dispatch({ type: "setAnswer", qid, optionId });
-
-      const candidate: Answers = { ...state.answers, [qid]: optionId };
-      const warn = coherenceWarning(candidate);
-      if (warn && !coherenceAckd.current) {
-        // Non bloquant : on affiche la micro-confirmation et on attend l'action.
-        setCoherenceMsg(warn);
-        return;
-      }
-      setCoherenceMsg(null);
       scheduleAdvance();
     },
-    [advancing, state.answers, scheduleAdvance],
+    [advancing, scheduleAdvance],
   );
-
-  // P9, « Oui, c'est exact » : on acquitte (ne plus redemander) et on avance.
-  const confirmCoherence = useCallback(() => {
-    coherenceAckd.current = true;
-    setCoherenceMsg(null);
-    scheduleAdvance();
-  }, [scheduleAdvance]);
-
-  // P9, « Corriger » : retour à la question des dépenses en devises.
-  const fixCoherence = useCallback(() => {
-    if (timer.current) clearTimeout(timer.current);
-    setAdvancing(false);
-    setCoherenceMsg(null);
-    dispatch({ type: "goto", step: FOREIGN_SHARE_STEP });
-  }, []);
 
   const goBack = useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
     setAdvancing(false);
-    setCoherenceMsg(null);
     // Depuis le chiffre express : revenir à la dernière question du quick win.
     if (state.phase === "quickResult") {
       dispatch({ type: "goto", step: QUICK_COUNT - 1 });
@@ -334,7 +275,7 @@ export default function Simulateur({
     emit("quickwin");
   }, [state.phase, emit]);
 
-  // À l'arrivée sur les résultats complets : « complete » si les 8 questions
+  // À l'arrivée sur les résultats complets : « complete » si les 6 questions
   // sont réellement renseignées (pas via le raccourci « Voir le classement »),
   // puis enregistrement de l'audit anonymisé (fourchettes + résultat), une seule
   // fois. Fire-and-forget : un échec réseau/DB ne casse jamais le parcours.
@@ -367,11 +308,9 @@ export default function Simulateur({
 
   const handleRestart = useCallback(() => {
     audited.current = false;
-    coherenceAckd.current = false;
     quickwinLogged.current = false;
     completeLogged.current = false;
     setSessionId(null);
-    setCoherenceMsg(null);
     dispatch({ type: "reset", state: initialState });
   }, [initialState]);
 
@@ -421,56 +360,17 @@ export default function Simulateur({
       )}
 
       {state.phase === "question" && question && (
-        <div className="flex flex-1 flex-col">
-          <ProgressBar
-            // Phase quick win : progression sur 3 ; affinage : sur 8 (parcours complet).
-            current={inRefine ? answeredCount(state.answers) : quickWinAnsweredCount(state.answers)}
-            step={state.step + 1}
-            total={inRefine ? TOTAL_QUESTIONS : QUICK_COUNT}
-          />
-
-          <div key={state.step} className="animate-step mt-8 flex-1 md:mt-12">
-            <QuestionStep
-              question={question}
-              selectedOptionId={state.answers[question.id]}
-              disabled={advancing}
-              keyboardEnabled={!coherenceMsg}
-              onBack={goBack}
-              onSelect={(optionId) => handleSelect(question.id, optionId)}
-            />
-
-            {/* P9 : micro-confirmation de cohérence, non bloquante */}
-            {coherenceMsg && (
-              <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 md:max-w-xl">
-                <p className="text-sm text-amber-900">
-                  {coherenceMsg} Est-ce exact ? Cela nous aide à affiner votre
-                  résultat.
-                </p>
-                <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                  <button
-                    type="button"
-                    onClick={confirmCoherence}
-                    className="rounded-lg bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
-                  >
-                    Oui, c&apos;est exact
-                  </button>
-                  <button
-                    type="button"
-                    onClick={fixCoherence}
-                    className="rounded-lg border border-amber-300 bg-white px-4 py-2.5 text-sm font-semibold text-amber-800 transition-colors hover:bg-amber-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
-                  >
-                    Corriger mes dépenses en devises
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Rassurance mobile (le desktop l'affiche dans la colonne intitulé). */}
-          <p className="mt-8 text-center text-xs text-slate-500 md:hidden">
-            Aucune donnée identifiante, aucun nom de banque demandé.
-          </p>
-        </div>
+        <QuestionStep
+          key={state.step}
+          question={question}
+          selectedOptionId={state.answers[question.id]}
+          answers={state.answers}
+          stepIndex={state.step}
+          quickCount={QUICK_COUNT}
+          disabled={advancing}
+          onBack={goBack}
+          onSelect={(optionId) => handleSelect(question.id, optionId)}
+        />
       )}
 
       {state.phase === "calculating" && (

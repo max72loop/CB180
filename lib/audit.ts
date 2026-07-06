@@ -28,17 +28,23 @@ export interface AuditResult {
   best_annual_gain: number;
 }
 
-/** Construit le profil anonymisé (fourchettes) à partir des réponses. */
+/**
+ * Construit le profil anonymisé (fourchettes) à partir des réponses.
+ *
+ * Les colonnes `travel_freq` et `profile_type` restent au schéma de la base
+ * (aucune migration) mais ne sont plus demandées à l'utilisateur : on y écrit un
+ * sentinel explicite « non_demande » pour distinguer ce cas d'une réponse vide.
+ */
 export function answersToAuditProfile(answers: Answers): AuditProfile {
   return {
     spend_band: selectedBand("monthlySpending", answers),
     foreign_share: selectedBand("foreignShare", answers),
-    travel_freq: selectedBand("travelFrequency", answers),
+    travel_freq: "non_demande",
     foreign_withdraw: selectedBand("foreignWithdrawals", answers),
     current_fee_band: selectedBand("currentFee", answers),
     reward_pref: selectedBand("rewardsInterest", answers),
     income_band: selectedBand("income", answers),
-    profile_type: selectedBand("profileType", answers),
+    profile_type: "non_demande",
   };
 }
 

@@ -10,9 +10,8 @@
 //     niveau : plus de barres pleines = plus élevé. Réutilisé par les questions
 //     ordinales (dépenses, part hors euro, retraits, revenu, cotisation), ce qui
 //     forme un langage cohérent tout au long du parcours.
-//   • des glyphes dédiés pour les options qualitatives (récompenses, profils) et
-//     les options « à part » (jamais / gratuite / je ne sais pas / je préfère ne
-//     pas répondre).
+//   • des glyphes dédiés pour les options qualitatives (récompenses) et les
+//     options « à part » (gratuite / je ne sais pas / je préfère ne pas répondre).
 //
 // La correspondance (questionId, optionId) → icône est purement présentationnelle
 // et vit ici, séparée de la table métier de lib/answers.ts.
@@ -129,63 +128,6 @@ function PiggyGlyph({ className }: GlyphProps) {
   );
 }
 
-/** Pousse / plante (profil « petit budget, sédentaire »). */
-function SeedlingGlyph({ className }: GlyphProps) {
-  return (
-    <Svg className={className}>
-      <path d="M12 20v-7" />
-      <path d="M12 13c0-2.5-1.7-4.3-4.5-4.5C7.3 11.3 9 13 12 13z" />
-      <path d="M12 11.5c0-2.2 1.7-3.8 4.4-4-.1 2.4-1.8 4-4.4 4z" />
-      <path d="M8 20h8" />
-    </Svg>
-  );
-}
-
-/** Mallette (profil « jeune actif »). */
-function BriefcaseGlyph({ className }: GlyphProps) {
-  return (
-    <Svg className={className}>
-      <rect x="3.5" y="8" width="17" height="11" rx="2" />
-      <path d="M9 8V6.5A1.5 1.5 0 0110.5 5h3A1.5 1.5 0 0115 6.5V8" />
-      <path d="M3.5 12.5h17" />
-    </Svg>
-  );
-}
-
-/** Boussole (profil « voyageur régulier »). */
-function CompassGlyph({ className }: GlyphProps) {
-  return (
-    <Svg className={className}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M15.5 8.5l-2 5-5 2 2-5z" />
-      <circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="currentColor" />
-    </Svg>
-  );
-}
-
-/** Courbe ascendante (profil « gros dépensier, j'optimise »). */
-function ChartUpGlyph({ className }: GlyphProps) {
-  return (
-    <Svg className={className}>
-      <path d="M4 19h16" />
-      <path d="M4 19V5" />
-      <path d="M7 15l3.5-3.5 2.5 2.5L19 8" />
-      <path d="M16 8h3v3" />
-    </Svg>
-  );
-}
-
-/** Trois points (profil « autre »). */
-function DotsGlyph({ className }: GlyphProps) {
-  return (
-    <Svg className={className}>
-      <circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none" />
-      <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
-      <circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none" />
-    </Svg>
-  );
-}
-
 /**
  * Résout l'icône d'une option. La magnitude des questions ordinales est encodée
  * par le nombre de barres pleines ; les options qualitatives et « à part » ont
@@ -204,13 +146,12 @@ export function AnswerIcon({
     // Questions ordinales : le suffixe numérique de l'id = le niveau du mètre.
     case "monthlySpending": // s1..s5
     case "foreignShare": // f1..f5
-    case "travelFrequency": // t1..t5 (t1 = jamais → 0 barre)
     case "foreignWithdrawals": // w1..w5 (w1 = jamais → 0 barre)
     case "income": {
       if (optionId === "i_skip") return <EyeOffGlyph className={className} />;
       const n = Number(optionId.slice(1));
-      // t1/w1 « Jamais » : niveau 0 (toutes barres en creux).
-      const zeroFirst = qid === "travelFrequency" || qid === "foreignWithdrawals";
+      // w1 « Jamais » : niveau 0 (toutes barres en creux).
+      const zeroFirst = qid === "foreignWithdrawals";
       const level = Number.isFinite(n) ? (zeroFirst ? n - 1 : n) : 3;
       return <BarsGlyph level={level} className={className} />;
     }
@@ -226,19 +167,6 @@ export function AnswerIcon({
       ) : (
         <PiggyGlyph className={className} />
       );
-    case "profileType":
-      switch (optionId) {
-        case "p1":
-          return <SeedlingGlyph className={className} />;
-        case "p2":
-          return <BriefcaseGlyph className={className} />;
-        case "p3":
-          return <CompassGlyph className={className} />;
-        case "p4":
-          return <ChartUpGlyph className={className} />;
-        default:
-          return <DotsGlyph className={className} />;
-      }
     default:
       return <BarsGlyph level={3} className={className} />;
   }

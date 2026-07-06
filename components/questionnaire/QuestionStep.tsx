@@ -1,10 +1,13 @@
 "use client";
 
 // components/questionnaire/QuestionStep.tsx
-// Une question par écran. Layout ADAPTATIF via une seule structure :
-//   • mobile  : intitulé puis cartes-réponses empilées, pleine largeur.
-//   • desktop : deux colonnes (intitulé + aide + rassurance à gauche, cartes à
-//     droite) grâce aux breakpoints `md:`, sans parcours dupliqué.
+// Une question par écran. Deux mises en page distinctes via les breakpoints :
+//   • mobile  : ProgressBar fine, intitulé + aide, cartes-réponses empilées
+//     pleine largeur, rassurance en bas.
+//   • desktop : « rail vivant + grille » — colonne gauche = StepRail sticky
+//     (stepper vertical des 6 étapes, profil qui se dessine, rassurance +
+//     astuce clavier), colonne droite = intitulé large + grille de réponses
+//     sur 2 colonnes qui occupe l'écran.
 //
 // Navigation 100 % au clic/tap, ET clavier optionnel sur desktop (jamais imposé,
 // aucune saisie) : touches 1-9 pour choisir, ↑/↓ pour déplacer le focus, Entrée
@@ -14,12 +17,26 @@
 // Présentationnel : ne gère pas l'état des réponses, remonte la sélection.
 
 import { useEffect, useState } from "react";
-import type { Question } from "@/lib/answers";
+import {
+  DISPLAY_ORDER,
+  answeredCount,
+  quickWinAnsweredCount,
+  type Answers,
+  type Question,
+} from "@/lib/answers";
 import AnswerCard from "./AnswerCard";
+import ProgressBar from "./ProgressBar";
+import StepRail from "./StepRail";
 
 interface QuestionStepProps {
   question: Question;
   selectedOptionId?: string;
+  /** Toutes les réponses déjà données (rail desktop + progression mobile). */
+  answers: Answers;
+  /** Index 0-based de la question courante dans DISPLAY_ORDER. */
+  stepIndex: number;
+  /** Nombre de questions de la phase quick win (frontière de phase). */
+  quickCount: number;
   onSelect: (optionId: string) => void;
   /** Retour arrière (déclenché aussi par ← / Échap au clavier). */
   onBack?: () => void;
@@ -32,6 +49,9 @@ interface QuestionStepProps {
 export default function QuestionStep({
   question,
   selectedOptionId,
+  answers,
+  stepIndex,
+  quickCount,
   onSelect,
   onBack,
   disabled = false,
@@ -106,70 +126,76 @@ export default function QuestionStep({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [keyboardEnabled, disabled, options, focusIdx, onSelect, onBack]);
 
+  // Progression mobile : phase quick win = « x sur 3 », affinage = « x sur 6 ».
+  const quickPhase = stepIndex < quickCount;
+  const progressCurrent = quickPhase
+    ? quickWinAnsweredCount(answers)
+    : answeredCount(answers);
+  const progressTotal = quickPhase ? quickCount : DISPLAY_ORDER.length;
+
   return (
-    <div className="md:grid md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] md:items-start md:gap-12 lg:gap-16">
-      {/* Colonne intitulé (gauche sur desktop, en tête sur mobile) */}
-      <div className="md:sticky md:top-28 md:self-start">
-        <div className="space-y-2">
+    <div className="flex w-full flex-1 flex-col">
+      {/* Barre de progression fine : mobile uniquement (le rail la remplace sur desktop). */}
+      <div className="md:hidden">
+        <ProgressBar
+          current={progressCurrent}
+          step={stepIndex + 1}
+          total={progressTotal}
+        />
+      </div>
+
+      <div className="mt-6 md:mt-2 md:grid md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] md:items-start md:gap-10 lg:gap-14">
+        {/* Colonne gauche desktop : le rail vivant, sticky. */}
+        <StepRail
+          answers={answers}
+          stepIndex={stepIndex}
+          quickCount={quickCount}
+          optionCount={options.length}
+        />
+
+        {/* Colonne droite desktop / corps mobile : intitulé + réponses. */}
+        <div className="min-w-0">
           <h2
             id={titleId}
-            className="text-2xl font-bold tracking-tight text-slate-900 md:text-[1.75rem] md:leading-snug"
+            className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl md:leading-snug"
           >
             {question.title}
           </h2>
           {question.help && (
-            <p className="text-sm leading-relaxed text-slate-500">
+            <p className="mt-2 text-sm leading-relaxed text-slate-500 md:text-base">
               {question.help}
             </p>
           )}
-        </div>
 
-        {/* Rassurance + astuce clavier : desktop uniquement (mobile : géré ailleurs). */}
-        <div className="mt-8 hidden md:block">
-          <p className="text-xs leading-relaxed text-slate-400">
+          {/* Empilées pleine largeur sur mobile, grille 2 colonnes sur desktop. */}
+          <ul
+            role="radiogroup"
+            aria-labelledby={titleId}
+            className="mt-6 space-y-3 md:mt-8 md:grid md:grid-cols-2 md:gap-3 md:space-y-0"
+          >
+            {options.map((option, i) => (
+              <li key={option.id}>
+                <AnswerCard
+                  qid={question.id}
+                  optionId={option.id}
+                  label={option.label}
+                  hint={option.hint}
+                  index={i + 1}
+                  selected={option.id === selectedOptionId}
+                  focused={i === focusIdx}
+                  disabled={disabled}
+                  onSelect={() => onSelect(option.id)}
+                />
+              </li>
+            ))}
+          </ul>
+
+          {/* Rassurance : mobile uniquement (le rail la porte sur desktop). */}
+          <p className="mt-8 text-xs leading-relaxed text-slate-400 md:hidden">
             Aucune donnée identifiante, aucun nom de banque demandé.
-          </p>
-          <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-400">
-            <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[0.65rem] font-semibold text-slate-500">
-              1-{Math.min(options.length, 9)}
-            </kbd>
-            <span>ou</span>
-            <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[0.65rem] font-semibold text-slate-500">
-              ↑
-            </kbd>
-            <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[0.65rem] font-semibold text-slate-500">
-              ↓
-            </kbd>
-            <span>puis</span>
-            <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[0.65rem] font-semibold text-slate-500">
-              Entrée
-            </kbd>
           </p>
         </div>
       </div>
-
-      {/* Colonne options (droite sur desktop, sous l'intitulé sur mobile) */}
-      <ul
-        role="radiogroup"
-        aria-labelledby={titleId}
-        className="mt-6 space-y-3 md:mt-0"
-      >
-        {options.map((option, i) => (
-          <li key={option.id}>
-            <AnswerCard
-              qid={question.id}
-              optionId={option.id}
-              label={option.label}
-              hint={option.hint}
-              index={i + 1}
-              selected={option.id === selectedOptionId}
-              focused={i === focusIdx}
-              disabled={disabled}
-              onSelect={() => onSelect(option.id)}
-            />
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

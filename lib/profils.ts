@@ -44,8 +44,6 @@ export const PROFILS: ProfilLanding[] = [
       monthlySpending: "s3", // 1 000 à 2 000 €
       foreignShare: "f5", // Majoritairement (>50 %)
       currentFee: "c2", // Moins de 50 €
-      profileType: "p3", // Voyageur régulier
-      travelFrequency: "t2", // 1 fois par an (le vol aller-retour)
       foreignWithdrawals: "w3", // 1 à 3 par mois
       rewardsInterest: "r2", // Non, payer le moins possible
       income: "i2", // 1 200 à 1 800 €

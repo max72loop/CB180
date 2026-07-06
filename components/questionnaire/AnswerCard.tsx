@@ -49,7 +49,9 @@ export default function AnswerCard({
       data-focused={focused || undefined}
       onClick={onSelect}
       className={[
-        "group flex w-full min-h-[68px] items-center gap-4 rounded-2xl border px-4 py-3.5 text-left transition-all sm:px-5",
+        // h-full : en cellule de grille desktop, les cartes d'une même rangée
+        // s'alignent en hauteur ; sans effet en pile mobile (li auto).
+        "group flex h-full w-full min-h-[68px] items-center gap-4 rounded-2xl border px-4 py-3.5 text-left transition-all sm:px-5",
         "focus:outline-none disabled:cursor-default",
         selected
           ? "border-indigo-600 bg-indigo-50 ring-2 ring-indigo-600"
