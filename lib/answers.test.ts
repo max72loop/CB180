@@ -15,21 +15,19 @@ import {
   type Answers,
 } from "./answers";
 
-/** Réponses complètes reconstituant le profil "voyageur régulier". */
+/** Réponses complètes reconstituant un profil "voyageur en devises". */
 const voyageurAnswers: Answers = {
   monthlySpending: "s4", // 2750
   foreignShare: "f4", // 0.40
-  travelFrequency: "t4", // 5
   foreignWithdrawals: "w3", // 2
   currentFee: "c4", // 130
   rewardsInterest: "r1", // true
   income: "i4", // 3250
-  profileType: "p3", // voyageur_regulier
 };
 
 describe("structure du questionnaire", () => {
-  it("comporte 8 questions, chacune avec au moins 2 options", () => {
-    expect(QUESTIONS).toHaveLength(8);
+  it("comporte 6 questions, chacune avec au moins 2 options", () => {
+    expect(QUESTIONS).toHaveLength(6);
     for (const q of QUESTIONS) {
       expect(q.options.length).toBeGreaterThanOrEqual(2);
     }
@@ -54,7 +52,7 @@ describe("progression", () => {
   it("answeredCount compte les réponses fournies", () => {
     expect(answeredCount({})).toBe(0);
     expect(answeredCount({ monthlySpending: "s1" })).toBe(1);
-    expect(answeredCount(voyageurAnswers)).toBe(8);
+    expect(answeredCount(voyageurAnswers)).toBe(6);
   });
 });
 
@@ -64,12 +62,14 @@ describe("answersToProfile", () => {
     expect(profile).toEqual({
       monthlySpendingEur: 2750,
       foreignSpendingShare: 0.4,
-      travelOutsideEuropePerYear: 5,
+      // Voyage retiré du questionnaire : signal neutralisé (0).
+      travelOutsideEuropePerYear: 0,
       foreignWithdrawalsPerMonth: 2,
       currentAnnualFeeEur: 130,
       valuesRewards: true,
       monthlyIncomeEur: 3250,
-      profileType: "voyageur_regulier",
+      // Profil type retiré du questionnaire : défaut inerte.
+      profileType: "autre",
     });
   });
 
@@ -83,7 +83,7 @@ describe("answersToProfile", () => {
 
   it("lève une erreur si le questionnaire est incomplet", () => {
     const partial: Answers = { ...voyageurAnswers };
-    delete partial.profileType;
+    delete partial.rewardsInterest;
     expect(() => answersToProfile(partial)).toThrow();
   });
 });
@@ -96,9 +96,9 @@ describe("simulateur en deux phases", () => {
     currentFee: "c4", // 130
   };
 
-  it("QUICK_WIN_IDS et REFINE_IDS partitionnent les 8 questions sans recouvrement", () => {
+  it("QUICK_WIN_IDS et REFINE_IDS partitionnent les 6 questions sans recouvrement", () => {
     expect(QUICK_WIN_IDS).toHaveLength(3);
-    expect(REFINE_IDS).toHaveLength(5);
+    expect(REFINE_IDS).toHaveLength(3);
     expect(new Set([...QUICK_WIN_IDS, ...REFINE_IDS]).size).toBe(QUESTIONS.length);
   });
 
@@ -114,7 +114,7 @@ describe("simulateur en deux phases", () => {
       monthlySpendingEur: 1500, // réponse réelle
       foreignSpendingShare: 0.1, // réponse réelle
       currentAnnualFeeEur: 130, // réponse réelle
-      travelOutsideEuropePerYear: 0, // défaut « jamais »
+      travelOutsideEuropePerYear: 0, // signal neutralisé (question retirée)
       foreignWithdrawalsPerMonth: 0, // défaut « jamais »
       valuesRewards: false, // défaut « non »
       monthlyIncomeEur: 0, // défaut « non renseigné »
@@ -123,8 +123,8 @@ describe("simulateur en deux phases", () => {
   });
 
   it("les défauts n'écrasent jamais une réponse déjà donnée", () => {
-    const withTravel = answersWithDefaults({ ...quickAnswers, travelFrequency: "t4" });
-    expect(withTravel.travelFrequency).toBe("t4"); // réponse réelle conservée
+    const withWithdrawals = answersWithDefaults({ ...quickAnswers, foreignWithdrawals: "w4" });
+    expect(withWithdrawals.foreignWithdrawals).toBe("w4"); // réponse réelle conservée
   });
 
   it("sur un jeu complet, le mode lenient égale le mode strict (aucun défaut ne fuit)", () => {

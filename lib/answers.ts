@@ -7,18 +7,16 @@
 //
 // Cette couche est pure et testable indépendamment de l'UI.
 
-import type { ProfileType, UsageProfile } from "./types";
+import type { UsageProfile } from "./types";
 
-/** Identifiant stable de chaque question (8 questions). */
+/** Identifiant stable de chaque question (6 questions). */
 export type QuestionId =
   | "monthlySpending"
   | "foreignShare"
-  | "travelFrequency"
   | "foreignWithdrawals"
   | "currentFee"
   | "rewardsInterest"
-  | "income"
-  | "profileType";
+  | "income";
 
 export interface QuestionOption {
   /** Identifiant d'option stocké dans les réponses. */
@@ -92,17 +90,6 @@ export const QUESTIONS: Question[] = [
     ],
   },
   {
-    id: "travelFrequency",
-    title: "À quelle fréquence voyagez-vous hors d'Europe ?",
-    options: [
-      { id: "t1", label: "Jamais", value: 0, band: "jamais" },
-      { id: "t2", label: "1 fois par an", value: 1, band: "1_par_an" },
-      { id: "t3", label: "2 à 3 fois par an", value: 2.5, band: "2_3_par_an" },
-      { id: "t4", label: "4 à 6 fois par an", value: 5, band: "4_6_par_an" },
-      { id: "t5", label: "Plus de 6 fois par an", value: 8, band: "plus_6_par_an" },
-    ],
-  },
-  {
     id: "foreignWithdrawals",
     title: "Combien de retraits en distributeur faites-vous à l'étranger par mois ?",
     help: "Retraits en devises, hors zone euro.",
@@ -154,17 +141,6 @@ export const QUESTIONS: Question[] = [
       },
     ],
   },
-  {
-    id: "profileType",
-    title: "Dans quel profil vous reconnaissez-vous le mieux ?",
-    options: [
-      { id: "p1", label: "Petit budget, je bouge peu", value: "petit_budget_sedentaire", band: "petit_budget_sedentaire" },
-      { id: "p2", label: "Jeune actif", value: "jeune_actif", band: "jeune_actif" },
-      { id: "p3", label: "Voyageur régulier", value: "voyageur_regulier", band: "voyageur_regulier" },
-      { id: "p4", label: "Gros dépensier, j'optimise", value: "gros_depensier_optimiseur", band: "gros_depensier_optimiseur" },
-      { id: "p5", label: "Autre", value: "autre", band: "autre" },
-    ],
-  },
 ];
 
 /**
@@ -182,33 +158,47 @@ export const QUICK_WIN_IDS: QuestionId[] = [
 ];
 
 /**
- * Phase AFFINAGE : les 5 questions restantes, dans un ordre engageant (profil
- * d'abord, revenu en dernier une fois l'utilisateur investi).
+ * Phase AFFINAGE : les 3 questions restantes, dans un ordre engageant (revenu
+ * en dernier, une fois l'utilisateur investi).
  */
 export const REFINE_IDS: QuestionId[] = [
-  "profileType",
-  "travelFrequency",
   "foreignWithdrawals",
   "rewardsInterest",
   "income",
 ];
 
 /**
- * Hypothèses par défaut pour les 5 questions NON posées en phase quick win.
+ * Ordre d'AFFICHAGE du parcours complet : d'abord les 3 questions du quick win,
+ * puis les 3 de l'affinage. Source unique consommée par l'UI ; le mapping
+ * retrouve chaque réponse par son id, indépendamment de cet ordre.
+ */
+export const DISPLAY_ORDER: QuestionId[] = [...QUICK_WIN_IDS, ...REFINE_IDS];
+
+/**
+ * Libellés courts pour le rail d'étapes (desktop). Décrivent la question en un
+ * mot-repère, distincts des intitulés complets posés à l'écran.
+ */
+export const SHORT_LABELS: Record<QuestionId, string> = {
+  monthlySpending: "Dépenses",
+  foreignShare: "Hors zone euro",
+  currentFee: "Cotisation",
+  foreignWithdrawals: "Retraits",
+  rewardsInterest: "Récompenses",
+  income: "Revenu",
+};
+
+/**
+ * Hypothèses par défaut pour les 3 questions NON posées en phase quick win.
  * Choix PRUDENTS : ils ne fabriquent aucune économie, pour que l'estimation
  * express soit une base honnête que l'affinage vient préciser.
- *  - travel « jamais » : ne relève pas la part hors euro déjà déclarée.
  *  - retraits « jamais » : n'ajoute de frais ni à la situation actuelle ni aux cartes.
  *  - récompenses « non » : miles/cashback comptés seulement si l'utilisateur les veut.
  *  - revenu « non renseigné » : aucun filtre d'éligibilité au stade express.
- *  - profil « autre » : inerte dans le calcul du coût (usage informatif seul).
  */
 export const DEFAULT_DEFERRED_ANSWERS: Partial<Record<QuestionId, string>> = {
-  travelFrequency: "t1", // Jamais → 0 voyage/an
   foreignWithdrawals: "w1", // Jamais → 0 retrait/mois
   rewardsInterest: "r2", // Non → valuesRewards false
   income: INCOME_SKIP_OPTION_ID, // « Je préfère ne pas répondre »
-  profileType: "p5", // Autre (inerte pour le moteur)
 };
 
 /** True si les 3 questions du quick win ont une réponse (calcul express possible). */
@@ -245,6 +235,33 @@ export function selectedBand(qid: QuestionId, answers: Answers): string {
   const question = QUESTIONS.find((q) => q.id === qid);
   const option = question?.options.find((o) => o.id === answers[qid]);
   return option?.band ?? "";
+}
+
+/** Une entrée du résumé « votre profil se dessine » (rail desktop). */
+export interface AnswerChip {
+  qid: QuestionId;
+  /** Mot-repère de la question (SHORT_LABELS). */
+  label: string;
+  /** Libellé de l'option retenue. */
+  value: string;
+}
+
+/**
+ * Résumé des réponses déjà données, dans l'ordre d'affichage : alimente le rail
+ * vivant du desktop qui se remplit à chaque réponse. Pure, testable.
+ */
+export function answerChips(answers: Answers): AnswerChip[] {
+  const chips: AnswerChip[] = [];
+  for (const qid of DISPLAY_ORDER) {
+    const optionId = answers[qid];
+    if (optionId == null) continue;
+    const option = QUESTIONS.find((q) => q.id === qid)?.options.find(
+      (o) => o.id === optionId,
+    );
+    if (!option) continue;
+    chips.push({ qid, label: SHORT_LABELS[qid], value: option.label });
+  }
+  return chips;
 }
 
 /** Récupère la valeur représentative de l'option retenue pour une question. */
@@ -284,16 +301,19 @@ export function answersToProfile(answers: Answers): UsageProfile {
     throw new Error("Questionnaire incomplet : impossible de construire le profil.");
   }
   const rewards = selectedValue("rewardsInterest", answers);
-  const profileType = selectedValue("profileType", answers);
 
   return {
     monthlySpendingEur: requireNumber("monthlySpending", answers),
     foreignSpendingShare: requireNumber("foreignShare", answers),
-    travelOutsideEuropePerYear: requireNumber("travelFrequency", answers),
+    // Fréquence de voyage retirée du questionnaire : le moteur ne s'en sert que
+    // comme plancher de la part hors euro déjà déclarée, on neutralise donc ce
+    // signal (0) et la part déclarée fait foi.
+    travelOutsideEuropePerYear: 0,
     foreignWithdrawalsPerMonth: requireNumber("foreignWithdrawals", answers),
     currentAnnualFeeEur: requireNumber("currentFee", answers),
     valuesRewards: rewards === true,
     monthlyIncomeEur: requireNumber("income", answers),
-    profileType: (profileType as ProfileType) ?? "autre",
+    // Profil type retiré du questionnaire : inerte dans le calcul du coût.
+    profileType: "autre",
   };
 }

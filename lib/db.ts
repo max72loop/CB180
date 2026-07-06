@@ -141,7 +141,7 @@ export type FunnelEvent =
   | "start_quiz"
   | "quickwin" // écart estimé express affiché (après 3 questions)
   | "affiner" // clic sur « Affiner mon estimation »
-  | "complete" // les 8 questions renseignées (résultat complet)
+  | "complete" // les 6 questions renseignées (résultat complet)
   | "click_affilie"
   | "partage"; // partage du chiffre d'économie (boucle virale)
 
