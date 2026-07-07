@@ -204,6 +204,176 @@
         { "q": "Une carte premium a-t-elle un intérêt sans voyager ?", "a": "L'essentiel de la valeur ajoutée d'une carte premium tient aux garanties de voyage, aux frais réduits à l'étranger et aux services liés aux déplacements. Sans voyages, il reste les plafonds élevés et certains avantages, mais la cotisation pèse davantage dans le bilan. Le simulateur CB180 permet de chiffrer ce que coûte la carte selon un profil d'usage donné." },
         { "q": "Comment savoir si une carte premium « vaut le coût » ?", "a": "En comparant le coût annuel complet (cotisation, frais éventuels, conditions d'usage) aux économies concrètes qu'elle génère : frais à l'étranger évités, assurances qui remplacent des contrats payants, avantages effectivement utilisés. Le simulateur CB180 fait ce calcul à partir d'un profil de dépenses déclaré et chiffre le coût réel de chaque carte sur cette base." }
       ]
+    },
+    {
+      "slug": "carte-boursobank",
+      "title": "Cartes bancaires BoursoBank",
+      "metaDescription": "Les cartes BoursoBank (WELCOME, ULTIM, ULTIM METAL) comparées sur données officielles : cotisation, frais à l'étranger, conditions d'usage. Information objective, sans conseil.",
+      "criterion": "Sont retenues ici les cartes émises par BoursoBank, la banque en ligne du groupe Société Générale, classées par cotisation annuelle croissante.",
+      "intro": "BoursoBank (ex-Boursorama Banque) est la banque en ligne du groupe Société Générale. Sa gamme de cartes va de la WELCOME gratuite à la ULTIM METAL, toutes sans frais de change hors zone euro. Voici ce que chacune coûte réellement et les conditions à connaître.",
+      "sections": [
+        { "h": "Une gamme courte et lisible", "body": "BoursoBank propose trois cartes Visa : la WELCOME, carte d'entrée gratuite ; la ULTIM, gratuite et plus complète, disponible en débit immédiat ou différé ; et la ULTIM METAL, carte métal à cotisation payante offrant des plafonds de paiement et de retrait relevés ainsi qu'un niveau d'assurances supérieur. Les trois appliquent 0 % de frais de change sur les paiements hors zone euro, ce qui les rend adaptées aux dépenses en devises." },
+        { "h": "Ce que « gratuite » recouvre réellement", "body": "La cotisation des cartes WELCOME et ULTIM est de 0 €, mais la gratuité s'accompagne de conditions d'usage : un montant minimal de paiements par mois est généralement demandé pour éviter des frais d'inactivité, et l'ouverture du compte peut être soumise à une condition de revenu ou à un versement initial. Ces conditions figurent dans la tarification officielle en vigueur ; vérifiez-les avant de souscrire, car elles évoluent." },
+        { "h": "À l'étranger et au quotidien", "body": "Aucune des trois cartes ne facture de commission de change sur les paiements en devises. Les retraits hors zone euro peuvent en revanche être facturés au-delà d'un certain nombre d'opérations ou d'un plafond mensuel, selon la carte. Comme partout, refusez la conversion proposée par le commerçant ou le distributeur (DCC) et payez toujours dans la devise locale : le taux du réseau Visa est presque toujours plus avantageux." }
+      ],
+      "faq": [
+        { "q": "Quelle carte BoursoBank est vraiment gratuite ?", "a": "Les cartes WELCOME et ULTIM ont une cotisation de 0 €, sous conditions d'usage (un minimum de paiements par mois, parfois une condition de revenu à l'ouverture). La ULTIM METAL est payante. Le simulateur CB180 chiffre le coût réel selon vos usages." },
+        { "q": "Les cartes BoursoBank facturent-elles les frais à l'étranger ?", "a": "Non sur les paiements : le change est à 0 %. Les retraits en devises peuvent être facturés au-delà d'un quota selon la carte ; la fiche de chaque carte détaille les frais." },
+        { "q": "BoursoBank est-elle une vraie banque ?", "a": "Oui, c'est la banque en ligne du groupe Société Générale, avec un agrément bancaire complet. La décision d'ouverture de compte appartient à l'établissement." }
+      ]
+    },
+    {
+      "slug": "carte-fortuneo",
+      "title": "Cartes bancaires Fortuneo",
+      "metaDescription": "Les cartes Fortuneo (Fosfo, Gold, World Elite Mastercard) comparées sur données officielles : cotisation, conditions d'accès, frais à l'étranger. Information objective, sans conseil.",
+      "criterion": "Sont retenues les cartes émises par Fortuneo (groupe Crédit Mutuel Arkéa), classées par cotisation annuelle croissante.",
+      "intro": "Fortuneo, banque en ligne du groupe Crédit Mutuel Arkéa, propose trois cartes Mastercard, dont deux niveaux haut de gamme affichés sans cotisation, sous conditions d'accès. Voici ce que chacune coûte réellement et les conditions à connaître.",
+      "sections": [
+        { "h": "Trois Mastercard, dont deux haut de gamme sans cotisation", "body": "Fortuneo propose la Fosfo, carte d'entrée gratuite ; la Gold Mastercard, carte intermédiaire ; et la World Elite Mastercard, carte haut de gamme aux assurances et plafonds étendus. Sa particularité : les cartes Gold et World Elite sont affichées sans cotisation, mais sous conditions d'accès (revenus ou encours d'épargne), là où d'autres banques facturent ce niveau de gamme. Les trois sont des Mastercard sans frais de change." },
+        { "h": "Gratuit « sous conditions » : ce que ça implique", "body": "L'absence de cotisation sur les cartes Gold et World Elite s'accompagne de conditions d'octroi : un revenu mensuel minimum ou un encours d'épargne à confier à la banque, et souvent un montant de paiements par mois pour maintenir la gratuité. Sans remplir ces conditions, des frais peuvent s'appliquer. Les seuils exacts figurent dans les conditions tarifaires officielles et peuvent changer ; vérifiez-les sur la fiche de la carte." },
+        { "h": "Frais à l'étranger", "body": "Les trois cartes Fortuneo appliquent 0 % de frais de change sur les paiements en devises, ce qui les rend adaptées aux dépenses hors zone euro. Les conditions de retrait à l'étranger varient selon la carte (nombre d'opérations gratuites, plafonds). Comme ailleurs, payez toujours dans la devise locale et refusez la conversion proposée sur place (DCC) pour bénéficier du taux du réseau Mastercard." }
+      ],
+      "faq": [
+        { "q": "Les cartes Gold et World Elite Fortuneo sont-elles vraiment gratuites ?", "a": "Leur cotisation est de 0 €, mais sous conditions de revenu ou d'encours, et parfois d'utilisation. C'est ce qui distingue Fortuneo : un niveau haut de gamme sans cotisation, en échange de conditions d'accès. Vérifiez-les sur la fiche de la carte." },
+        { "q": "Quelle différence entre la Gold et la World Elite ?", "a": "La World Elite est le niveau supérieur : plafonds de paiement et de retrait plus élevés, assurances et assistance plus étendues, et conditions d'accès plus exigeantes. Les deux sont des Mastercard sans frais de change." },
+        { "q": "Fortuneo convient-elle pour voyager ?", "a": "Ses cartes n'appliquent pas de frais de change, ce qui limite le coût des paiements en devises. Le montant réel dépend de vos retraits et de vos usages : le simulateur CB180 le chiffre." }
+      ]
+    },
+    {
+      "slug": "carte-revolut",
+      "title": "Cartes Revolut",
+      "metaDescription": "Les cartes Revolut (Standard, Premium, Metal) comparées sur données officielles : formules, frais de change, ce qu'implique une néobanque. Information objective, sans conseil.",
+      "criterion": "Sont retenues les cartes proposées par Revolut, néobanque européenne, selon ses formules (Standard, Premium, Metal), classées par coût croissant.",
+      "intro": "Revolut est une néobanque européenne, accessible par application, dont l'offre s'organise en formules d'abonnement (Standard gratuite, Premium et Metal payantes). Voici ce que chaque formule apporte, comment fonctionnent ses frais de change, et ce qu'implique une néobanque au quotidien.",
+      "sections": [
+        { "h": "Une néobanque multi-devises, pas une banque française", "body": "Revolut est une néobanque européenne, accessible uniquement via application mobile, opérant en France sous licence bancaire lituanienne (passeport européen). Sa gamme est organisée en formules d'abonnement : Standard (gratuite), Premium et Metal (payantes), chacune ouvrant droit à une carte et à des services croissants. Son atout est la détention et l'échange de plusieurs devises au sein de l'application." },
+        { "h": "Frais de change : l'essentiel à comprendre", "body": "Le change dépend de la formule. La formule Standard applique le taux interbancaire dans une limite mensuelle, au-delà de laquelle une commission s'ajoute, avec une majoration le week-end sur certaines devises. Les formules Premium et Metal suppriment cette limite. Pour un usage intensif en devises, une formule payante peut revenir moins cher qu'un surcoût de change répété ; le simulateur CB180 arbitre selon vos montants." },
+        { "h": "Ce qu'une néobanque change au quotidien", "body": "Revolut fonctionne sans agence : tout se gère dans l'application (cartes virtuelles, plafonds, gel de la carte, notifications). En contrepartie, le service client est dématérialisé et la relation diffère d'une banque de réseau. Le compte s'appuie sur un IBAN européen, accepté pour les virements SEPA. Vérifiez la compatibilité avec vos prélèvements et versements (salaire, administrations) avant d'en faire votre compte principal." }
+      ],
+      "faq": [
+        { "q": "Revolut est-elle gratuite ?", "a": "La formule Standard est gratuite (cotisation 0 €) et donne une carte. Les formules Premium et Metal sont des abonnements payants aux services étendus. Le coût réel dépend de vos usages en devises : le simulateur CB180 le chiffre." },
+        { "q": "Revolut prélève-t-elle des frais de change ?", "a": "En formule Standard, le change est au taux interbancaire dans une limite mensuelle, avec une commission au-delà et une majoration le week-end. Les formules Premium et Metal lèvent cette limite." },
+        { "q": "Revolut est-elle une banque française ?", "a": "Non : c'est une néobanque européenne opérant sous licence lituanienne via le passeport européen, avec un IBAN européen. Elle est soumise à la réglementation bancaire de l'Union européenne." }
+      ]
+    },
+    {
+      "slug": "carte-n26",
+      "title": "Cartes N26",
+      "metaDescription": "Les cartes N26 (Standard, You) comparées sur données officielles : cotisation, frais de change, IBAN européen. Information objective, sans conseil personnalisé.",
+      "criterion": "Sont retenues les cartes proposées par N26, néobanque allemande, classées par cotisation annuelle croissante.",
+      "intro": "N26 est une néobanque allemande à licence bancaire complète, accessible par application. Ses cartes Mastercard n'appliquent pas de frais de change sur les paiements en devises. Voici sa gamme, ses frais réels et les points à vérifier avant d'en faire son compte principal.",
+      "sections": [
+        { "h": "La néobanque allemande à IBAN européen", "body": "N26 est une néobanque allemande disposant d'une licence bancaire complète en Allemagne, accessible via application mobile. Sa gamme se décline en formules : N26 Standard, gratuite, et des formules payantes comme N26 You, qui ajoutent des assurances voyage et des plafonds relevés. Toutes ses cartes sont des Mastercard et n'appliquent pas de frais de change sur les paiements en devises." },
+        { "h": "Paiements en devises sans frais, retraits à surveiller", "body": "N26 n'applique pas de commission de change sur les paiements par carte en devises, y compris hors zone euro : c'est l'un de ses arguments pour les voyageurs. Les retraits d'espèces suivent en revanche une politique propre (nombre d'opérations gratuites limité, éventuels frais au-delà, notamment en euros). Le détail figure dans les conditions tarifaires ; il conditionne le coût réel selon votre usage des distributeurs." },
+        { "h": "Compte principal : les points à vérifier", "body": "N26 fournit un compte courant à part entière avec IBAN européen, compatible avec les virements et prélèvements SEPA. Comme toute néobanque, elle fonctionne sans agence et mise sur l'application (catégorisation des dépenses, sous-comptes, notifications instantanées). Avant d'en faire votre compte principal, vérifiez l'acceptation de l'IBAN par vos organismes (employeur, administrations) et les modalités de dépôt d'espèces, souvent limitées." }
+      ],
+      "faq": [
+        { "q": "La carte N26 est-elle gratuite ?", "a": "La formule N26 Standard est gratuite et fournit une Mastercard. Les formules supérieures (comme N26 You) sont payantes et ajoutent assurances et plafonds. Le simulateur CB180 chiffre le coût réel selon vos usages." },
+        { "q": "N26 facture-t-elle les paiements à l'étranger ?", "a": "Non : les paiements par carte en devises se font sans commission de change. Les retraits peuvent en revanche être facturés au-delà d'un quota ; la fiche détaille ces frais." },
+        { "q": "N26 est-elle une banque française ?", "a": "Non : c'est une néobanque allemande sous licence bancaire allemande, avec un IBAN européen accepté pour les opérations SEPA." }
+      ]
+    },
+    {
+      "slug": "carte-american-express",
+      "title": "Cartes American Express",
+      "metaDescription": "Les cartes American Express en France (Gold, Air France KLM, Platinum) : cotisation, acceptation, frais à l'étranger, avantages. Information objective, sans conseil.",
+      "criterion": "Sont retenues les cartes American Express distribuées en France, classées par cotisation annuelle croissante.",
+      "intro": "American Express émet ses cartes en direct en France et exploite son propre réseau de paiement. Sa gamme (Gold, Air France KLM Gold, Platinum) mise sur les points, les assurances et les services. Voici ce que chaque carte coûte, et le point décisif de l'acceptation en France.",
+      "sections": [
+        { "h": "Un émetteur à part, avec son propre réseau", "body": "American Express n'est pas une banque de dépôt classique : c'est un émetteur qui exploite son propre réseau de paiement, distinct de Visa et Mastercard. En France, sa gamme grand public s'articule autour de la Carte Gold, de la co-brandée Air France KLM Gold (orientée miles) et de la Carte Platinum, haut de gamme. Ces cartes misent sur les programmes de points, les assurances et les services, avec des cotisations parmi les plus élevées du marché." },
+        { "h": "Le point clé : l'acceptation en France", "body": "Le réseau American Express est moins largement accepté que Visa et Mastercard en France, en particulier chez les petits commerçants et certaines enseignes. Beaucoup de porteurs utilisent leur carte Amex là où elle est acceptée et conservent une carte Visa ou Mastercard en complément. C'est l'élément à intégrer avant de souscrire : l'intérêt d'une Amex dépend autant de vos lieux de dépense que de ses avantages." },
+        { "h": "Frais de change et logique de la carte", "body": "Les cartes American Express appliquent des frais de change sur les paiements en devises (de l'ordre de 2,8 %), ce qui les rend moins adaptées aux dépenses hors zone euro qu'une carte à 0 % de change. Leur logique est ailleurs : accumulation de points Membership Rewards ou de miles, assurances voyage, primes de bienvenue et services. Leur intérêt se juge au regard des avantages réellement utilisés, pas de la seule cotisation." }
+      ],
+      "faq": [
+        { "q": "American Express est-elle acceptée partout en France ?", "a": "Non : son réseau est moins accepté que Visa et Mastercard, surtout chez les petits commerçants. Beaucoup de porteurs gardent une carte Visa ou Mastercard en complément. C'est le premier point à vérifier avant de souscrire." },
+        { "q": "Les cartes Amex ont-elles des frais à l'étranger ?", "a": "Oui : elles appliquent une commission de change sur les paiements en devises (environ 2,8 %). Pour des dépenses fréquentes hors zone euro, une carte à 0 % de change coûte moins cher sur ce poste." },
+        { "q": "La cotisation Amex vaut-elle le coup ?", "a": "Cela dépend des avantages que vous utilisez réellement (points, miles, assurances, services). Le simulateur CB180 rapporte la cotisation au coût annuel selon vos usages ; les avantages non chiffrables restent à évaluer selon votre situation." }
+      ]
+    },
+    {
+      "slug": "carte-nickel",
+      "title": "Cartes Nickel",
+      "metaDescription": "Les cartes Nickel (Nickel, Chrome, Metal) comparées : ouverture chez le buraliste sans condition de revenu, abonnement annuel, frais à l'étranger. Information objective.",
+      "criterion": "Sont retenues les cartes du service Nickel (adossé à BNP Paribas), classées par cotisation annuelle croissante.",
+      "intro": "Nickel est un service de compte et de carte détenu par BNP Paribas, qui s'ouvre chez les buralistes sans condition de revenu. Sa gamme (Nickel, Chrome, Metal) fonctionne par abonnement annuel. Voici ce que chaque carte coûte et à qui ce modèle s'adresse.",
+      "sections": [
+        { "h": "Un compte accessible à tous, au tabac-presse", "body": "Nickel est un service de compte et de carte détenu par BNP Paribas, dont la particularité est de s'ouvrir chez les buralistes (tabac-presse) en quelques minutes, sans condition de revenu ni de dépôt, et sans découvert. Il vise l'inclusion : l'ouverture est possible même en situation d'interdit bancaire. La gamme comprend la carte Nickel, la Chrome et la Metal, toutes des Mastercard à cotisation annuelle forfaitaire." },
+        { "h": "Un modèle tarifaire différent : l'abonnement annuel", "body": "Contrairement aux banques en ligne qui affichent des cartes « gratuites » sous conditions, Nickel facture un abonnement annuel clair et sans condition : la carte Nickel au tarif de base, la Chrome et la Metal à des tarifs croissants offrant des plafonds et services renforcés. À cela peuvent s'ajouter des frais à l'acte (retraits chez le buraliste, dépôt d'espèces), propres au modèle Nickel. La grille tarifaire officielle détaille chaque poste." },
+        { "h": "Frais à l'étranger et usage", "body": "Les cartes Nickel appliquent 0 % de frais de change sur les paiements en devises, ce qui est favorable hors zone euro. Certaines opérations restent facturées à l'acte selon la formule (retraits, notamment). Nickel n'est pas une banque de crédit : pas de découvert ni de chéquier, ce qui en fait un compte de paiement simple et maîtrisé plutôt qu'un compte bancaire complet. Vérifiez que cet usage correspond à votre besoin." }
+      ],
+      "faq": [
+        { "q": "Faut-il des conditions de revenu pour ouvrir un compte Nickel ?", "a": "Non : Nickel s'ouvre sans condition de revenu ni de dépôt, y compris en situation d'interdit bancaire. C'est un compte de paiement, sans découvert ni crédit." },
+        { "q": "Combien coûte une carte Nickel ?", "a": "Nickel fonctionne par abonnement annuel forfaitaire (carte Nickel, Chrome ou Metal, du moins cher au plus complet), auquel s'ajoutent d'éventuels frais à l'acte. Le simulateur CB180 chiffre le coût selon vos usages." },
+        { "q": "Les cartes Nickel ont-elles des frais à l'étranger ?", "a": "Les paiements en devises se font sans frais de change (0 %). Certains retraits peuvent être facturés à l'acte ; la grille tarifaire Nickel détaille ces montants." }
+      ]
+    },
+    {
+      "slug": "carte-bancaire-pour-le-japon",
+      "title": "Carte bancaire pour voyager au Japon",
+      "metaDescription": "Quelle carte bancaire pour le Japon : éviter les frais de change en yens, retirer des espèces dans les bons distributeurs (konbini), et déjouer la conversion (DCC).",
+      "criterion": "Sont retenues les cartes sans frais de change ni frais de retrait hors zone euro : le socle utile pour dépenser en yens sans surcoût. L'éditorial ci-dessous est spécifique au Japon.",
+      "intro": "Le Japon combine une monnaie forte, le yen, une culture encore attachée aux espèces et un réseau de distributeurs particulier. Pour limiter les frais, deux réflexes : une carte sans frais de change, et savoir où retirer des yens. Voici les cartes du catalogue sans frais à l'étranger, et ce qu'il faut savoir sur place.",
+      "sections": [
+        { "h": "Espèces ou carte : la réalité au Japon", "body": "Le Japon se modernise vite (paiement sans contact, cartes IC de transport comme Suica ou Pasmo, konbini), mais les espèces restent nécessaires : petits restaurants, temples, marchés et commerces de quartier n'acceptent pas toujours la carte. Prévoyez d'avoir des yens en poche, tout en réglant par carte là où c'est possible. Une carte sans frais de change évite de payer un surcoût sur chaque paiement en devise, sur un séjour où les dépenses s'accumulent vite." },
+        { "h": "Où retirer des yens sans galérer", "body": "Tous les distributeurs japonais n'acceptent pas les cartes étrangères. Les plus fiables sont ceux des konbini 7-Eleven (Seven Bank) et des bureaux de poste (Japan Post Bank), présents partout et disponibles en anglais ; certains distributeurs bancaires classiques refusent les cartes étrangères ou ferment la nuit. Une carte sans frais de retrait en devises limite le coût ; le distributeur local peut néanmoins appliquer ses propres frais, affichés avant validation de l'opération." },
+        { "h": "Le piège de la conversion (DCC)", "body": "Au moment de payer ou de retirer, on vous proposera souvent de régler « en euros » plutôt qu'en yens : c'est la conversion dynamique (DCC), presque toujours défavorable car le taux est fixé par le terminal, pas par votre réseau. Refusez systématiquement et choisissez de payer en yens (JPY) : votre carte appliquera le taux Visa ou Mastercard, plus avantageux. C'est le réflexe qui économise le plus, quelle que soit la carte utilisée." }
+      ],
+      "faq": [
+        { "q": "Faut-il de l'argent liquide au Japon ?", "a": "Oui, malgré la montée du paiement sans contact : de nombreux petits commerces, temples et restaurants n'acceptent que les espèces. Prévoyez des yens, tout en payant par carte là où c'est accepté." },
+        { "q": "Où retirer des yens avec une carte étrangère ?", "a": "Les distributeurs des konbini 7-Eleven (Seven Bank) et des bureaux de poste (Japan Post) acceptent les cartes étrangères et proposent l'anglais. Une carte sans frais de retrait en devises limite le coût de l'opération." },
+        { "q": "Dois-je payer en euros ou en yens sur place ?", "a": "Toujours en yens. La conversion « en euros » proposée par le terminal (DCC) applique un taux défavorable. En choisissant le yen, c'est le taux de votre réseau (Visa/Mastercard) qui s'applique." }
+      ]
+    },
+    {
+      "slug": "carte-bancaire-pour-la-thailande",
+      "title": "Carte bancaire pour voyager en Thaïlande",
+      "metaDescription": "Quelle carte pour la Thaïlande : éviter les frais de change en bahts et surtout le frais fixe des distributeurs thaïlandais (~220 THB par retrait). Nos cartes sans frais.",
+      "criterion": "Sont retenues les cartes sans frais de change ni frais de retrait en devises. Attention : les distributeurs thaïlandais ajoutent leurs propres frais, indépendants de votre carte — voir ci-dessous.",
+      "intro": "La Thaïlande fonctionne encore beaucoup en espèces (marchés, street food, transports locaux), et ses distributeurs appliquent un frais fixe élevé à chaque retrait par carte étrangère. Une carte sans frais de change est utile, mais la vraie économie se joue sur la manière de retirer des bahts. Voici les cartes sans frais à l'étranger, et la méthode locale.",
+      "sections": [
+        { "h": "Le frais fixe des distributeurs : le vrai coût", "body": "La plupart des distributeurs thaïlandais facturent un frais fixe d'environ 220 bahts (autour de 6 €) à chaque retrait par carte étrangère — et ce, quelle que soit votre banque, en plus des éventuels frais de votre carte. Conséquence : mieux vaut retirer une somme plus importante en une fois plutôt que multiplier les petits retraits. Une carte sans frais de retrait en devises supprime la part de votre banque, mais pas ce frais local, incompressible." },
+        { "h": "Espèces indispensables, carte pour le reste", "body": "En Thaïlande, les espèces restent reines pour les marchés, la street food, les taxis et songthaews, les petits commerces et de nombreuses guesthouses. La carte est acceptée dans les centres commerciaux, les hôtels et les grandes enseignes. Une carte sans frais de change évite le surcoût sur ces paiements en bahts ; gardez toujours du liquide pour le quotidien, retiré en montants groupés pour amortir le frais fixe des distributeurs." },
+        { "h": "Refuser la conversion en euros (DCC)", "body": "Distributeurs et terminaux thaïlandais proposent presque toujours de « convertir en euros » : c'est la conversion dynamique (DCC), au taux défavorable fixé sur place. Refusez et choisissez les bahts (THB) : votre carte appliquera le taux de son réseau. Ce réflexe, combiné à des retraits groupés et à une carte sans frais de change, minimise le coût total de votre séjour, quelle que soit la carte utilisée." }
+      ],
+      "faq": [
+        { "q": "Pourquoi les retraits coûtent-ils cher en Thaïlande ?", "a": "Les distributeurs thaïlandais ajoutent un frais fixe d'environ 220 bahts par retrait de carte étrangère, indépendant de votre banque. Une carte sans frais de retrait supprime la part de votre banque, mais pas ce frais local. Retirez des sommes plus importantes en une fois." },
+        { "q": "Peut-on payer partout par carte en Thaïlande ?", "a": "Non : centres commerciaux, hôtels et grandes enseignes acceptent la carte, mais marchés, street food, taxis et petits commerces fonctionnent en espèces. Gardez du liquide en bahts." },
+        { "q": "Faut-il payer en bahts ou en euros ?", "a": "En bahts, toujours. La conversion « en euros » (DCC) proposée sur place applique un taux défavorable. En choisissant le baht, c'est le taux de votre réseau (Visa/Mastercard) qui s'applique." }
+      ]
+    },
+    {
+      "slug": "carte-bancaire-pour-le-royaume-uni",
+      "title": "Carte bancaire pour voyager au Royaume-Uni",
+      "metaDescription": "Quelle carte pour le Royaume-Uni : payer en livres sterling sans frais de change, le sans-contact partout, et éviter la conversion en euros (DCC). Nos cartes sans frais.",
+      "criterion": "Sont retenues les cartes sans frais de change ni frais de retrait en devises — l'essentiel pour dépenser en livres sterling. L'éditorial est spécifique au Royaume-Uni.",
+      "intro": "Le Royaume-Uni utilise la livre sterling et fonctionne massivement par carte : le sans contact y est la norme, jusque dans les transports londoniens. Une carte sans frais de change suffit à couvrir l'essentiel des dépenses. Voici les cartes du catalogue sans frais à l'étranger, et les réflexes utiles sur place.",
+      "sections": [
+        { "h": "Un pays où la carte règne", "body": "Au Royaume-Uni, le paiement sans contact est accepté quasiment partout, y compris pour de petits montants, dans les commerces comme dans les transports : à Londres, on entre dans le métro et le bus en présentant simplement sa carte sans contact ou son téléphone, sans acheter de ticket. Une carte sans frais de change couvre donc l'immense majorité des dépenses en livres sterling sans surcoût, et limite fortement le besoin d'espèces." },
+        { "h": "Espèces et distributeurs", "body": "Le liquide reste utile à la marge (marchés, pourboires, très petits commerces), mais peut souvent être évité. Les distributeurs (cashpoints) rattachés aux banques sont généralement gratuits au retrait ; certains automates privés, dans les commerces de proximité, facturent des frais affichés avant l'opération. Une carte sans frais de retrait en devises évite la part de votre banque ; vérifiez seulement l'éventuel frais de l'automate au moment du retrait." },
+        { "h": "Payer en livres, pas en euros", "body": "Terminaux et distributeurs britanniques proposent souvent de régler « en euros » : cette conversion dynamique (DCC) applique un taux défavorable fixé sur place. Choisissez toujours la livre sterling (GBP) pour que votre carte applique le taux de son réseau. Le Brexit n'a rien changé aux frais de carte : une carte à 0 % de change reste sans commission sur vos paiements en livres, comme auparavant." }
+      ],
+      "faq": [
+        { "q": "A-t-on besoin d'espèces au Royaume-Uni ?", "a": "Peu : le paiement sans contact est accepté quasiment partout, y compris dans les transports londoniens. Un peu de liquide reste utile pour les marchés ou les pourboires, mais la carte suffit à l'essentiel." },
+        { "q": "Le Brexit a-t-il changé les frais de carte ?", "a": "Non : une carte française sans frais de change reste sans commission sur les paiements en livres sterling. Le Royaume-Uni était déjà hors zone euro auparavant ; rien ne change côté frais de carte." },
+        { "q": "Faut-il payer en livres ou en euros ?", "a": "En livres sterling. La conversion « en euros » (DCC) proposée par le terminal applique un taux défavorable. En choisissant la livre, c'est le taux de votre réseau (Visa/Mastercard) qui s'applique." }
+      ]
+    },
+    {
+      "slug": "carte-bancaire-pour-le-canada",
+      "title": "Carte bancaire pour voyager au Canada",
+      "metaDescription": "Quelle carte pour le Canada : payer en dollars canadiens sans frais de change, comprendre les taxes ajoutées en caisse et le pourboire, éviter la conversion (DCC).",
+      "criterion": "Sont retenues les cartes sans frais de change ni frais de retrait en devises, utiles pour dépenser en dollars canadiens. L'éditorial ci-dessous est spécifique au Canada.",
+      "intro": "Le Canada utilise le dollar canadien et fonctionne largement par carte, avec deux spécificités qui surprennent les voyageurs : les taxes s'ajoutent en caisse (les prix sont affichés hors taxes) et le pourboire est attendu. Une carte sans frais de change évite le surcoût sur vos paiements. Voici les cartes sans frais à l'étranger, et les usages locaux.",
+      "sections": [
+        { "h": "Carte partout, mais des frais de distributeur", "body": "Le paiement par carte, sans contact compris, est très répandu au Canada. Les distributeurs (ATM) appliquent en revanche souvent un frais de l'opérateur (quelques dollars canadiens) en plus des frais éventuels de votre carte, surtout les automates privés hors réseaux bancaires. Une carte sans frais de retrait en devises supprime la part de votre banque ; privilégiez les distributeurs des grandes banques et retirez des montants groupés pour diluer le frais de l'automate." },
+        { "h": "Taxes et pourboire : le prix affiché n'est pas le prix payé", "body": "Au Canada, les prix en magasin et au restaurant sont affichés hors taxes : les taxes de vente (fédérale et provinciale, variables selon la province) s'ajoutent au passage en caisse. Au restaurant et pour de nombreux services, un pourboire d'environ 15 à 20 % est d'usage, parfois proposé directement sur le terminal de paiement. Anticipez ces suppléments : le total réglé dépasse le prix étiqueté, indépendamment de votre carte." },
+        { "h": "Payer en dollars canadiens, pas en euros", "body": "Comme ailleurs, terminaux et distributeurs proposent la conversion « en euros » (DCC) : un taux défavorable fixé sur place. Choisissez le dollar canadien (CAD) pour bénéficier du taux de votre réseau (Visa/Mastercard). Associé à une carte sans frais de change et à des retraits groupés, ce réflexe minimise le coût de vos dépenses sur place, quelle que soit la carte utilisée." }
+      ],
+      "faq": [
+        { "q": "Les prix affichés incluent-ils les taxes au Canada ?", "a": "Non : les prix sont affichés hors taxes, qui s'ajoutent en caisse (taxes fédérale et provinciale selon la province). Le total payé est donc supérieur au prix étiqueté." },
+        { "q": "Le pourboire est-il obligatoire au Canada ?", "a": "Il n'est pas obligatoire mais fortement attendu au restaurant et pour de nombreux services, autour de 15 à 20 %, souvent proposé sur le terminal. Prévoyez-le dans votre budget." },
+        { "q": "Faut-il payer en dollars canadiens ou en euros ?", "a": "En dollars canadiens. La conversion « en euros » (DCC) applique un taux défavorable. En choisissant le CAD, c'est le taux de votre réseau (Visa/Mastercard) qui s'applique." }
+      ]
     }
   ]
 }

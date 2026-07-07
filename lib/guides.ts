@@ -218,6 +218,51 @@ const EDITORIAL_PREDICATES: Record<
     match: (c) => c.tier === "premium" || c.tier === "haut_de_gamme",
     sort: byFeeThenName,
   },
+  // ─── Guides par marque / émetteur : requêtes de marque, forte intention. On
+  // filtre sur l'émetteur (fait objectif) et on classe par coût croissant. ───
+  "carte-boursobank": {
+    match: (c) => c.issuer.includes("BoursoBank"),
+    sort: byFeeThenName,
+  },
+  "carte-fortuneo": {
+    match: (c) => c.issuer.includes("Fortuneo"),
+    sort: byFeeThenName,
+  },
+  "carte-revolut": {
+    match: (c) => c.issuer.includes("Revolut"),
+    sort: byFeeThenName,
+  },
+  "carte-n26": {
+    match: (c) => c.issuer.includes("N26"),
+    sort: byFeeThenName,
+  },
+  "carte-american-express": {
+    match: (c) => c.issuer.includes("American Express"),
+    sort: byFeeThenName,
+  },
+  "carte-nickel": {
+    match: (c) => c.issuer.includes("Nickel"),
+    sort: byFeeThenName,
+  },
+  // ─── Guides par destination : même critère objectif que « États-Unis »
+  // (aucun frais de change ni de retrait en devises). L'éditorial, lui, est
+  // spécifique à chaque pays (devise, culture du cash, DAB locaux). ───
+  "carte-bancaire-pour-le-japon": {
+    match: (c) => c.fx_fee_percent === 0 && noForeignWithdrawalFee(c),
+    sort: byFeeThenName,
+  },
+  "carte-bancaire-pour-la-thailande": {
+    match: (c) => c.fx_fee_percent === 0 && noForeignWithdrawalFee(c),
+    sort: byFeeThenName,
+  },
+  "carte-bancaire-pour-le-royaume-uni": {
+    match: (c) => c.fx_fee_percent === 0 && noForeignWithdrawalFee(c),
+    sort: byFeeThenName,
+  },
+  "carte-bancaire-pour-le-canada": {
+    match: (c) => c.fx_fee_percent === 0 && noForeignWithdrawalFee(c),
+    sort: byFeeThenName,
+  },
 };
 
 interface GuideContent {
