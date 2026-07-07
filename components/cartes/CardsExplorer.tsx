@@ -17,8 +17,10 @@ import { formatEur } from "@/lib/format";
 import type { CardCompareData } from "@/lib/card-compare";
 import type { Badge, BadgeId } from "@/lib/card-badges";
 import { BADGE_FILTERS } from "@/lib/card-badges";
+import type { Card } from "@/lib/types";
 import ComparisonModal from "./ComparisonModal";
 import CardBadges from "./CardBadges";
+import CostEstimator from "./CostEstimator";
 
 /** Donnée d'une carte pour la liste : tout est pré-calculé côté serveur. */
 export interface CardListItem {
@@ -43,6 +45,8 @@ export interface CardListItem {
   badges: Badge[];
   /** Données prêtes à comparer (tableau côte à côte). */
   compare: CardCompareData;
+  /** Carte brute, pour le widget d'estimation (calcul moteur côté client). */
+  card: Card;
   /** Visuel de la carte, rendu côté serveur et passé tel quel. */
   visual: React.ReactNode;
 }
@@ -276,11 +280,11 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
           {shown.map((it) => {
             const isSel = selected.includes(it.id);
             return (
-              <li key={it.id} className="relative">
+              <li key={it.id} className="relative flex flex-col">
                 <Link
                   href={`/cartes/${it.id}`}
                   className={
-                    "group flex h-full flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-600/5 " +
+                    "group flex flex-1 flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-600/5 " +
                     (isSel ? "border-indigo-400 ring-2 ring-indigo-400" : "border-slate-200")
                   }
                 >
@@ -366,6 +370,9 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
 
                 {/* Badges « Best for » : 2 max, superposés au bord supérieur gauche. */}
                 <CardBadges badges={it.badges.slice(0, 2)} />
+
+                {/* Accordéon d'estimation : le widget n'est monté qu'à l'ouverture. */}
+                <CostAccordion card={it.card} />
               </li>
             );
           })}
@@ -429,6 +436,43 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
         />
       )}
     </section>
+  );
+}
+
+/**
+ * Accordéon « Estimez votre coût » sous chaque carte. Le widget d'estimation
+ * n'est RENDU qu'à l'ouverture : on évite de monter 35 estimateurs d'un coup.
+ */
+function CostAccordion({ card }: { card: Card }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+      >
+        Estimez votre coût
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden
+          className={"h-4 w-4 shrink-0 transition-transform " + (open ? "rotate-90" : "")}
+        >
+          <path
+            fillRule="evenodd"
+            d="M7.3 4.3a1 1 0 011.4 0l5 5a1 1 0 010 1.4l-5 5a1 1 0 01-1.4-1.4L11.6 10 7.3 5.7a1 1 0 010-1.4z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </button>
+      {open && (
+        <div className="mt-2">
+          <CostEstimator card={card} bare />
+        </div>
+      )}
+    </div>
   );
 }
 

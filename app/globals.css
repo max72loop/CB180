@@ -168,3 +168,45 @@ h3 {
     animation: none;
   }
 }
+
+/* Slider du widget « Estimez votre coût » : piste fine 4px, thumb rond 20px.
+   La couleur de remplissage de la piste active est posée en inline (dégradé
+   jusqu'à la valeur), la couleur primaire du thumb est ici. */
+.cb-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  cursor: pointer;
+}
+.cb-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: #4f46e5;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.cb-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: #4f46e5;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.cb-range:focus-visible {
+  outline: none;
+}
+.cb-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+.cb-range:focus-visible::-moz-range-thumb {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}

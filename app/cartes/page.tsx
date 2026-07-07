@@ -50,6 +50,9 @@ export default function CartesIndex() {
       deferredDebit: debit === "differe" || debit === "choix",
       badges: cardBadges(card),
       compare: buildCompareData(card),
+      // Le widget d'estimation (client) n'utilise que les frais : on neutralise
+      // le bloc affiliation (commission, URL de tracking) avant de l'envoyer.
+      card: { ...card, affiliate: { network: null, est_commission_eur: 0 } },
       visual: <ProductCardVisual card={card} className="w-full" />,
     };
   });

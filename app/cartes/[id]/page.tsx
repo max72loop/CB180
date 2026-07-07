@@ -9,7 +9,7 @@ import { notFound } from "next/navigation";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
 import { ProductCardVisual, MiniCard } from "@/components/brand/CardVisual";
-import MiniSimulateur from "@/components/questionnaire/MiniSimulateur";
+import CostEstimator from "@/components/cartes/CostEstimator";
 import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
 import { getCard, publicCards } from "@/lib/cards";
 import { formatEur } from "@/lib/format";
@@ -322,9 +322,9 @@ export default async function CartePage({ params }: Params) {
             </details>
           </section>
 
-          {/* ─── Widget de simulation embarqué, scopé sur cette carte ─── */}
+          {/* ─── Widget d'estimation embarqué, scopé sur cette carte ─── */}
           <section className="mt-10">
-            <MiniSimulateur card={card} />
+            <CostEstimator card={card} />
           </section>
 
           {/* ─── Vérification des données (source officielle) ─── */}
