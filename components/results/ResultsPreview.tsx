@@ -206,10 +206,9 @@ export default function ResultsPreview({
             </span>
           </div>
           <p className="text-xs leading-relaxed text-slate-500">
-            Une information objective, pas un conseil : classement trié par coût (
-            {view === "year1" ? "1ʳᵉ année, prime incluse" : "récurrent, hors prime"}
-            ), sans « recommandé pour vous ». Les liens affiliés n&apos;influencent
-            pas cet ordre.
+            Trié par coût{" "}
+            {view === "year1" ? "(1ʳᵉ année, prime incluse)" : "(récurrent, hors prime)"}.
+            Certains liens sont affiliés et n&apos;influencent pas cet ordre.
           </p>
         </div>
 
@@ -493,8 +492,7 @@ function Reveal({
         )}
 
         <p className="mx-auto mt-4 max-w-sm text-xs text-slate-400">
-          Estimation fondée uniquement sur les fourchettes que vous avez saisies.
-          Une information chiffrée, pas un conseil.
+          Estimation fondée sur les fourchettes que vous avez saisies.
         </p>
 
         {/* Boucle virale : le chiffre est le contenu de partage (audit, chantier 05) */}
@@ -760,16 +758,11 @@ function RankedCardRow({
         </div>
       </details>
 
-      {/* Transparence affiliée : caractère affilié du lien, sans montant. */}
-      {card.affiliate.network && (
-        <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
-          Lien affilié. N&apos;influence pas le classement.
-        </p>
-      )}
-
       <div className="flex items-center justify-between gap-3 border-t border-slate-100 px-4 py-3">
         <div className="text-xs text-slate-500">
-          Dernière vérification : {formatDate(card.last_verified)}
+          Vérifié : {formatDate(card.last_verified)}
+          {/* Caractère affilié indiqué une fois, au plus près du lien (compact). */}
+          {card.affiliate.network && " · lien affilié"}
         </div>
         {hasOffer && (
           <a

@@ -173,17 +173,15 @@ function CompareBar({
 
 function TrustStrip() {
   const items = [
-    "Données en fourchettes, anonymisées",
+    "Anonyme : aucune donnée identifiante requise",
     "Hébergement en Union européenne (RGPD)",
-    "Aucune donnée identifiante requise",
-    "Un même calcul objectif pour toutes les cartes",
   ];
   return (
     <section className="border-y border-slate-200 bg-white">
-      <div className="mx-auto grid max-w-5xl gap-3 px-5 py-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-3xl gap-3 px-5 py-6 sm:grid-cols-2">
         {items.map((item) => (
-          <div key={item} className="flex items-start gap-2">
-            <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+          <div key={item} className="flex items-center justify-center gap-2">
+            <CheckIcon className="h-4 w-4 shrink-0 text-emerald-600" />
             <span className="text-sm text-slate-600">{item}</span>
           </div>
         ))}
@@ -294,12 +292,6 @@ function HowItWorks() {
 /* ----------------------------------------------------- Example result ---- */
 
 function ExampleResult() {
-  const lines = [
-    { label: "Cotisation annuelle", value: "0,00 €" },
-    { label: "Frais de change estimés", value: "0,00 €" },
-    { label: "Frais de retrait étranger estimés", value: "0,00 €" },
-    { label: "Prime de bienvenue (amortie 3 ans)", value: "−10,00 €", neg: true },
-  ];
   return (
     <section className="bg-white">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 lg:grid-cols-2">
@@ -339,30 +331,14 @@ function ExampleResult() {
                 <p className="text-lg font-bold text-slate-900">
                   0 €<span className="text-xs font-normal text-slate-500"> / an</span>
                 </p>
-                <p className="text-xs text-slate-400">1ʳᵉ année : −10 €</p>
                 <p className="text-xs font-medium text-emerald-600">
                   Économie vs actuel +269 €
                 </p>
               </div>
             </div>
-            <dl className="space-y-1.5 border-t border-slate-100 bg-slate-50/60 px-4 py-3 text-sm">
-              {lines.map((l) => (
-                <div key={l.label} className="flex justify-between text-slate-600">
-                  <dt>{l.label}</dt>
-                  <dd className={l.neg ? "text-emerald-600" : ""}>{l.value}</dd>
-                </div>
-              ))}
-              <div className="mt-1 flex justify-between border-t border-slate-200 pt-2 font-semibold text-slate-900">
-                <dt>Coût net la 1ʳᵉ année</dt>
-                <dd>−10,00 €</dd>
-              </div>
-              <div className="flex justify-between text-slate-500">
-                <dt>Coût récurrent (hors prime)</dt>
-                <dd>0,00 €</dd>
-              </div>
-            </dl>
-            <p className="border-t border-slate-100 px-4 py-2.5 text-xs text-slate-500">
-              Lien affilié. N&apos;influence pas le classement.
+            <p className="border-t border-slate-100 bg-slate-50/60 px-4 py-3 text-xs text-slate-500">
+              Le détail poste par poste (cotisation, change, retrait, primes) est
+              affiché et dépliable sur chaque résultat.
             </p>
           </div>
         </div>

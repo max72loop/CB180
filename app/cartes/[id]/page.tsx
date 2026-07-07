@@ -243,8 +243,9 @@ export default async function CartePage({ params }: Params) {
                 )}
               </div>
               <p className="mt-3 text-xs text-slate-400">
-                Simulation gratuite, sans inscription. Le lien « Voir l&apos;offre »
-                mène au site officiel de {card.issuer.split(" (")[0]}.
+                Simulation gratuite, sans inscription.
+                {hasOffer &&
+                  ` Lien affilié vers le site officiel de ${card.issuer.split(" (")[0]} — n'influence pas le classement.`}
               </p>
             </div>
           </div>
@@ -308,12 +309,17 @@ export default async function CartePage({ params }: Params) {
               </span>
             </p>
 
-            <p className="mt-3 text-xs leading-relaxed text-slate-400">
-              Estimations sur hypothèses explicites (retrait étranger moyen 100 €,
-              prime de bienvenue amortie sur 3 ans). Un coût négatif signifie que
-              la carte « rapporte » sur l&apos;horizon retenu. Votre cas exact peut
-              différer : ajustez-le ci-dessous.
-            </p>
+            <details className="mt-3 text-xs leading-relaxed text-slate-400">
+              <summary className="cursor-pointer font-medium text-slate-500 marker:content-['']">
+                Hypothèses de calcul
+              </summary>
+              <p className="mt-1.5">
+                Retrait étranger moyen 100 €, prime de bienvenue amortie sur 3 ans.
+                Un coût négatif signifie que la carte « rapporte » sur
+                l&apos;horizon retenu. Votre cas exact peut différer : ajustez-le
+                ci-dessous.
+              </p>
+            </details>
           </section>
 
           {/* ─── Widget de simulation embarqué, scopé sur cette carte ─── */}
@@ -321,59 +327,34 @@ export default async function CartePage({ params }: Params) {
             <MiniSimulateur card={card} />
           </section>
 
-          {/* ─── Transparence & méthode ─── */}
-          <section className="mt-16">
-            <SectionHeading eyebrow="Notre engagement" title="Transparence & méthode" />
-            <div className="mt-6 grid gap-3 md:grid-cols-2">
-              {card.verif_note && (
-                <div className="rounded-2xl border border-slate-200 bg-white p-5">
-                  <div className="flex items-center gap-2">
-                    <ShieldIcon className="h-4 w-4 text-emerald-500" />
-                    <h3 className="text-sm font-semibold text-slate-900">
-                      Note de vérification
-                    </h3>
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    {card.verif_note}
-                  </p>
-                  {hasOffer && (
-                    <a
-                      href={card.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer sponsored"
-                      className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700"
-                    >
-                      Consulter la source officielle
-                      <ArrowIcon className="h-3.5 w-3.5" />
-                    </a>
-                  )}
-                </div>
-              )}
-
-              <div className="rounded-2xl border border-slate-200 bg-white p-5">
+          {/* ─── Vérification des données (source officielle) ─── */}
+          {card.verif_note && (
+            <section className="mt-16">
+              <SectionHeading eyebrow="Notre engagement" title="Vérification des données" />
+              <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
                 <div className="flex items-center gap-2">
-                  <BalanceIcon className="h-4 w-4 text-slate-500" />
+                  <ShieldIcon className="h-4 w-4 text-emerald-500" />
                   <h3 className="text-sm font-semibold text-slate-900">
-                    Un classement objectif
+                    Note de vérification
                   </h3>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                  {card.affiliate.network != null ? (
-                    <>
-                      Si vous ouvrez cette carte via notre lien, il s&apos;agit
-                      d&apos;un lien affilié. Il n&apos;influence pas le classement,
-                      établi objectivement selon le coût annuel calculé.
-                    </>
-                  ) : (
-                    <>
-                      Le classement est établi objectivement selon le coût annuel
-                      calculé, sur données officielles vérifiées.
-                    </>
-                  )}
+                  {card.verif_note}
                 </p>
+                {hasOffer && (
+                  <a
+                    href={card.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                  >
+                    Consulter la source officielle
+                    <ArrowIcon className="h-3.5 w-3.5" />
+                  </a>
+                )}
               </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           {/* ─── Alerte tarifaire : capture email récurrente, ciblée ─── */}
           <section className="mt-10">
@@ -779,15 +760,6 @@ function HomeIcon({ className }: { className?: string }) {
       <path d="M4 11 12 4l8 7" />
       <path d="M6 9.5V19a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V9.5" />
       <path d="M10 20v-5h4v5" />
-    </Svg>
-  );
-}
-
-function BalanceIcon({ className }: { className?: string }) {
-  return (
-    <Svg className={className}>
-      <path d="M12 4v15M6 19h12M4 8l4-3 4 3M12 8l4-3 4 3" />
-      <path d="M4 8l-1.5 3a2.2 2.2 0 0 0 3 0L8 8M16 8l-1.5 3a2.2 2.2 0 0 0 3 0L20 8" />
     </Svg>
   );
 }

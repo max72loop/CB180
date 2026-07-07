@@ -149,25 +149,24 @@ export default async function ProfilPage({
           </ol>
         </section>
 
-        {/* Transparence : les hypothèses derrière le chiffre. */}
+        {/* Transparence : les hypothèses derrière le chiffre, repliées par défaut. */}
         <section className="mt-10">
-          <h2 className="text-xl font-semibold text-slate-900">
-            Les hypothèses de ce chiffrage
-          </h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="text-sm text-slate-500">
             L&apos;estimation ci-dessus repose sur un profil PVT type. Vos usages
             réels peuvent différer — le simulateur les ajuste.
           </p>
-          <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-slate-600">
-            {profil.hypotheses.map((h) => (
-              <li key={h}>{h}</li>
-            ))}
-          </ul>
+          <details className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <summary className="cursor-pointer text-sm font-medium text-slate-700 marker:content-['']">
+              Les hypothèses de ce chiffrage
+            </summary>
+            <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-slate-600">
+              {profil.hypotheses.map((h) => (
+                <li key={h}>{h}</li>
+              ))}
+            </ul>
+          </details>
           <p className="mt-4 text-xs leading-relaxed text-slate-400">
-            Un écart chiffré, pas un conseil. CB180 informe et compare, il ne
-            recommande aucune souscription. Estimation sur données officielles et
-            hypothèses explicites (retrait moyen 100 €, situation actuelle
-            modélisée sur une carte de réseau traditionnel).{" "}
+            Un écart chiffré, pas un conseil.{" "}
             <Link
               href="/comment-ca-marche"
               className="font-medium text-indigo-600 hover:text-indigo-700"

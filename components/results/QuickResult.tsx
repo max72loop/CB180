@@ -238,8 +238,7 @@ export default function QuickResult({
             />
           </div>
           <p className="mt-2 text-xs leading-relaxed text-slate-500">
-            Calcul prudent pour le reste (aucun voyage, aucun retrait à
-            l&apos;étranger, miles non comptés). Les {REMAINING} questions
+            Hypothèses prudentes pour le reste. Les {REMAINING} questions
             suivantes complètent le tableau.
           </p>
         </div>
@@ -263,10 +262,6 @@ export default function QuickResult({
         >
           Voir directement le classement
         </button>
-        <p className="text-center text-xs leading-relaxed text-slate-500">
-          Un écart chiffré, pas un conseil. Le classement est trié objectivement
-          par coût annuel.
-        </p>
       </div>
     </div>
   );
