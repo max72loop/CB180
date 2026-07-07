@@ -15,7 +15,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { formatEur } from "@/lib/format";
 import type { CardCompareData } from "@/lib/card-compare";
+import type { Badge, BadgeId } from "@/lib/card-badges";
+import { BADGE_FILTERS } from "@/lib/card-badges";
 import ComparisonModal from "./ComparisonModal";
+import CardBadges from "./CardBadges";
 
 /** Donnée d'une carte pour la liste : tout est pré-calculé côté serveur. */
 export interface CardListItem {
@@ -36,6 +39,8 @@ export interface CardListItem {
   zeroFx: boolean;
   noIncomeCondition: boolean;
   deferredDebit: boolean;
+  /** Badges « Best for » éligibles, ordonnés par priorité (affichage : 2 max). */
+  badges: Badge[];
   /** Données prêtes à comparer (tableau côte à côte). */
   compare: CardCompareData;
   /** Visuel de la carte, rendu côté serveur et passé tel quel. */
@@ -59,6 +64,7 @@ const STORAGE_KEY = "cb180:compare";
 export default function CardsExplorer({ items }: { items: CardListItem[] }) {
   const [sort, setSort] = useState<SortKey>("cout");
   const [active, setActive] = useState<Set<FilterKey>>(new Set());
+  const [activeBadges, setActiveBadges] = useState<Set<BadgeId>>(new Set());
 
   // Sélection de comparaison : liste d'ids ordonnée, persistée en sessionStorage.
   const [selected, setSelected] = useState<string[]>([]);
@@ -108,13 +114,19 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
   }, [modalOpen, selected]);
 
   const shown = useMemo(() => {
-    const filtered = items.filter((it) => [...active].every((k) => it[k]));
+    const filtered = items.filter(
+      (it) =>
+        [...active].every((k) => it[k]) &&
+        [...activeBadges].every((bid) => it.badges.some((b) => b.id === bid)),
+    );
     return [...filtered].sort((a, b) =>
       sort === "cout"
         ? a.minCost - b.minCost || a.name.localeCompare(b.name)
         : a.name.localeCompare(b.name),
     );
-  }, [items, active, sort]);
+  }, [items, active, activeBadges, sort]);
+
+  const filtersOn = active.size + activeBadges.size;
 
   function toggle(key: FilterKey) {
     setActive((prev) => {
@@ -123,6 +135,20 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
       else next.add(key);
       return next;
     });
+  }
+
+  function toggleBadge(id: BadgeId) {
+    setActiveBadges((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function resetFilters() {
+    setActive(new Set());
+    setActiveBadges(new Set());
   }
 
   const toggleCompare = useCallback(
@@ -181,10 +207,10 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
               </button>
             );
           })}
-          {active.size > 0 && (
+          {filtersOn > 0 && (
             <button
               type="button"
-              onClick={() => setActive(new Set())}
+              onClick={resetFilters}
               className="ml-1 text-sm font-medium text-slate-400 underline-offset-2 hover:text-slate-600 hover:underline"
             >
               Réinitialiser
@@ -205,9 +231,37 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
         </label>
       </div>
 
+      {/* Filtres « cas d'usage » : sélection par badge (couleur de la catégorie). */}
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          Cas d&apos;usage
+        </span>
+        {BADGE_FILTERS.map((b) => {
+          const on = activeBadges.has(b.id);
+          return (
+            <button
+              key={b.id}
+              type="button"
+              aria-pressed={on}
+              onClick={() => toggleBadge(b.id)}
+              style={on ? { backgroundColor: b.bg, color: b.fg } : undefined}
+              className={
+                "inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 " +
+                (on
+                  ? "border-transparent"
+                  : "border-slate-200 bg-white text-slate-600 hover:border-indigo-200 hover:text-slate-800")
+              }
+            >
+              <span aria-hidden>{b.emoji}</span>
+              {b.short}
+            </button>
+          );
+        })}
+      </div>
+
       <p className="mt-4 text-sm text-slate-500" aria-live="polite">
         {shown.length} carte{shown.length > 1 ? "s" : ""}
-        {active.size > 0 ? " correspondant à vos filtres" : ""}
+        {filtersOn > 0 ? " correspondant à vos filtres" : ""}
       </p>
 
       {shown.length === 0 ? (
@@ -309,6 +363,9 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
                   )}
                   {isSel ? "Sélectionnée" : "Comparer"}
                 </button>
+
+                {/* Badges « Best for » : 2 max, superposés au bord supérieur gauche. */}
+                <CardBadges badges={it.badges.slice(0, 2)} />
               </li>
             );
           })}
