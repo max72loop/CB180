@@ -103,17 +103,22 @@ export default function ObservatoirePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(dataset) }}
       />
       <main>
-        {/* ─── Hero + chiffre clé ─── */}
-        <section className="relative overflow-hidden border-b border-slate-200 bg-white">
-          <div className="brand-glow pointer-events-none absolute inset-0 -z-10 opacity-60" />
+        {/* ─── Hero + chiffre clé (masthead éditorial sur fond encre) ─── */}
+        <section className="relative overflow-hidden border-b border-slate-800 bg-slate-950 text-white">
+          <div className="graticule pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(80%_70%_at_50%_0%,black,transparent)]" />
+          <div className="brand-glow pointer-events-none absolute inset-0 -z-10 opacity-70" />
           <div className="mx-auto max-w-5xl px-5 py-16 sm:py-20">
-            <p className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
-              Observatoire CB180 · {snap.label}
-            </p>
-            <h1 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            {/* Barre de masthead : signature d'un indice publié, en monospace */}
+            <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-4 font-mono text-[11px] uppercase tracking-[0.22em] text-slate-400">
+              <span className="text-indigo-300">Indice tarifaire</span>
+              <span className="text-right">
+                {snap.label} · relevé {frDate(snap.referenceDate)}
+              </span>
+            </div>
+            <h1 className="mt-6 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
               Le coût des cartes bancaires en France, chiffré et daté
             </h1>
-            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-300">
               Un indice trimestriel public, calculé sur les cartes vérifiées du
               panel CB180. Données issues des documents tarifaires officiels,
               méthodologie ouverte, prêt à citer.
@@ -121,14 +126,14 @@ export default function ObservatoirePage() {
 
             {/* Chiffre clé */}
             <div className="mt-10 grid gap-4 sm:grid-cols-5">
-              <div className="rounded-3xl border border-indigo-200 bg-gradient-to-b from-indigo-50 to-white p-7 sm:col-span-3">
-                <p className="text-sm font-medium text-indigo-700">
+              <div className="rounded-3xl border border-indigo-400/30 bg-indigo-500/10 p-7 backdrop-blur sm:col-span-3">
+                <p className="text-sm font-medium text-indigo-300">
                   Cotisation annuelle moyenne
                 </p>
-                <p className="mt-1 text-6xl font-extrabold tracking-tight text-slate-900 tabular-nums sm:text-7xl">
+                <p className="mt-1 text-6xl font-extrabold tracking-tight text-white tabular-nums sm:text-7xl">
                   {eur2.format(snap.avgAnnualFee)}
                 </p>
-                <p className="mt-2 text-sm text-slate-500">
+                <p className="mt-2 text-sm text-slate-400">
                   Médiane {eur0.format(snap.medianAnnualFee)} · panel de{" "}
                   {snap.panelSize} cartes vérifiées · relevé au{" "}
                   {frDate(snap.referenceDate)}
@@ -152,6 +157,7 @@ export default function ObservatoirePage() {
           {/* ─── Repères ─── */}
           <section>
             <SectionTitle
+              n={1}
               eyebrow="Repères du trimestre"
               title="Les extrêmes et la moyenne du marché suivi"
             />
@@ -181,6 +187,7 @@ export default function ObservatoirePage() {
           {/* ─── Par gamme ─── */}
           <section>
             <SectionTitle
+              n={2}
               eyebrow="Par gamme"
               title="Cotisation moyenne selon le niveau de carte"
             />
@@ -217,6 +224,7 @@ export default function ObservatoirePage() {
           {/* ─── Évolution ─── */}
           <section>
             <SectionTitle
+              n={3}
               eyebrow="Évolution"
               title="La cotisation moyenne au fil des trimestres"
             />
@@ -226,6 +234,7 @@ export default function ObservatoirePage() {
           {/* ─── Ce qui a changé ─── */}
           <section>
             <SectionTitle
+              n={4}
               eyebrow="Dernières évolutions détectées"
               title="Ce qui a bougé depuis le relevé précédent"
             />
@@ -310,22 +319,37 @@ export default function ObservatoirePage() {
   );
 }
 
-function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
+function SectionTitle({
+  n,
+  eyebrow,
+  title,
+}: {
+  n: number;
+  eyebrow: string;
+  title: string;
+}) {
   return (
-    <div>
-      <p className="text-sm font-semibold text-indigo-600">{eyebrow}</p>
-      <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
-        {title}
-      </h2>
+    <div className="flex items-baseline gap-4 border-t border-slate-200 pt-5">
+      <span className="font-mono text-sm font-semibold tabular-nums text-indigo-500">
+        {String(n).padStart(2, "0")}
+      </span>
+      <div>
+        <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-indigo-600">
+          {eyebrow}
+        </p>
+        <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
+          {title}
+        </h2>
+      </div>
     </div>
   );
 }
 
 function MiniCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col justify-center rounded-2xl border border-slate-200 bg-white p-5">
-      <p className="text-3xl font-bold tabular-nums text-slate-900">{value}</p>
-      <p className="mt-1 text-sm text-slate-500">{label}</p>
+    <div className="flex flex-col justify-center rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
+      <p className="text-3xl font-bold tabular-nums text-white">{value}</p>
+      <p className="mt-1 text-sm text-slate-400">{label}</p>
     </div>
   );
 }
