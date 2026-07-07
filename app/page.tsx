@@ -42,13 +42,7 @@ function Hero() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 sm:py-24 lg:grid-cols-2">
         {/* Colonne texte */}
         <div className="text-center lg:text-left">
-          {/* Punchline de catégorie : le différenciateur, posé d'emblée */}
-          <p className="mx-auto inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 lg:mx-0">
-            <CheckIcon className="h-3.5 w-3.5" />
-            Le seul comparateur qui ne vend aucune carte
-          </p>
-
-          <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
             Votre carte vous coûte peut-être{" "}
             <span className="text-gradient">200&nbsp;€ de trop</span> par
             an&nbsp;?
