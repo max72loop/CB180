@@ -64,6 +64,12 @@ export interface Card {
    */
   image?: string;
 
+  /**
+   * Fonctionnalités & services comparables, au-delà du coût (§ CardFeatures).
+   * Optionnel et purement informatif : n'entre jamais dans le classement.
+   */
+  features?: CardFeatures;
+
   // --- Dérivés numériques pour le moteur (optionnels) ---
   /** [moteur] Frais % appliqué à un retrait étranger facturé. Défaut 0. */
   foreign_withdrawal_fee_percent?: number;
@@ -85,6 +91,56 @@ export interface Card {
   point_value_eur?: number;
   /** [moteur] Source et date des valeurs de récompense (traçabilité). */
   rewards_source?: string;
+}
+
+/**
+ * Fonctionnalités & services d'une carte/compte, au-delà du coût.
+ *
+ * Objectif : rendre COMPARABLE ce qui diffère de banque à banque et que le
+ * coût annuel net ne capture pas (débit différé, paiement mobile, sous-comptes,
+ * IBAN français, chéquier…). Ces champs ne participent PAS au classement (le
+ * tri reste le coût net) : ils informent, ils ne prescrivent pas (IOBSP).
+ *
+ * TRI-ÉTAT VOLONTAIRE pour les booléens : `true` = confirmé présent, `false` =
+ * confirmé absent, `undefined` (champ omis) = NON VÉRIFIÉ. L'affichage distingue
+ * les trois : jamais « non » par défaut quand on n'a pas vérifié. Chaque valeur
+ * suit la même discipline de vérification que le reste de la fiche
+ * (`last_verified` / `source_url`).
+ */
+export interface CardFeatures {
+  /** Mode de débit proposé. "choix" = immédiat ET différé disponibles. */
+  debitType?: "immediat" | "differe" | "choix";
+  /** Découvert autorisé possible sur le compte support. */
+  authorizedOverdraft?: boolean;
+
+  /** Paiement mobile Apple Pay. */
+  applePay?: boolean;
+  /** Paiement mobile Google Pay. */
+  googlePay?: boolean;
+  /** Carte virtuelle (numéro dématérialisé) disponible. */
+  virtualCard?: boolean;
+  /** Cartes virtuelles jetables / à usage unique (ex. Revolut, bunq). */
+  disposableVirtualCards?: boolean;
+  /** Carte virtuelle utilisable immédiatement à l'ouverture (avant la physique). */
+  instantCard?: boolean;
+
+  /** Sous-comptes / espaces / coffres pour organiser son argent. */
+  subAccounts?: boolean;
+  /** Espace ou compte partageable à deux (brique « compte joint »). */
+  sharedSpace?: boolean;
+  /** Solde ou poche d'épargne rémunéré intégré (ex. Trade Republic). */
+  remuneratedBalance?: boolean;
+  /** IBAN français (évite les rejets de prélèvements/employeurs). */
+  frenchIban?: boolean;
+  /** Chéquier disponible (sur demande, éventuellement payant). */
+  chequebook?: boolean;
+  /** Dépôt d'espèces possible (buraliste, DAB partenaire…). */
+  cashDeposit?: boolean;
+
+  /** Matière de la carte physique. */
+  cardMaterial?: "plastique" | "metal" | "recycle";
+  /** Gel / dégel instantané de la carte depuis l'application. */
+  instantFreeze?: boolean;
 }
 
 /** Profil type déclaré par l'utilisateur (usage informatif, non prescriptif). */

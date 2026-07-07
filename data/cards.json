@@ -29,7 +29,21 @@
       "free_foreign_withdrawals_per_month": 1,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "subAccounts": false,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "boursobank-ultim",
@@ -57,7 +71,21 @@
       "free_foreign_withdrawals_per_month": 3,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "choix",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "subAccounts": false,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "boursobank-metal",
@@ -85,7 +113,21 @@
       "free_foreign_withdrawals_per_month": 999,
       "cashback_rate_percent": 0.2,
       "cashback_cap_eur": 240,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "choix",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "subAccounts": false,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "metal",
+        "instantFreeze": true
+      }
     },
     {
       "id": "fortuneo-fosfo",
@@ -113,7 +155,20 @@
       "free_foreign_withdrawals_per_month": 999,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "fortuneo-gold",
@@ -141,7 +196,20 @@
       "free_foreign_withdrawals_per_month": 999,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": 2200
+      "min_monthly_income_eur": 2200,
+      "features": {
+        "debitType": "choix",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "fortuneo-world-elite",
@@ -169,7 +237,20 @@
       "free_foreign_withdrawals_per_month": 999,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": 4000
+      "min_monthly_income_eur": 4000,
+      "features": {
+        "debitType": "choix",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "hellobank-prime",
@@ -197,7 +278,20 @@
       "free_foreign_withdrawals_per_month": 999,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": 1500
+      "min_monthly_income_eur": 1500,
+      "features": {
+        "debitType": "choix",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "monabanq-uniq-plus",
@@ -225,7 +319,20 @@
       "free_foreign_withdrawals_per_month": 999,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "choix",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "revolut-standard",
@@ -256,7 +363,21 @@
       "min_monthly_income_eur": null,
       "points_per_euro": 0.1,
       "point_value_eur": 0,
-      "rewards_source": "RevPoints Standard, valeur EUR non publiee (2026-07) -> non creditee"
+      "rewards_source": "RevPoints Standard, valeur EUR non publiee (2026-07) -> non creditee",
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "disposableVirtualCards": true,
+        "instantCard": true,
+        "subAccounts": true,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "revolut-premium",
@@ -287,7 +408,21 @@
       "min_monthly_income_eur": null,
       "points_per_euro": 0.25,
       "point_value_eur": 0,
-      "rewards_source": "RevPoints Premium, valeur EUR non publiee (2026-07) -> non creditee"
+      "rewards_source": "RevPoints Premium, valeur EUR non publiee (2026-07) -> non creditee",
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "disposableVirtualCards": true,
+        "instantCard": true,
+        "subAccounts": true,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "n26-standard",
@@ -315,7 +450,18 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "subAccounts": true,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "amex-gold",
@@ -346,7 +492,17 @@
       "min_monthly_income_eur": null,
       "points_per_euro": 1,
       "point_value_eur": 0.004,
-      "rewards_source": "Membership Rewards, estimation conservatrice 0,004 EUR/pt (2026-07)"
+      "rewards_source": "Membership Rewards, estimation conservatrice 0,004 EUR/pt (2026-07)",
+      "features": {
+        "debitType": "differe",
+        "applePay": true,
+        "googlePay": true,
+        "sharedSpace": false,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "instantFreeze": true
+      }
     },
     {
       "id": "amex-afklm-gold",
@@ -377,7 +533,17 @@
       "min_monthly_income_eur": null,
       "points_per_euro": 1,
       "point_value_eur": 0.01,
-      "rewards_source": "Flying Blue, estimation conservatrice 0,01 EUR/mile ; taux de base hors depenses AF/KLM (2026-07)"
+      "rewards_source": "Flying Blue, estimation conservatrice 0,01 EUR/mile ; taux de base hors depenses AF/KLM (2026-07)",
+      "features": {
+        "debitType": "differe",
+        "applePay": true,
+        "googlePay": true,
+        "sharedSpace": false,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "instantFreeze": true
+      }
     },
     {
       "id": "visa-premier-traditionnelle",
@@ -461,7 +627,20 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "subAccounts": false,
+        "sharedSpace": false,
+        "frenchIban": true,
+        "chequebook": false,
+        "cashDeposit": true,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "nickel-chrome",
@@ -489,7 +668,20 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "subAccounts": false,
+        "sharedSpace": false,
+        "frenchIban": true,
+        "chequebook": false,
+        "cashDeposit": true,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "nickel-metal",
@@ -517,7 +709,20 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "subAccounts": false,
+        "sharedSpace": false,
+        "frenchIban": true,
+        "chequebook": false,
+        "cashDeposit": true,
+        "cardMaterial": "metal",
+        "instantFreeze": true
+      }
     },
     {
       "id": "trade-republic-card",
@@ -553,7 +758,20 @@
       "free_foreign_withdrawals_per_month": 99,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "remuneratedBalance": true,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "wise-card",
@@ -589,7 +807,21 @@
       "free_foreign_withdrawals_per_month": 2,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "disposableVirtualCards": true,
+        "subAccounts": true,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "bforbank-visa",
@@ -625,7 +857,20 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "bforbank-bforzen",
@@ -653,7 +898,20 @@
       "free_foreign_withdrawals_per_month": 1,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "choix",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "revolut-metal",
@@ -692,7 +950,21 @@
       "min_monthly_income_eur": null,
       "points_per_euro": 1,
       "point_value_eur": 0,
-      "rewards_source": "RevPoints Metal, valeur EUR non publiee (INDICATIF) -> non creditee"
+      "rewards_source": "RevPoints Metal, valeur EUR non publiee (INDICATIF) -> non creditee",
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "disposableVirtualCards": true,
+        "instantCard": true,
+        "subAccounts": true,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "metal",
+        "instantFreeze": true
+      }
     },
     {
       "id": "n26-go",
@@ -728,7 +1000,19 @@
       "free_foreign_withdrawals_per_month": 999,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "subAccounts": true,
+        "sharedSpace": true,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "amex-platinum",
@@ -767,7 +1051,18 @@
       "min_monthly_income_eur": null,
       "points_per_euro": 1,
       "point_value_eur": 0.004,
-      "rewards_source": "Membership Rewards, estimation conservatrice 0,004 EUR/pt (INDICATIF)"
+      "rewards_source": "Membership Rewards, estimation conservatrice 0,004 EUR/pt (INDICATIF)",
+      "features": {
+        "debitType": "differe",
+        "applePay": true,
+        "googlePay": true,
+        "sharedSpace": false,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "metal",
+        "instantFreeze": true
+      }
     },
     {
       "id": "hellobank-one",
@@ -803,7 +1098,20 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "bunq-free",
@@ -831,7 +1139,23 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "disposableVirtualCards": true,
+        "instantCard": true,
+        "subAccounts": true,
+        "sharedSpace": true,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "bunq-core",
@@ -859,7 +1183,24 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "disposableVirtualCards": true,
+        "instantCard": true,
+        "subAccounts": true,
+        "sharedSpace": true,
+        "remuneratedBalance": true,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "bunq-pro",
@@ -887,7 +1228,24 @@
       "free_foreign_withdrawals_per_month": 6,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "disposableVirtualCards": true,
+        "instantCard": true,
+        "subAccounts": true,
+        "sharedSpace": true,
+        "remuneratedBalance": true,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "bunq-elite",
@@ -915,7 +1273,24 @@
       "free_foreign_withdrawals_per_month": 6,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "disposableVirtualCards": true,
+        "instantCard": true,
+        "subAccounts": true,
+        "sharedSpace": true,
+        "remuneratedBalance": true,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "metal",
+        "instantFreeze": true
+      }
     },
     {
       "id": "n26-smart",
@@ -943,7 +1318,19 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "subAccounts": true,
+        "sharedSpace": true,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "n26-metal",
@@ -971,7 +1358,19 @@
       "free_foreign_withdrawals_per_month": 999,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "subAccounts": true,
+        "sharedSpace": true,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "metal",
+        "instantFreeze": true
+      }
     },
     {
       "id": "monabanq-pratiq-plus",
@@ -999,7 +1398,20 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "monabanq-uniq",
@@ -1027,7 +1439,20 @@
       "free_foreign_withdrawals_per_month": 0,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "choix",
+        "authorizedOverdraft": true,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "sharedSpace": true,
+        "frenchIban": true,
+        "chequebook": true,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "trade-republic-virtual",
@@ -1055,7 +1480,20 @@
       "free_foreign_withdrawals_per_month": 99,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "instantCard": true,
+        "remuneratedBalance": true,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "instantFreeze": true
+      }
     },
     {
       "id": "trade-republic-mirror",
@@ -1083,7 +1521,20 @@
       "free_foreign_withdrawals_per_month": 99,
       "cashback_rate_percent": 0,
       "cashback_cap_eur": null,
-      "min_monthly_income_eur": null
+      "min_monthly_income_eur": null,
+      "features": {
+        "debitType": "immediat",
+        "authorizedOverdraft": false,
+        "applePay": true,
+        "googlePay": true,
+        "virtualCard": true,
+        "remuneratedBalance": true,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     },
     {
       "id": "amex-blue",
@@ -1114,7 +1565,18 @@
       "min_monthly_income_eur": null,
       "points_per_euro": 1,
       "point_value_eur": 0.004,
-      "rewards_source": "Membership Rewards, estimation conservatrice 0,004 EUR/pt (INDICATIF)"
+      "rewards_source": "Membership Rewards, estimation conservatrice 0,004 EUR/pt (INDICATIF)",
+      "features": {
+        "debitType": "differe",
+        "applePay": true,
+        "googlePay": true,
+        "sharedSpace": false,
+        "frenchIban": false,
+        "chequebook": false,
+        "cashDeposit": false,
+        "cardMaterial": "plastique",
+        "instantFreeze": true
+      }
     }
   ]
 }
