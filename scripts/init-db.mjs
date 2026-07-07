@@ -42,9 +42,19 @@ const schema = readFileSync(join(root, "schema.sql"), "utf8");
 
 console.log(`→ Connexion à ${url}`);
 await db.executeMultiple(schema);
-console.log("✓ Schéma chargé (audits, emails, events, alertes).");
+console.log(
+  "✓ Schéma chargé (audits, emails, events, alertes, clicks, conversions).",
+);
 
-for (const table of ["audits", "emails", "events", "alertes"]) {
+// IF NOT EXISTS : ré-exécuter est sûr et idempotent (aucune donnée écrasée).
+for (const table of [
+  "audits",
+  "emails",
+  "events",
+  "alertes",
+  "clicks",
+  "conversions",
+]) {
   const res = await db.execute(`SELECT COUNT(*) AS n FROM ${table}`);
   console.log(`  ${table} : ${res.rows[0].n} ligne(s)`);
 }

@@ -14,6 +14,7 @@ const ALLOWED: FunnelEvent[] = [
   "complete",
   "click_affilie",
   "partage",
+  "telechargement",
 ];
 
 export async function POST(req: NextRequest) {

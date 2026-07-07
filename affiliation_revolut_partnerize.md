@@ -104,6 +104,57 @@ Une fois le programme **accepté**, Partnerize te fournit un **lien de tracking*
 
 ---
 
+## Étape D : Mesure bout-en-bout (clic → conversion → revenu)
+
+La plomberie est en place côté CB180. Il reste à la câbler à Partnerize.
+
+### D1 — Sub-id (attribution du clic)
+
+À chaque clic sur « Voir l'offre », la route `/go/[carte]` génère un `click_id`
+opaque et l'injecte dans le lien de tracking en **sub-id**. Par défaut, pour un
+lien Partnerize (`prf.hn` / `partnerize`), il est ajouté en segment
+`…/pubref:<click_id>/…`.
+
+> **À confirmer quand le vrai lien arrive** : si Partnerize attend le sub-id
+> ailleurs (ex. un paramètre de query précis), régler la variable d'env
+> `AFFILIATE_SUBID_PARAM=<nom_du_param>` — aucun changement de code nécessaire.
+
+### D2 — Postback de conversion (revenu)
+
+Configurer, dans l'interface Partnerize, un **postback / pixel S2S** vers :
+
+```
+https://cb180.xyz/api/postback?token=<POSTBACK_SECRET>
+  &conversion_id={conversion_id}
+  &clickref={pubref}
+  &commission={commission}
+  &currency={currency}
+  &status={status}
+```
+
+(les `{…}` sont les macros de Partnerize ; adapter aux noms exacts fournis par
+la plateforme — l'endpoint accepte de nombreux alias : `pubref`/`clickref`,
+`order_id`/`conversion_id`, `payout`/`commission`/`value`, etc.)
+
+L'endpoint est **idempotent** (dédup sur `conversion_id`) : un postback rejoué
+ou une mise à jour de statut (pending → approved → rejected) ne double-compte
+jamais.
+
+### D3 — Variables d'environnement (Vercel)
+
+| Variable | Rôle |
+|---|---|
+| `POSTBACK_SECRET` | Secret partagé validant les appels de `/api/postback`. Sans lui, l'endpoint refuse tout. |
+| `AFFILIATE_SUBID_PARAM` | *(optionnel)* Force le nom du paramètre de sub-id si le format Partnerize l'exige. |
+
+### D4 — Lecture
+
+Tableau de bord `/stats?key=<ADMIN_KEY>`, section **« Tunnel affilié &
+revenu »** : clics → conversions → revenu confirmé, revenu par visiteur (RPV),
+par clic (EPC), revenu potentiel, et détail par carte.
+
+---
+
 ## Suivi
 
 | Étape | Qui | Statut |

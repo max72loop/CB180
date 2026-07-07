@@ -7,8 +7,10 @@
 // sortants sponsorisés, pas du contenu.
 
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { getCard } from "@/lib/cards";
-import { isDbConfigured, logEvent } from "@/lib/db";
+import { isDbConfigured, logEvent, saveClick } from "@/lib/db";
+import { withClickRef } from "@/lib/affiliate";
 
 export const runtime = "nodejs";
 
@@ -25,25 +27,52 @@ export async function GET(
     return NextResponse.redirect(new URL("/cartes", origin), 302);
   }
 
-  // Cible : lien affilié s'il existe, sinon page officielle ; repli = fiche interne.
-  const candidate = card.affiliate.url ?? card.source_url;
-  const target =
+  // Un vrai lien affilié (tracking) permet l'attribution ; à défaut on redirige
+  // vers la page officielle (source_url) ou, en dernier repli, la fiche interne.
+  const affiliateUrl = card.affiliate.url;
+  const usingAffiliate = Boolean(affiliateUrl && affiliateUrl.startsWith("http"));
+  const candidate = usingAffiliate ? affiliateUrl! : card.source_url;
+  const base =
     candidate && candidate.startsWith("http")
       ? candidate
       : new URL(`/cartes/${card.id}`, origin).toString();
 
-  // Log serveur (non identifiant). `from` = contexte du clic, `sid` = session
-  // d'audit éventuelle (corrélation avec le parcours, sans donnée personnelle).
+  // click_id : notre identifiant opaque, passé au partenaire en sub-id pour que
+  // le postback de conversion puisse le renvoyer et refermer la boucle revenu.
+  const clickId = randomUUID();
+  const from = req.nextUrl.searchParams.get("from") ?? undefined;
+  const sid = req.nextUrl.searchParams.get("sid");
+  const sessionId = typeof sid === "string" && sid ? sid : null;
+
+  // On n'ajoute le sub-id qu'au vrai lien affilié (inutile sur une page officielle).
+  const target = usingAffiliate
+    ? withClickRef(base, card.affiliate.network, clickId)
+    : base;
+
+  // Tracking serveur (non identifiant), best-effort : ne doit JAMAIS bloquer la
+  // redirection. On enregistre le clic attribuable (table clicks) ET l'event de
+  // funnel (continuité de l'entonnoir /stats).
   if (isDbConfigured()) {
-    const from = req.nextUrl.searchParams.get("from") ?? undefined;
-    const sid = req.nextUrl.searchParams.get("sid");
     try {
-      await logEvent(typeof sid === "string" && sid ? sid : null, "click_affilie", {
+      await saveClick({
+        clickId,
+        sessionId,
+        cardId: card.id,
+        network: card.affiliate.network,
+        source: from ?? null,
+        estCommissionEur: card.affiliate.est_commission_eur ?? null,
+      });
+    } catch {
+      /* silencieux */
+    }
+    try {
+      await logEvent(sessionId, "click_affilie", {
         card_id: card.id,
+        click_id: clickId,
         ...(from ? { from } : {}),
       });
     } catch {
-      /* silencieux : le tracking ne doit jamais bloquer la redirection */
+      /* silencieux */
     }
   }
 
