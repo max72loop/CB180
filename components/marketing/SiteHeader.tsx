@@ -26,6 +26,12 @@ export default function SiteHeader() {
             Guides
           </Link>
           <Link
+            href="/observatoire"
+            className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 lg:block"
+          >
+            Observatoire
+          </Link>
+          <Link
             href="/comment-ca-marche"
             className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 lg:block"
           >

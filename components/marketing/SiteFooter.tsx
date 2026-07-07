@@ -61,6 +61,14 @@ export default function SiteFooter() {
               </li>
               <li>
                 <Link
+                  href="/observatoire"
+                  className="text-slate-600 hover:text-slate-900"
+                >
+                  Observatoire des tarifs
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/comment-ca-marche"
                   className="text-slate-600 hover:text-slate-900"
                 >

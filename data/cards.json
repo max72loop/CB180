@@ -242,7 +242,7 @@
       "cashback": "RevPoints (programme de points)",
       "miles_program": "RevPoints convertibles partenaires aériens",
       "welcome_bonus_eur": 20,
-      "affiliate": { "network": "programme direct / Impact", "est_commission_eur": 40, "status": "à candidater" },
+      "affiliate": { "network": "Revolut (Impact)", "est_commission_eur": 40, "status": "à candidater" },
       "target_profiles": ["voyageur_petit_budget", "multi_devises", "digital_natif"],
       "last_verified": "2026-07-03",
       "source_url": "https://www.revolut.com/fr-FR/our-pricing-plans/",
@@ -273,7 +273,7 @@
       "cashback": "RevPoints boostés",
       "miles_program": "RevPoints convertibles partenaires aériens",
       "welcome_bonus_eur": 20,
-      "affiliate": { "network": "programme direct / Impact", "est_commission_eur": 50, "status": "à candidater" },
+      "affiliate": { "network": "Revolut (Impact)", "est_commission_eur": 50, "status": "à candidater" },
       "target_profiles": ["voyageur_regulier", "multi_devises", "optimiseur_points"],
       "last_verified": "2026-07-03",
       "source_url": "https://www.revolut.com/fr-FR/our-pricing-plans/",
@@ -642,7 +642,7 @@
       "miles_program": "RevPoints convertibles partenaires aériens",
       "welcome_bonus_eur": 0,
       "affiliate": {
-        "network": "programme direct / Impact",
+        "network": "Revolut (Impact)",
         "est_commission_eur": 60,
         "status": "à candidater"
       },

@@ -56,9 +56,47 @@ CREATE TABLE IF NOT EXISTS alertes (
   unsub_token     TEXT NOT NULL            -- jeton opaque du lien de désinscription
 );
 
+-- Table 5 : clics affiliés (attribution). Chaque clic sur « Voir l'offre »
+-- crée une ligne dont l'`id` (opaque) est passé au partenaire en SUB-ID
+-- (clickref/pubref). Le postback de conversion le renverra, permettant de
+-- rattacher revenu → clic → visiteur. On fige la commission ESTIMÉE au moment
+-- du clic (est_commission_eur), pour le « revenu potentiel » du tableau de bord.
+CREATE TABLE IF NOT EXISTS clicks (
+  id                 TEXT PRIMARY KEY,       -- click_id opaque, envoyé en sub-id
+  created_at         TEXT NOT NULL,          -- ISO timestamp
+  session_id         TEXT,                   -- référence opaque vers audits.id (corrélation parcours)
+  card_id            TEXT NOT NULL,          -- carte cliquée
+  network            TEXT,                   -- ex. "Revolut (Partnerize)"
+  source             TEXT,                   -- contexte du clic (`from` : results | fiche | ...)
+  est_commission_eur REAL                    -- commission estimée figée au clic (revenu potentiel)
+);
+
+-- Table 6 : conversions affiliées (revenu réel). Alimentée par le postback S2S
+-- du réseau (voir app/api/postback). `conversion_ref` est l'identifiant unique
+-- de la conversion CÔTÉ RÉSEAU : il garantit l'idempotence (un postback rejoué
+-- ou une mise à jour de statut ne double-compte jamais). `click_id` référence
+-- clicks.id quand le sub-id nous est bien renvoyé.
+CREATE TABLE IF NOT EXISTS conversions (
+  id             TEXT PRIMARY KEY,           -- uuid interne
+  created_at     TEXT NOT NULL,              -- 1ʳᵉ réception
+  updated_at     TEXT NOT NULL,              -- dernière mise à jour de statut
+  click_id       TEXT,                       -- référence clicks.id (sub-id renvoyé) ; NULL si non rattachable
+  conversion_ref TEXT UNIQUE,                -- id unique de la conversion côté réseau (dédup/idempotence)
+  status         TEXT NOT NULL,              -- "pending" | "approved" | "rejected"
+  commission_eur REAL,                       -- commission réelle versée
+  currency       TEXT,                       -- devise du montant (ex. "EUR")
+  card_id        TEXT,                       -- dénormalisé depuis le clic, pour l'analyse par carte
+  raw            TEXT                         -- payload brut (json) reçu, pour audit/debug
+);
+
 -- Index utiles pour l'analyse
 CREATE INDEX IF NOT EXISTS idx_audits_created ON audits(created_at);
 CREATE INDEX IF NOT EXISTS idx_events_type ON events(event_type);
 CREATE INDEX IF NOT EXISTS idx_alertes_email ON alertes(email);
 CREATE INDEX IF NOT EXISTS idx_alertes_confirm ON alertes(confirm_token);
 CREATE INDEX IF NOT EXISTS idx_alertes_unsub ON alertes(unsub_token);
+CREATE INDEX IF NOT EXISTS idx_clicks_created ON clicks(created_at);
+CREATE INDEX IF NOT EXISTS idx_clicks_card ON clicks(card_id);
+CREATE INDEX IF NOT EXISTS idx_conversions_click ON conversions(click_id);
+CREATE INDEX IF NOT EXISTS idx_conversions_status ON conversions(status);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_conversions_ref ON conversions(conversion_ref);
