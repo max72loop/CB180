@@ -57,6 +57,20 @@ export const BANKS: Bank[] = [
     blurb: "Néobanque allemande, 100 % mobile.",
   },
   {
+    slug: "bunq",
+    name: "bunq",
+    issuerKeyword: "bunq",
+    blurb:
+      "Néobanque néerlandaise multi-devises, à formules d'abonnement (Free, Core, Pro, Elite).",
+  },
+  {
+    slug: "bforbank",
+    name: "BforBank",
+    issuerKeyword: "bforbank",
+    blurb:
+      "Banque en ligne du groupe Crédit Agricole, sans condition de revenus (cartes BforBASIC et BforZEN).",
+  },
+  {
     slug: "american-express",
     name: "American Express",
     issuerKeyword: "american express",
