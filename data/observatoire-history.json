@@ -5,54 +5,61 @@
       "period": "2026-Q3",
       "label": "3ᵉ trimestre 2026",
       "generatedAt": "2026-07-07",
-      "panelSize": 17,
-      "referenceDate": "2026-07-05",
-      "avgAnnualFee": 67.28,
-      "medianAnnualFee": 25,
+      "panelSize": 33,
+      "referenceDate": "2026-07-07",
+      "avgAnnualFee": 92.72,
+      "medianAnnualFee": 58.8,
       "minAnnualFee": 0,
-      "maxAnnualFee": 252,
-      "shareFree": 0.47,
-      "shareNoForeignFee": 0.47,
-      "avgFxFeePercent": 0.39,
+      "maxAnnualFee": 708,
+      "shareFree": 0.36,
+      "shareNoForeignFee": 0.3,
+      "avgFxFeePercent": 0.58,
       "byTier": [
         {
           "tier": "entree",
           "label": "Entrée de gamme",
-          "count": 6,
-          "avgFee": 4.17
+          "count": 12,
+          "avgFee": 10.08
         },
         {
           "tier": "intermediaire",
           "label": "Intermédiaire",
-          "count": 5,
-          "avgFee": 51.8
+          "count": 11,
+          "avgFee": 66.94
         },
         {
           "tier": "premium",
           "label": "Premium",
-          "count": 5,
-          "avgFee": 171.94
+          "count": 8,
+          "avgFee": 186.78
         },
         {
           "tier": "haut_de_gamme",
           "label": "Haut de gamme",
-          "count": 1,
-          "avgFee": 0
+          "count": 2,
+          "avgFee": 354
         }
       ],
       "cheapest": {
-        "id": "boursobank-ultim",
-        "name": "BoursoBank ULTIM",
-        "issuer": "BoursoBank",
+        "id": "bforbank-visa",
+        "name": "BforBank BforBASIC",
+        "issuer": "BforBank (Crédit Agricole)",
         "fee": 0
       },
       "mostExpensive": {
-        "id": "amex-afklm-gold",
-        "name": "Carte Air France KLM American Express Gold",
+        "id": "amex-platinum",
+        "name": "American Express Carte Platinum",
         "issuer": "American Express France",
-        "fee": 252
+        "fee": 708
       },
       "cards": [
+        {
+          "id": "bforbank-visa",
+          "name": "BforBank BforBASIC",
+          "issuer": "BforBank (Crédit Agricole)",
+          "annualFee": 0,
+          "fxFee": 1.95
+        },
         {
           "id": "boursobank-ultim",
           "name": "BoursoBank ULTIM",
@@ -66,6 +73,13 @@
           "issuer": "BoursoBank",
           "annualFee": 0,
           "fxFee": 0
+        },
+        {
+          "id": "bunq-free",
+          "name": "bunq Free",
+          "issuer": "bunq",
+          "annualFee": 0,
+          "fxFee": 0.5
         },
         {
           "id": "fortuneo-fosfo",
@@ -89,6 +103,13 @@
           "fxFee": 0
         },
         {
+          "id": "hellobank-one",
+          "name": "Hello One",
+          "issuer": "Hello bank! (BNP Paribas)",
+          "annualFee": 0,
+          "fxFee": 0
+        },
+        {
           "id": "n26-standard",
           "name": "N26 Standard",
           "issuer": "N26",
@@ -104,16 +125,37 @@
         },
         {
           "id": "trade-republic-card",
-          "name": "Trade Republic Carte",
+          "name": "Trade Republic Carte Classic",
           "issuer": "Trade Republic",
           "annualFee": 0,
           "fxFee": 0
+        },
+        {
+          "id": "wise-card",
+          "name": "Wise Carte",
+          "issuer": "Wise",
+          "annualFee": 0,
+          "fxFee": 0.45
         },
         {
           "id": "nickel-standard",
           "name": "Nickel",
           "issuer": "Nickel (BNP Paribas)",
           "annualFee": 25,
+          "fxFee": 0
+        },
+        {
+          "id": "monabanq-pratiq-plus",
+          "name": "Monabanq Pratiq+",
+          "issuer": "Monabanq (Crédit Mutuel Alliance Fédérale)",
+          "annualFee": 36,
+          "fxFee": 2
+        },
+        {
+          "id": "bunq-core",
+          "name": "bunq Core",
+          "issuer": "bunq",
+          "annualFee": 47.88,
           "fxFee": 0
         },
         {
@@ -124,11 +166,39 @@
           "fxFee": 0
         },
         {
+          "id": "n26-smart",
+          "name": "N26 Smart",
+          "issuer": "N26",
+          "annualFee": 58.8,
+          "fxFee": 0
+        },
+        {
+          "id": "amex-blue",
+          "name": "American Express Carte Blue",
+          "issuer": "American Express France",
+          "annualFee": 60,
+          "fxFee": 2.8
+        },
+        {
+          "id": "bforbank-bforzen",
+          "name": "BforBank BforZEN",
+          "issuer": "BforBank (Crédit Agricole)",
+          "annualFee": 60,
+          "fxFee": 0
+        },
+        {
           "id": "hellobank-prime",
           "name": "Hello Prime",
           "issuer": "Hello bank! (BNP Paribas)",
           "annualFee": 60,
           "fxFee": 0
+        },
+        {
+          "id": "monabanq-uniq",
+          "name": "Monabanq Uniq",
+          "issuer": "Monabanq (Crédit Mutuel Alliance Fédérale)",
+          "annualFee": 72,
+          "fxFee": 2
         },
         {
           "id": "nickel-metal",
@@ -142,6 +212,20 @@
           "name": "BoursoBank ULTIM METAL",
           "issuer": "BoursoBank",
           "annualFee": 118.8,
+          "fxFee": 0
+        },
+        {
+          "id": "n26-go",
+          "name": "N26 Go",
+          "issuer": "N26",
+          "annualFee": 118.8,
+          "fxFee": 0
+        },
+        {
+          "id": "bunq-pro",
+          "name": "bunq Pro",
+          "issuer": "bunq",
+          "annualFee": 119.88,
           "fxFee": 0
         },
         {
@@ -159,6 +243,27 @@
           "fxFee": 0
         },
         {
+          "id": "n26-metal",
+          "name": "N26 Metal",
+          "issuer": "N26",
+          "annualFee": 202.8,
+          "fxFee": 0
+        },
+        {
+          "id": "revolut-metal",
+          "name": "Revolut Metal",
+          "issuer": "Revolut",
+          "annualFee": 203.88,
+          "fxFee": 0
+        },
+        {
+          "id": "bunq-elite",
+          "name": "bunq Elite",
+          "issuer": "bunq",
+          "annualFee": 227.88,
+          "fxFee": 0
+        },
+        {
           "id": "amex-gold",
           "name": "American Express Carte Gold",
           "issuer": "American Express France",
@@ -170,6 +275,13 @@
           "name": "Carte Air France KLM American Express Gold",
           "issuer": "American Express France",
           "annualFee": 252,
+          "fxFee": 2.8
+        },
+        {
+          "id": "amex-platinum",
+          "name": "American Express Carte Platinum",
+          "issuer": "American Express France",
+          "annualFee": 708,
           "fxFee": 2.8
         }
       ]
