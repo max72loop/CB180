@@ -1,9 +1,9 @@
-# Candidature affiliation : Revolut (via Partnerize), CB180
+# Candidature affiliation : Revolut (via Impact), CB180
 
 Mise en place **par étapes** du premier programme d'affiliation professionnel
-(CPA) de CB180. Réseau : Revolut en direct, opéré par la plateforme
-**Partnerize**. Objectif : obtenir un lien de tracking validé, puis le brancher
-dans `data/cards.json` (`affiliate.url` de la carte Revolut).
+(CPA) de CB180. Réseau : Revolut, opéré par la plateforme **Impact**
+(impact.com). Objectif : obtenir un lien de tracking validé, puis le brancher
+dans `data/cards.json` (`affiliate.url` des cartes Revolut).
 
 > Champs à compléter par toi : `[SIRET]`, `[Prénom Nom]`, l'email pro
 > `contact@cb180.xyz` (vérifie qu'il existe et relève les messages, les
@@ -15,10 +15,11 @@ dans `data/cards.json` (`affiliate.url` de la carte Revolut).
 
 1. Va sur la page partenaires de Revolut : recherche **« Revolut affiliate
    program »** → tu arrives sur leur page « Partners / Affiliates » (opérée par
-   Partnerize).
-2. Clique **« Become a partner » / « Join »**. Tu crées un compte **éditeur
-   Partnerize** (ou tu te connectes s'il existe déjà).
-3. Renseigne le profil éditeur avec la **fiche d'identité** ci-dessous (Étape B2).
+   **Impact**).
+2. Clique **« Become a partner » / « Join »**. Tu crées un compte **partenaire
+   Impact** (ou tu te connectes s'il existe déjà — un seul compte Impact donne
+   accès à tous les programmes hébergés chez eux).
+3. Renseigne le profil média avec la **fiche d'identité** ci-dessous (Étape B2).
 4. Postule au **programme Revolut** ; ajoute le message de l'Étape B3 si un champ
    « message / description de la promotion » est proposé.
 
@@ -79,16 +80,17 @@ dans `data/cards.json` (`affiliate.url` de la carte Revolut).
 
 ## Étape C : Après validation (ensemble)
 
-Une fois le programme **accepté**, Partnerize te fournit un **lien de tracking**
-(souvent un lien « deep link » de la forme `https://prf.hn/click/...` ou
-`https://track.partnerize.com/...` pointant vers Revolut).
+Une fois le programme **accepté**, Impact te fournit un **lien de tracking**
+(deep link, généralement sur un domaine `*.pxf.io` — ex.
+`https://revolut.pxf.io/...` — pointant vers Revolut).
 
 1. Tu me colles ce lien.
-2. Je le mets dans `data/cards.json` → carte `revolut-standard` :
+2. Je le mets dans `data/cards.json` → cartes `revolut-standard` / `-premium` /
+   `-metal` :
    ```json
    "affiliate": {
-     "network": "Revolut (Partnerize)",
-     "url": "<ton lien de tracking Partnerize>",
+     "network": "Revolut (Impact)",
+     "url": "<ton lien de tracking Impact>",
      "est_commission_eur": 40,
      "status": "actif"
    }
@@ -98,43 +100,45 @@ Une fois le programme **accepté**, Partnerize te fournit un **lien de tracking*
 4. On teste le parcours A→Z en prod (redirection + événement `click_affilie`),
    comme le test déjà réalisé en local.
 
-> Remarque attribution : Partnerize suit la conversion **côté annonceur**. On
-> pourra en option passer notre `sid` (session) en sous-ID du lien pour
-> réconcilier nos clics avec leurs conversions, à voir à l'étape C.
-
 ---
 
 ## Étape D : Mesure bout-en-bout (clic → conversion → revenu)
 
-La plomberie est en place côté CB180. Il reste à la câbler à Partnerize.
+La plomberie est en place côté CB180 (voir le commit `feat(tracking)`). Il reste
+à la câbler à Impact.
 
 ### D1 — Sub-id (attribution du clic)
 
 À chaque clic sur « Voir l'offre », la route `/go/[carte]` génère un `click_id`
-opaque et l'injecte dans le lien de tracking en **sub-id**. Par défaut, pour un
-lien Partnerize (`prf.hn` / `partnerize`), il est ajouté en segment
-`…/pubref:<click_id>/…`.
+opaque et l'injecte dans le lien de tracking en **sub-id**. Pour un lien Impact
+(`*.pxf.io` ou réseau « Impact »), il est ajouté en paramètre **`subId1`** —
+c'est la convention Impact, gérée automatiquement par `lib/affiliate.ts`.
 
-> **À confirmer quand le vrai lien arrive** : si Partnerize attend le sub-id
-> ailleurs (ex. un paramètre de query précis), régler la variable d'env
-> `AFFILIATE_SUBID_PARAM=<nom_du_param>` — aucun changement de code nécessaire.
+> **À confirmer quand le vrai lien arrive** : si Impact attend le sub-id sous un
+> autre nom, régler la variable d'env `AFFILIATE_SUBID_PARAM=<nom_du_param>` —
+> aucun changement de code nécessaire.
 
-### D2 — Postback de conversion (revenu)
+### D2 — Réception de la conversion (revenu)
 
-Configurer, dans l'interface Partnerize, un **postback / pixel S2S** vers :
+Impact suit la conversion **côté annonceur**. Deux voies pour récupérer le
+revenu, par ordre de préférence :
 
-```
-https://cb180.xyz/api/postback?token=<POSTBACK_SECRET>
-  &conversion_id={conversion_id}
-  &clickref={pubref}
-  &commission={commission}
-  &currency={currency}
-  &status={status}
-```
-
-(les `{…}` sont les macros de Partnerize ; adapter aux noms exacts fournis par
-la plateforme — l'endpoint accepte de nombreux alias : `pubref`/`clickref`,
-`order_id`/`conversion_id`, `payout`/`commission`/`value`, etc.)
+1. **Postback / notification partenaire** (si Impact le propose pour ce
+   programme) : le configurer vers l'endpoint agnostique
+   ```
+   https://cb180.xyz/api/postback?token=<POSTBACK_SECRET>
+     &conversion_id={ActionId}
+     &subid1={subId1}
+     &commission={Payout}
+     &currency={Currency}
+     &status={Status}
+   ```
+   (les `{…}` sont les macros Impact ; adapter aux noms exacts fournis — l'endpoint
+   accepte de nombreux alias : `subid`/`subid1`/`clickref`, `order_id`/
+   `conversion_id`/`action_id`, `payout`/`commission`/`value`, etc.)
+2. **À défaut**, réconciliation via l'**API / export Impact** : rapprocher notre
+   `subId1` (renvoyé dans leurs rapports) avec nos clics. À câbler quand le
+   programme est actif, si Impact n'expose pas de postback direct.
 
 L'endpoint est **idempotent** (dédup sur `conversion_id`) : un postback rejoué
 ou une mise à jour de statut (pending → approved → rejected) ne double-compte
@@ -145,7 +149,7 @@ jamais.
 | Variable | Rôle |
 |---|---|
 | `POSTBACK_SECRET` | Secret partagé validant les appels de `/api/postback`. Sans lui, l'endpoint refuse tout. |
-| `AFFILIATE_SUBID_PARAM` | *(optionnel)* Force le nom du paramètre de sub-id si le format Partnerize l'exige. |
+| `AFFILIATE_SUBID_PARAM` | *(optionnel)* Force le nom du paramètre de sub-id si Impact en exige un autre que `subId1`. |
 
 ### D4 — Lecture
 
@@ -161,7 +165,8 @@ par clic (EPC), revenu potentiel, et détail par carte.
 |---|---|---|
 | Alignement marque CB180 | Moi | ✅ |
 | Kit de candidature Revolut | Moi | ✅ (ce document) |
-| Création compte Partnerize + candidature | Toi | ⏳ |
+| Instrumentation du tunnel (clic → conversion → revenu) | Moi | ✅ |
+| Création compte Impact + candidature | Toi | ⏳ |
 | Validation programme Revolut | Revolut | ⏳ |
 | Branchement du lien de tracking | Moi | ⏳ |
 | Test A→Z en prod | Ensemble | ⏳ |
