@@ -51,18 +51,18 @@ export default function HomeStickyCta() {
         <Link
           href="/simulateur"
           role="button"
-          aria-label="Lancer la simulation gratuite"
+          aria-label="Lancer la simulation"
           aria-hidden={!visible}
           tabIndex={visible ? undefined : -1}
           className={[
             "flex min-h-[48px] w-full items-center justify-center gap-2",
-            "bg-indigo-600 px-4 py-3 text-white shadow-[0_-2px_12px_rgba(0,0,0,0.15)]",
-            "text-base font-semibold transition-colors hover:bg-indigo-700",
-            "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700",
+            "bg-brand px-4 py-3 text-white shadow-[0_-2px_12px_rgba(0,0,0,0.15)]",
+            "text-base font-semibold transition-opacity hover:opacity-95",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2",
             "md:mb-4 md:w-auto md:max-w-[480px] md:rounded-xl",
           ].join(" ")}
         >
-          Lancer la simulation gratuite&nbsp;— 30&nbsp;s
+          Lancer la simulation
           <svg
             viewBox="0 0 20 20"
             fill="currentColor"
