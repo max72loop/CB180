@@ -11,6 +11,7 @@ import CardsExplorer, { type CardListItem } from "@/components/cartes/CardsExplo
 import { publicCards } from "@/lib/cards";
 import { feeLabel, verifiedDate } from "@/lib/card-display";
 import { featureHighlights } from "@/lib/card-features";
+import { buildCompareData } from "@/lib/card-compare";
 import { computeAnnualCost } from "@/lib/engine";
 import { USAGE_SCENARIOS } from "@/lib/scenarios";
 
@@ -46,6 +47,7 @@ export default function CartesIndex() {
       zeroFx: card.fx_fee_percent === 0,
       noIncomeCondition: card.min_monthly_income_eur == null,
       deferredDebit: debit === "differe" || debit === "choix",
+      compare: buildCompareData(card),
       visual: <ProductCardVisual card={card} className="w-full" />,
     };
   });
