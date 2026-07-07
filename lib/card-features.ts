@@ -14,7 +14,7 @@ import type { Card, CardFeatures } from "./types";
 export type FeatureStatus = "yes" | "no" | "unknown";
 
 /** Clé d'une fonctionnalité booléenne (exclut les champs enum). */
-type BoolFeatureKey = {
+export type BoolFeatureKey = {
   [K in keyof CardFeatures]-?: NonNullable<CardFeatures[K]> extends boolean ? K : never;
 }[keyof CardFeatures];
 
@@ -181,6 +181,62 @@ export function featureHighlights(card: Card, max = 3): string[] {
   if (f.chequebook === true) out.push("Chéquier disponible");
   if (f.cashDeposit === true) out.push("Dépôt d'espèces");
   return out.slice(0, max);
+}
+
+/**
+ * Fonctionnalités candidates au DÉPARTAGE de cartes à coût égal, ordonnées du
+ * plus au moins différenciant pour un usage grand public. Sert de vivier au
+ * mini-parcours « à coût égal, qu'est-ce qui compte pour vous ? » : on n'expose
+ * que celles qui séparent réellement les cartes ex æquo (cf. distinguishingFeatures).
+ */
+export const TIEBREAK_FEATURE_KEYS: BoolFeatureKey[] = [
+  "chequebook",
+  "cashDeposit",
+  "subAccounts",
+  "remuneratedBalance",
+  "applePay",
+  "googlePay",
+  "disposableVirtualCards",
+  "frenchIban",
+  "instantFreeze",
+];
+
+/** Une fonctionnalité proposée comme critère de départage. */
+export interface TiebreakOption {
+  key: BoolFeatureKey;
+  label: string;
+  icon: FeatureIcon;
+}
+
+/**
+ * Parmi un ensemble de cartes à coût égal, les fonctionnalités qui les
+ * DIFFÉRENCIENT réellement : au moins une carte les confirme (« yes ») et au
+ * moins une ne les confirme pas (« no » ou « unknown »). Une fonctionnalité que
+ * toutes offrent (ou qu'aucune ne confirme) ne départage rien et est écartée.
+ * Ordre stable = TIEBREAK_FEATURE_KEYS.
+ */
+export function distinguishingFeatures(cards: Card[]): TiebreakOption[] {
+  return TIEBREAK_FEATURE_KEYS.filter((key) => {
+    let anyYes = false;
+    let anyNot = false;
+    for (const card of cards) {
+      if (featureStatus(card, key) === "yes") anyYes = true;
+      else anyNot = true;
+    }
+    return anyYes && anyNot;
+  }).map((key) => ({ key, label: FEATURE_LABEL[key], icon: FEATURE_ICON[key] }));
+}
+
+/**
+ * Nombre de fonctionnalités sélectionnées que la carte offre de façon CONFIRMÉE
+ * (statut « yes »). Sert à reclasser les cartes ex æquo selon les critères cochés.
+ * Le non vérifié ne compte pas (discipline tri-état).
+ */
+export function featureMatchCount(card: Card, keys: BoolFeatureKey[]): number {
+  return keys.reduce(
+    (n, key) => n + (featureStatus(card, key) === "yes" ? 1 : 0),
+    0,
+  );
 }
 
 /**

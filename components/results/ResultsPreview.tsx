@@ -17,9 +17,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { costComposition, splitByEligibility } from "@/lib/engine";
+import { distinguishingFeatures } from "@/lib/card-features";
 import { MiniCard } from "@/components/brand/CardVisual";
 import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
 import ShareResult from "@/components/results/ShareResult";
+import TiebreakByFeatures from "@/components/results/TiebreakByFeatures";
 import { shareCompoFromBreakdown } from "@/lib/share";
 import type { Card, CostBreakdown, CostShare, RankedCard } from "@/lib/types";
 import { formatEur, formatEurCents, formatSignedEur } from "@/lib/format";
@@ -144,6 +146,32 @@ export default function ResultsPreview({
     : eligible.slice(0, INITIAL_VISIBLE);
   const hiddenCount = eligible.length - visibleEligible.length;
 
+  // Départage : cartes ACCESSIBLES à coût récurrent le plus bas, à égalité (≥ 2).
+  // Ancré sur le récurrent (hors prime), indépendant de la bascule de vue, pour
+  // rester cohérent avec la révélation. Le coût ne tranche plus → on proposera de
+  // départager sur les fonctionnalités qui les différencient réellement.
+  const tiedTop = useMemo(() => {
+    if (eligible.length < 2) return [] as RankedCard[];
+    const byRecurring = [...eligible].sort(
+      (a, b) =>
+        a.breakdown.netAnnualCostWithoutBonusEur -
+        b.breakdown.netAnnualCostWithoutBonusEur,
+    );
+    const minCents = Math.round(
+      byRecurring[0].breakdown.netAnnualCostWithoutBonusEur * 100,
+    );
+    return byRecurring.filter(
+      (r) => Math.round(r.breakdown.netAnnualCostWithoutBonusEur * 100) === minCents,
+    );
+  }, [eligible]);
+
+  // On ne montre le départage que s'il y a une vraie égalité ET au moins une
+  // fonctionnalité qui sépare ces cartes (sinon aucune case n'aurait d'effet).
+  const showTiebreak =
+    tiedTop.length >= 2 &&
+    distinguishingFeatures(tiedTop.map((r) => r.card)).length > 0;
+  const tiedCostEur = tiedTop[0]?.breakdown.netAnnualCostWithoutBonusEur ?? 0;
+
   return (
     <div className="space-y-8">
       {/* ─── Actes 1 & 2 : la révélation (grand chiffre + décomposition) ─── */}
@@ -213,6 +241,11 @@ export default function ResultsPreview({
           </button>
         )}
       </section>
+
+      {/* Départage sur fonctionnalités quand le coût ne tranche plus (ex æquo). */}
+      {showTiebreak && (
+        <TiebreakByFeatures cards={tiedTop} costEur={tiedCostEur} />
+      )}
 
       {/* Cartes non éligibles : regroupées à part, dégradées, jamais retirées */}
       {incomeDisclosed && ineligible.length > 0 && (
