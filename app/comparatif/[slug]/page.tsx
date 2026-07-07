@@ -19,6 +19,14 @@ import {
   parseComparisonSlug,
   welcomeLabel,
 } from "@/lib/card-display";
+import {
+  FEATURE_GROUPS,
+  FEATURE_LABEL,
+  debitLabel,
+  featureCompareValue,
+  featureStatus,
+  materialLabel,
+} from "@/lib/card-features";
 import type { Card } from "@/lib/types";
 import { SITE_URL } from "@/lib/site";
 
@@ -71,6 +79,31 @@ export default async function ComparatifPage({ params }: Params) {
   // Redirige les slugs non canoniques (ordre inversé) vers l'URL unique.
   const canonical = comparisonSlug(a.id, b.id);
   if (slug !== canonical) redirect(`/comparatif/${canonical}`);
+
+  // Lignes « fonctionnalités » : on n'affiche une ligne QUE si au moins une des
+  // deux cartes renseigne la valeur (sinon deux « — » n'apprennent rien). Débit
+  // et matière (enum) d'abord, puis les fonctionnalités booléennes des groupes.
+  const featureRows: { label: string; a: string; b: string }[] = [];
+  if (debitLabel(a) || debitLabel(b)) {
+    featureRows.push({ label: "Mode de débit", a: debitLabel(a) ?? "—", b: debitLabel(b) ?? "—" });
+  }
+  if (materialLabel(a) || materialLabel(b)) {
+    featureRows.push({
+      label: "Matière de la carte",
+      a: materialLabel(a) ?? "—",
+      b: materialLabel(b) ?? "—",
+    });
+  }
+  for (const group of FEATURE_GROUPS) {
+    for (const key of group.keys) {
+      if (featureStatus(a, key) === "unknown" && featureStatus(b, key) === "unknown") continue;
+      featureRows.push({
+        label: FEATURE_LABEL[key],
+        a: featureCompareValue(a, key),
+        b: featureCompareValue(b, key),
+      });
+    }
+  }
 
   return (
     <>
@@ -148,6 +181,20 @@ export default async function ComparatifPage({ params }: Params) {
                 a={INSURANCE_LABEL[a.insurances_level]}
                 b={INSURANCE_LABEL[b.insurances_level]}
               />
+              {featureRows.length > 0 && (
+                <tr>
+                  <th
+                    scope="colgroup"
+                    colSpan={3}
+                    className="bg-slate-100 px-4 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500"
+                  >
+                    Fonctionnalités &amp; services
+                  </th>
+                </tr>
+              )}
+              {featureRows.map((r) => (
+                <Row key={r.label} label={r.label} a={r.a} b={r.b} />
+              ))}
             </tbody>
           </table>
         </div>

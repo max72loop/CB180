@@ -28,6 +28,13 @@ import {
   verifiedDate,
   welcomeLabel,
 } from "@/lib/card-display";
+import {
+  FEATURE_GROUPS,
+  debitLabel,
+  groupRows,
+  hasFeatures,
+  materialLabel,
+} from "@/lib/card-features";
 import type { Card } from "@/lib/types";
 import { SITE_URL } from "@/lib/site";
 
@@ -263,6 +270,9 @@ export default async function CartePage({ params }: Params) {
               </p>
             )}
           </section>
+
+          {/* ─── Fonctionnalités & services (au-delà du coût) ─── */}
+          {hasFeatures(card) && <FeaturesSection card={card} />}
 
           {/* ─── Coût réel : analyse chiffrée selon 3 usages types (indexable) ─── */}
           <section className="mt-16">
@@ -538,6 +548,83 @@ function FactCard({
   );
 }
 
+/**
+ * Section « Fonctionnalités & services » : ce qui différencie la carte au-delà
+ * du coût (débit, paiement mobile, sous-comptes, IBAN, chéquier…). Purement
+ * informatif, n'entre pas dans le classement. Tri-état : ✓ confirmé présent,
+ * « Non » confirmé absent ; les fonctionnalités non vérifiées sont masquées.
+ */
+function FeaturesSection({ card }: { card: Card }) {
+  const debit = debitLabel(card);
+  const material = materialLabel(card);
+  const groups = FEATURE_GROUPS.map((g) => ({ group: g, rows: groupRows(card, g) })).filter(
+    (g) => g.rows.length > 0,
+  );
+
+  return (
+    <section className="mt-16">
+      <SectionHeading
+        eyebrow="Au-delà du coût"
+        title="Fonctionnalités & services"
+      />
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
+        Ce que la cotisation ne dit pas : les services qui diffèrent d&apos;une
+        banque à l&apos;autre. Information factuelle, sans incidence sur le
+        classement, qui reste établi sur le seul coût annuel.
+      </p>
+
+      {/* Débit + matière : deux traits saillants mis en avant s'ils sont connus. */}
+      {(debit || material) && (
+        <div className="mt-6 flex flex-wrap gap-2">
+          {debit && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700">
+              <ClockIcon className="h-4 w-4 text-slate-400" />
+              {debit}
+            </span>
+          )}
+          {material && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700">
+              <WalletIcon className="h-4 w-4 text-slate-400" />
+              {material}
+            </span>
+          )}
+        </div>
+      )}
+
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {groups.map(({ group, rows }) => (
+          <div key={group.id} className="rounded-2xl border border-slate-200 bg-white p-5">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              {group.title}
+            </h3>
+            <ul className="mt-3 space-y-2.5">
+              {rows.map((r) => {
+                const yes = r.status === "yes";
+                return (
+                  <li key={r.key} className="flex items-center gap-2.5 text-sm">
+                    {yes ? (
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+                        <CheckIcon className="h-3.5 w-3.5" />
+                      </span>
+                    ) : (
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                        <MinusIcon className="h-3.5 w-3.5" />
+                      </span>
+                    )}
+                    <span className={yes ? "font-medium text-slate-800" : "text-slate-400"}>
+                      {r.label}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 /** Icône d'un scénario d'usage (sédentaire / occasionnel / grand voyageur). */
 const SCENARIO_ICON: Record<string, (p: { className?: string }) => React.ReactElement> = {
   sedentaire: HomeIcon,
@@ -735,6 +822,23 @@ function ChevronIcon({ className }: { className?: string }) {
   return (
     <Svg className={className}>
       <path d="m6 9 6 6 6-6" />
+    </Svg>
+  );
+}
+
+function ClockIcon({ className }: { className?: string }) {
+  return (
+    <Svg className={className}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </Svg>
+  );
+}
+
+function MinusIcon({ className }: { className?: string }) {
+  return (
+    <Svg className={className}>
+      <path d="M5 12h14" />
     </Svg>
   );
 }
