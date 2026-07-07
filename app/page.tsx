@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
+import HomeStickyCta from "@/components/marketing/HomeStickyCta";
 import CardVisual, { ProductCardVisual } from "@/components/brand/CardVisual";
 import { publicCards } from "@/lib/cards";
 import { GUIDES } from "@/lib/guides";
@@ -13,8 +14,11 @@ export default function Home() {
   return (
     <>
       <SiteHeader />
-      <main>
+      {/* pb-5 : zone de sécurité pour que le CTA collant ne masque pas le bas du contenu. */}
+      <main className="pb-5">
         <Hero />
+        {/* CTA collant : sentinelle à la sortie du hero + barre fixe (indépendant du hero). */}
+        <HomeStickyCta />
         <TrustStrip />
         <ValueProps />
         <HowItWorks />
