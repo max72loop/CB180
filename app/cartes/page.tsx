@@ -7,12 +7,12 @@ import Link from "next/link";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
 import { ProductCardVisual } from "@/components/brand/CardVisual";
+import CardsExplorer, { type CardListItem } from "@/components/cartes/CardsExplorer";
 import { publicCards } from "@/lib/cards";
-import {
-  feeLabel,
-  fxLabel,
-  verifiedDate,
-} from "@/lib/card-display";
+import { feeLabel, verifiedDate } from "@/lib/card-display";
+import { featureHighlights } from "@/lib/card-features";
+import { computeAnnualCost } from "@/lib/engine";
+import { USAGE_SCENARIOS } from "@/lib/scenarios";
 
 export const metadata: Metadata = {
   title: "Cartes bancaires comparées",
@@ -22,10 +22,33 @@ export const metadata: Metadata = {
 };
 
 export default function CartesIndex() {
-  // Tri par cotisation croissante puis nom (déterministe, objectif).
-  const cards = [...publicCards()].sort(
-    (a, b) => a.annual_fee_eur - b.annual_fee_eur || a.name.localeCompare(b.name),
-  );
+  // Données de chaque carte, chiffrées côté serveur (SSG) : fourchette de coût
+  // réel net sur les 3 scénarios d'usage, atouts de fonctionnalités et drapeaux
+  // de filtre. Le visuel est rendu ici et passé à l'île client (SEO préservé).
+  const items: CardListItem[] = publicCards().map((card) => {
+    const nets = USAGE_SCENARIOS.map(
+      (s) => computeAnnualCost(card, s.profile).netAnnualCostEur,
+    );
+    // Plancher à 0 : un coût net négatif (« la carte rapporte ») s'affiche 0 €.
+    const minCost = Math.max(0, Math.round(Math.min(...nets)));
+    const maxCost = Math.max(0, Math.round(Math.max(...nets)));
+    const debit = card.features?.debitType;
+    return {
+      id: card.id,
+      name: card.name,
+      issuer: card.issuer,
+      fee: feeLabel(card),
+      minCost,
+      maxCost,
+      verified: verifiedDate(card),
+      highlights: featureHighlights(card, 2),
+      isFree: card.annual_fee_eur === 0,
+      zeroFx: card.fx_fee_percent === 0,
+      noIncomeCondition: card.min_monthly_income_eur == null,
+      deferredDebit: debit === "differe" || debit === "choix",
+      visual: <ProductCardVisual card={card} className="w-full" />,
+    };
+  });
 
   return (
     <>
@@ -52,48 +75,7 @@ export default function CartesIndex() {
           </Link>
         </header>
 
-        <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map((card) => {
-            const verified = verifiedDate(card);
-            return (
-              <li key={card.id}>
-                <Link
-                  href={`/cartes/${card.id}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-600/5"
-                >
-                  <div className="p-4">
-                    <ProductCardVisual card={card} className="w-full" />
-                  </div>
-                  <div className="flex flex-1 flex-col px-4 pb-4">
-                    <h2 className="font-semibold text-slate-900">{card.name}</h2>
-                    <p className="text-sm text-slate-500">{card.issuer}</p>
-
-                    <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-                      <Fact label="Cotisation" value={feeLabel(card)} />
-                      <Fact label="Change hors €" value={fxLabel(card)} />
-                    </dl>
-
-                    <div className="mt-auto flex items-center justify-between pt-4">
-                      {verified ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
-                          <CheckIcon className="h-3.5 w-3.5" />
-                          Vérifié le {verified}
-                        </span>
-                      ) : (
-                        <span className="text-xs text-slate-400">
-                          Données indicatives
-                        </span>
-                      )}
-                      <span className="text-sm font-semibold text-indigo-600 group-hover:text-indigo-700">
-                        Voir la fiche →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <CardsExplorer items={items} />
 
         <p className="mt-10 max-w-3xl text-xs leading-relaxed text-slate-500">
           CB180 est un site d&apos;information et de comparaison. Ces fiches ne
@@ -105,26 +87,5 @@ export default function CartesIndex() {
       </main>
       <SiteFooter />
     </>
-  );
-}
-
-function Fact({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-xs text-slate-400">{label}</dt>
-      <dd className="font-medium text-slate-800">{value}</dd>
-    </div>
-  );
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden className={className}>
-      <path
-        fillRule="evenodd"
-        d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0L3.3 9.7a1 1 0 011.4-1.4l3.3 3.3 6.8-6.8a1 1 0 011.4 0z"
-        clipRule="evenodd"
-      />
-    </svg>
   );
 }
