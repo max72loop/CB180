@@ -28,7 +28,7 @@ export default function ConfidentialitePage() {
         <Section title="Responsable de traitement">
           <p>
             Le responsable de traitement est l&apos;éditeur du site,{" "}
-            <Todo>nom / raison sociale de l&apos;éditeur</Todo>. Pour toute
+            <strong>Max Landry</strong> (micro-entreprise). Pour toute
             question relative à vos données, écrivez à{" "}
             <a href="mailto:contact@cb180.xyz" className="text-indigo-600 hover:underline">contact@cb180.xyz</a>.
           </p>
@@ -169,13 +169,5 @@ function Section({ title, children }: { title: string; children: React.ReactNode
         {children}
       </div>
     </section>
-  );
-}
-
-function Todo({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="rounded bg-amber-100 px-1 text-amber-800">
-      [à compléter : {children}]
-    </span>
   );
 }
