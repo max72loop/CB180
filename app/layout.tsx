@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   },
   description:
     "Outil d'information : renseignez vos usages, obtenez le coût annuel chiffré de votre carte et le classement objectif des alternatives. CB180 n'est pas intermédiaire en opérations de banque.",
+  other: {
+    "impact-site-verification": "79e6e2ca-a24a-4467-b18e-222ddfb3af36",
+  },
 };
 
 export default function RootLayout({
