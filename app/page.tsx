@@ -46,6 +46,10 @@ function Hero() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 sm:py-24 lg:grid-cols-2">
         {/* Colonne texte */}
         <div className="text-center lg:text-left">
+          {/* Vérification de propriété Impact (temporaire, à retirer après validation) */}
+          <p className="mb-2 text-[11px] leading-tight text-slate-300">
+            Impact-Site-Verification: 79e6e2ca-a24a-4467-b18e-222ddfb3af36
+          </p>
           <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
             Votre carte vous coûte peut-être{" "}
             <span className="text-gradient">200&nbsp;€ de trop</span> par
