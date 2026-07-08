@@ -374,6 +374,40 @@
         { "q": "Le pourboire est-il obligatoire au Canada ?", "a": "Il n'est pas obligatoire mais fortement attendu au restaurant et pour de nombreux services, autour de 15 à 20 %, souvent proposé sur le terminal. Prévoyez-le dans votre budget." },
         { "q": "Faut-il payer en dollars canadiens ou en euros ?", "a": "En dollars canadiens. La conversion « en euros » (DCC) applique un taux défavorable. En choisissant le CAD, c'est le taux de votre réseau (Visa/Mastercard) qui s'applique." }
       ]
+    },
+    {
+      "slug": "carte-a-debit-differe",
+      "title": "Carte à débit différé",
+      "metaDescription": "Les cartes bancaires à débit différé du marché français, comparées sur données officielles : cotisation, frais à l'étranger, conditions. Information objective, sans conseil.",
+      "criterion": "Cartes proposant le débit différé (différé seul, ou immédiat/différé au choix). Classement par cotisation croissante.",
+      "intro": "Avec le débit différé, les paiements par carte sont regroupés puis prélevés en une seule fois, en général en fin de mois. Voici les cartes du catalogue qui proposent cette option, sur données officielles.",
+      "sections": [
+        { "h": "Débit immédiat ou débit différé : la différence", "body": "En débit immédiat, chaque paiement est prélevé de votre compte au fil de l'eau, sous un ou deux jours. En débit différé, les paiements du mois sont cumulés et prélevés en une fois à une date fixe. Le montant dépensé est identique : seule la date de prélèvement change." },
+        { "h": "Ce que le débit différé change à l'usage", "body": "Le débit différé lisse la trésorerie : vos dépenses de carte n'impactent le solde qu'au prélèvement mensuel, avec un relevé unique qui facilite le suivi. Ce n'est pas un crédit : la totalité est prélevée à l'échéance, sans remboursement fractionné. Il faut donc disposer de la somme le jour du prélèvement." },
+        { "h": "Points de vigilance", "body": "Certaines cartes réservent le débit différé à des gammes payantes ou l'assortissent d'une condition de revenu ; d'autres laissent le choix entre immédiat et différé. Chaque fiche indique le mode de débit et la cotisation. Anticipez le prélèvement unique de fin de mois pour éviter un découvert." }
+      ],
+      "faq": [
+        { "q": "Le débit différé, est-ce un crédit ?", "a": "Non. C'est un simple report de la date de prélèvement : l'intégralité de vos dépenses du mois est débitée en une fois à l'échéance, sans intérêts ni remboursement fractionné. À ne pas confondre avec une carte de crédit." },
+        { "q": "Le débit différé coûte-t-il plus cher ?", "a": "Cela dépend de la carte : le différé est parfois inclus, parfois lié à une gamme payante. La cotisation de chaque carte est indiquée sur sa fiche, et le simulateur CB180 en chiffre le coût réel selon vos usages." },
+        { "q": "Puis-je choisir entre débit immédiat et différé ?", "a": "Sur certaines cartes, oui : le mode « au choix » permet de basculer entre immédiat et différé. Sur d'autres, le mode est fixe. Le détail figure sur chaque fiche." }
+      ]
+    },
+    {
+      "slug": "carte-bancaire-metal",
+      "title": "Carte bancaire métal",
+      "metaDescription": "Les cartes bancaires en métal disponibles en France, comparées sur données officielles : cotisation, frais à l'étranger, assurances. Information objective, sans conseil.",
+      "criterion": "Cartes dont le support physique est en métal. Classement par cotisation croissante.",
+      "intro": "Les cartes métal se distinguent par un support en métal plutôt qu'en plastique. Voici celles du catalogue, avec ce qu'elles coûtent et ce qu'elles incluent réellement, sur données officielles.",
+      "sections": [
+        { "h": "Qu'est-ce qu'une carte métal ?", "body": "Une carte métal a un corps, partiel ou total, en métal, ce qui lui donne un poids et un toucher différents d'une carte plastique. C'est avant tout une caractéristique de matériau : elle n'implique en soi ni frais, ni garanties, ni plafonds particuliers." },
+        { "h": "Le métal ne garantit pas plus d'avantages", "body": "Les assurances, plafonds et services dépendent des conditions de la carte, pas de sa matière. Une carte métal peut être très équipée ou plus sobre : comparez les garanties réelles et le coût annuel, indépendamment du support. Chaque fiche en détaille les frais et services." },
+        { "h": "Combien coûte une carte métal ?", "body": "Les cartes métal relèvent souvent de gammes intermédiaires ou premium, à cotisation variable, mais certaines néobanques en proposent à tarif contenu. Le coût réel dépend surtout de vos usages (dépenses, part en devises) : le simulateur CB180 le chiffre carte par carte." }
+      ],
+      "faq": [
+        { "q": "Une carte métal offre-t-elle plus de garanties ?", "a": "Pas nécessairement. Le matériau est esthétique et statutaire ; les assurances et services dépendent des conditions contractuelles de la carte, à vérifier sur chaque fiche et dans les conditions générales de la banque." },
+        { "q": "Peut-on payer sans contact avec une carte métal ?", "a": "Oui, en général : le sans contact et le paiement mobile ne dépendent pas de la matière de la carte mais de son équipement, indiqué sur la fiche." },
+        { "q": "La carte métal est-elle forcément plus chère ?", "a": "Souvent associée à des gammes payantes, mais pas toujours : certaines néobanques proposent une carte métal à cotisation modérée. Comparez la cotisation et le coût réel plutôt que le seul matériau." }
+      ]
     }
   ]
 }

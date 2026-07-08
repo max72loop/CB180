@@ -218,6 +218,15 @@ const EDITORIAL_PREDICATES: Record<
     match: (c) => c.tier === "premium" || c.tier === "haut_de_gamme",
     sort: byFeeThenName,
   },
+  "carte-a-debit-differe": {
+    match: (c) =>
+      c.features?.debitType === "differe" || c.features?.debitType === "choix",
+    sort: byFeeThenName,
+  },
+  "carte-bancaire-metal": {
+    match: (c) => c.features?.cardMaterial === "metal",
+    sort: byFeeThenName,
+  },
   // ─── Guides par marque / émetteur : requêtes de marque, forte intention. On
   // filtre sur l'émetteur (fait objectif) et on classe par coût croissant. ───
   "carte-boursobank": {
