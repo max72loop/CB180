@@ -55,7 +55,10 @@ export interface Card {
   last_verified: string | null;
   source_url: string;
   to_verify?: boolean;
+  /** Audit interne : raccourcis, noms de champs, arbitrages. Jamais affiché. */
   verif_note?: string;
+  /** Note de vérification rédigée, publiée telle quelle sur la fiche. */
+  verif_public?: string;
   /**
    * Chemin d'une image officielle de la carte, servie depuis /public
    * (ex. "/cartes/revolut-standard.webp"). Fournie via les kits d'affiliation

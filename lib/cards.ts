@@ -14,8 +14,15 @@ interface CardsFile {
 
 const file = cardsData as CardsFile;
 
-/** Toutes les cartes du jeu de données. */
-export const cards: Card[] = file.cards;
+/**
+ * Toutes les cartes du jeu de données, `verif_note` retiré.
+ *
+ * `verif_note` est un audit interne (raccourcis, arbitrages de modélisation).
+ * Les fiches passent la carte à des composants clients : tout champ laissé ici
+ * finit sérialisé dans le HTML envoyé au navigateur. La note destinée aux
+ * lecteurs est `verif_public`.
+ */
+export const cards: Card[] = file.cards.map(({ verif_note: _internal, ...card }) => card);
 
 /** Cartes vérifiées uniquement (last_verified renseigné et to_verify !== true). */
 export function verifiedCards(): Card[] {

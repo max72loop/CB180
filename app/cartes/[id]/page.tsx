@@ -328,7 +328,7 @@ export default async function CartePage({ params }: Params) {
           </section>
 
           {/* ─── Vérification des données (source officielle) ─── */}
-          {card.verif_note && (
+          {card.verif_public && (
             <section className="mt-16">
               <SectionHeading eyebrow="Notre engagement" title="Vérification des données" />
               <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
@@ -339,7 +339,7 @@ export default async function CartePage({ params }: Params) {
                   </h3>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                  {card.verif_note}
+                  {card.verif_public}
                 </p>
                 {hasOffer && (
                   <a
