@@ -49,8 +49,8 @@ export const PROFILS: ProfilLanding[] = [
       income: "i2", // 1 200 à 1 800 €
     },
     seo: {
-      title:
-        "PVT Australie : le vrai coût de votre carte bancaire sur un an | CB180",
+      // Sans suffixe de marque : le template de app/layout.tsx ajoute « : CB180 ».
+      title: "PVT Australie : le vrai coût de votre carte bancaire sur un an",
       description:
         "Combien une carte française vous coûte réellement pendant un PVT en Australie, frais de change et de retrait compris — et quelle carte évite ces frais. Estimation transparente, simulateur pré-rempli.",
     },
