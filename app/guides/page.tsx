@@ -51,7 +51,7 @@ export default function GuidesIndex() {
                     {guide.intro}
                   </p>
                   <div className="mt-4 flex items-center justify-between">
-                    <span className="text-xs font-medium text-slate-400">
+                    <span className="text-xs font-medium text-slate-500">
                       {count} carte{count > 1 ? "s" : ""} concernée
                       {count > 1 ? "s" : ""}
                     </span>

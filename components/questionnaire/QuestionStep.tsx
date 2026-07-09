@@ -191,7 +191,7 @@ export default function QuestionStep({
           </ul>
 
           {/* Rassurance : mobile uniquement (le rail la porte sur desktop). */}
-          <p className="mt-8 text-xs leading-relaxed text-slate-400 md:hidden">
+          <p className="mt-8 text-xs leading-relaxed text-slate-600 md:hidden">
             Aucune donnée identifiante, aucun nom de banque demandé.
           </p>
         </div>

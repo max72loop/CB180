@@ -200,13 +200,13 @@ export default function ObservatoirePage() {
                     <div className="mb-1 flex items-baseline justify-between gap-3">
                       <span className="text-sm font-medium text-slate-700">
                         {t.label}{" "}
-                        <span className="text-slate-400">
+                        <span className="text-slate-500">
                           · {t.count} carte{t.count > 1 ? "s" : ""}
                         </span>
                       </span>
                       <span className="shrink-0 text-sm font-bold tabular-nums text-slate-900">
                         {eur0.format(t.avgFee)}
-                        <span className="text-xs font-normal text-slate-400"> /an</span>
+                        <span className="text-xs font-normal text-slate-500"> /an</span>
                       </span>
                     </div>
                     <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100">
@@ -375,7 +375,7 @@ function ExtremeCard({
       <p className="text-sm text-slate-500">{label}</p>
       <p className="mt-1 text-2xl font-bold tabular-nums text-slate-900">
         {eur0.format(card.fee)}
-        <span className="text-xs font-normal text-slate-400"> /an</span>
+        <span className="text-xs font-normal text-slate-500"> /an</span>
       </p>
       <p className="mt-1 truncate text-sm font-medium text-slate-700">
         {card.name}
@@ -489,7 +489,7 @@ function ChangesBlock({
                   {c.direction === "hausse" ? "▲" : "▼"} {eur0.format(c.from)} →{" "}
                   {eur0.format(c.to)}
                 </span>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-500">
                   {c.delta > 0 ? "+" : ""}
                   {eur0.format(c.delta)} /an
                 </p>

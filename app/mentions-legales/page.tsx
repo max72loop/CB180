@@ -152,7 +152,7 @@ export default function MentionsLegalesPage() {
           </p>
         </Section>
 
-        <p className="mt-10 text-xs text-slate-400">
+        <p className="mt-10 text-xs text-slate-500">
           Dernière mise à jour : {LAST_UPDATE}.
         </p>
       </main>

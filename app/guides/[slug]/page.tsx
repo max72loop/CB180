@@ -141,7 +141,7 @@ export default async function GuidePage({ params }: Params) {
               })}
             </ol>
           )}
-          <p className="mt-3 text-xs text-slate-400">
+          <p className="mt-3 text-xs text-slate-600">
             Classement objectif selon le critère ci-dessus. Le coût réel dépend de
             vos usages : le simulateur le chiffre précisément.
           </p>

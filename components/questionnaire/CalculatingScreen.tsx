@@ -45,7 +45,7 @@ export default function CalculatingScreen({ cardCount }: CalculatingScreenProps)
         On chiffre le coût réel de votre situation et on le compare aux{" "}
         {cardCount} cartes du marché, poste par poste.
       </p>
-      <p className="mt-6 text-xs font-medium text-slate-400">
+      <p className="mt-6 text-xs font-medium text-slate-600">
         Classement établi objectivement, sans « recommandé pour vous ».
       </p>
     </div>

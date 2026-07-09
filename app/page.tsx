@@ -112,7 +112,7 @@ function HeroVisual() {
             <span className="text-4xl font-extrabold tracking-tight tabular-nums text-emerald-600">
               +269&nbsp;€
             </span>
-            <span className="text-xs font-medium text-slate-400">/ an</span>
+            <span className="text-xs font-medium text-slate-500">/ an</span>
           </div>
 
           {/* La comparaison qui explique l'écart : actuel vs la moins chère */}
@@ -134,7 +134,7 @@ function HeroVisual() {
           </div>
         </div>
 
-        <p className="border-t border-slate-100 bg-slate-50/70 px-4 py-2 text-[11px] leading-tight text-slate-400">
+        <p className="border-t border-slate-100 bg-slate-50/70 px-4 py-2 text-[11px] leading-tight text-slate-600">
           Exemple illustratif, recalculé selon vos réponses.
         </p>
       </div>
@@ -403,11 +403,11 @@ function FeaturedCards() {
 
                     <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
                       <div>
-                        <dt className="text-xs text-slate-400">Cotisation</dt>
+                        <dt className="text-xs text-slate-500">Cotisation</dt>
                         <dd className="font-medium text-slate-800">{feeLabel(card)}</dd>
                       </div>
                       <div>
-                        <dt className="text-xs text-slate-400">Change hors €</dt>
+                        <dt className="text-xs text-slate-500">Change hors €</dt>
                         <dd className="font-medium text-slate-800">{fxLabel(card)}</dd>
                       </div>
                     </dl>
@@ -419,7 +419,7 @@ function FeaturedCards() {
                           Vérifié le {verified}
                         </span>
                       ) : (
-                        <span className="text-xs text-slate-400">
+                        <span className="text-xs text-slate-500">
                           Données indicatives
                         </span>
                       )}

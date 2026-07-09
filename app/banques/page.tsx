@@ -47,7 +47,7 @@ export default function BanquesIndex() {
                     {bank.blurb}
                   </p>
                   <div className="mt-4 flex items-center justify-between">
-                    <span className="text-xs font-medium text-slate-400">
+                    <span className="text-xs font-medium text-slate-500">
                       {count} carte{count > 1 ? "s" : ""}
                     </span>
                     <span className="text-sm font-semibold text-indigo-600 group-hover:text-indigo-700">

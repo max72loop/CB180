@@ -107,7 +107,7 @@ export default function PriceAlertSignup({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="vous@exemple.fr"
             aria-label="Votre adresse email"
-            className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+            className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
           />
           <button
             type="submit"
@@ -168,7 +168,7 @@ export default function PriceAlertSignup({
           onChange={(e) => setEmail(e.target.value)}
           placeholder="vous@exemple.fr"
           aria-label="Votre adresse email"
-          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
         />
         <label className="flex items-start gap-2 text-xs leading-relaxed text-slate-600">
           <input
@@ -191,7 +191,7 @@ export default function PriceAlertSignup({
             L&apos;inscription n&apos;a pas abouti. Réessayez dans un instant.
           </p>
         )}
-        <p className="text-xs leading-relaxed text-slate-400">
+        <p className="text-xs leading-relaxed text-slate-600">
           Double confirmation par email. Votre adresse est stockée séparément de
           toute simulation et n&apos;est jamais transmise à une banque.
         </p>

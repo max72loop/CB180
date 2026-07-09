@@ -23,7 +23,7 @@ export default function ProgressBar({ current, step, total }: ProgressBarProps) 
         <span className="text-slate-700">
           Question {stepLabel} sur {total}
         </span>
-        <span className="text-slate-400">
+        <span className="text-slate-500">
           {answered}/{total} répondu{answered > 1 ? "es" : "e"}
         </span>
       </div>

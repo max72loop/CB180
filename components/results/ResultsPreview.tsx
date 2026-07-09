@@ -201,7 +201,7 @@ export default function ResultsPreview({
                 ? "Cartes accessibles avec votre revenu"
                 : "Cartes triées par coût annuel"}
             </h3>
-            <span className="shrink-0 text-xs text-slate-400">
+            <span className="shrink-0 text-xs text-slate-500">
               {VIEW_LABEL[view].toLowerCase()}
             </span>
           </div>
@@ -491,7 +491,7 @@ function Reveal({
           </>
         )}
 
-        <p className="mx-auto mt-4 max-w-sm text-xs text-slate-400">
+        <p className="mx-auto mt-4 max-w-sm text-xs text-slate-600">
           Estimation fondée sur les fourchettes que vous avez saisies.
         </p>
 
@@ -692,7 +692,7 @@ function RankedCardRow({
             <span className="text-xs font-normal text-slate-500"> / an</span>
           </p>
           {/* Deux vues de coût toujours visibles */}
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             {VIEW_LABEL[otherView]} : {formatEur(otherCost)}
           </p>
           {rewards && (
@@ -888,7 +888,7 @@ function EmailCapture({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="vous@exemple.fr"
-          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
         />
         <label className="flex items-start gap-2 text-xs text-slate-600">
           <input

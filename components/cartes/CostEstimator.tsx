@@ -182,7 +182,7 @@ export default function CostEstimator({ card, bare = false }: CostEstimatorProps
         </p>
         <p className="mt-0.5 text-2xl font-bold tabular-nums text-slate-900">
           {formatEur(shownCost)}
-          <span className="text-sm font-medium text-slate-400"> / an</span>
+          <span className="text-sm font-medium text-slate-500"> / an</span>
         </p>
         {net < 0 && (
           <p className="text-xs font-medium text-emerald-600">
@@ -222,7 +222,7 @@ export default function CostEstimator({ card, bare = false }: CostEstimatorProps
         </dl>
       </div>
 
-      <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
+      <p className="mt-2 text-[11px] leading-relaxed text-slate-600">
         Estimation sur les frais officiels de la carte. Hypothèses : retrait moyen
         100 €, ~1 retrait/mois hors zone euro, prime amortie sur 3 ans.
       </p>

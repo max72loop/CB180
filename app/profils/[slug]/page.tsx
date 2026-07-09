@@ -165,7 +165,7 @@ export default async function ProfilPage({
               ))}
             </ul>
           </details>
-          <p className="mt-4 text-xs leading-relaxed text-slate-400">
+          <p className="mt-4 text-xs leading-relaxed text-slate-600">
             Un écart chiffré, pas un conseil.{" "}
             <Link
               href="/comment-ca-marche"

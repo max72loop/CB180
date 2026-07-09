@@ -104,14 +104,14 @@ export default function ComparisonModal({
             type="button"
             onClick={onClose}
             aria-label="Fermer la comparaison"
-            className="shrink-0 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+            className="shrink-0 rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
           >
             <XIcon className="h-5 w-5" />
           </button>
         </div>
 
         {/* Indicateur de scroll horizontal (mobile) */}
-        <p className="px-5 pt-3 text-xs text-slate-400 sm:hidden">
+        <p className="px-5 pt-3 text-xs text-slate-600 sm:hidden">
           Faites glisser le tableau horizontalement pour tout voir →
         </p>
 
@@ -143,7 +143,7 @@ export default function ComparisonModal({
                         type="button"
                         onClick={() => onRemove(c.id)}
                         aria-label={`Retirer ${c.name} de la comparaison`}
-                        className="shrink-0 rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+                        className="shrink-0 rounded-md p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
                       >
                         <XIcon className="h-4 w-4" />
                       </button>
@@ -200,7 +200,7 @@ export default function ComparisonModal({
 /** Rendu d'une cellule : « — » si vide, liste à puces si avantages, texte sinon. */
 function CellValue({ value }: { value: string | string[] | null }) {
   if (value == null || (Array.isArray(value) && value.length === 0)) {
-    return <span className="text-slate-300">—</span>;
+    return <span className="text-slate-500">—</span>;
   }
   if (Array.isArray(value)) {
     return (

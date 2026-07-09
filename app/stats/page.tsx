@@ -136,7 +136,7 @@ function Dashboard({ stats }: { stats: DashboardStats }) {
           Cartes en tête du classement
         </h2>
         {stats.topCards.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-400">Aucun audit pour l&apos;instant.</p>
+          <p className="mt-2 text-sm text-slate-500">Aucun audit pour l&apos;instant.</p>
         ) : (
           <ul className="mt-4 space-y-3">
             {stats.topCards.map((c) => {
@@ -194,7 +194,7 @@ function AffiliateRevenue({ stats }: { stats: DashboardStats }) {
       </p>
 
       {!hasData ? (
-        <p className="mt-4 text-sm text-slate-400">
+        <p className="mt-4 text-sm text-slate-500">
           Aucun clic affilié tracé pour l&apos;instant. Les compteurs se
           rempliront dès les premiers clics, puis les postbacks de conversion.
         </p>
@@ -325,7 +325,7 @@ function Funnel({ stats }: { stats: DashboardStats }) {
       </p>
 
       {steps.every((s) => s.value === 0) ? (
-        <p className="mt-4 text-sm text-slate-400">
+        <p className="mt-4 text-sm text-slate-500">
           Aucune donnée de funnel pour l&apos;instant.
         </p>
       ) : (

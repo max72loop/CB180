@@ -198,7 +198,7 @@ export default async function ComparatifPage({ params }: Params) {
             </tbody>
           </table>
         </div>
-        <p className="mt-2 text-xs text-slate-400">
+        <p className="mt-2 text-xs text-slate-600">
           Le repère « moins cher » ne porte que sur le poste concerné, pas sur le
           coût global, qui dépend de vos usages.
         </p>

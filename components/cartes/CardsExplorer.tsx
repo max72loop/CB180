@@ -189,7 +189,7 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
       {/* ─── Barre de contrôle : tri + filtres objectifs ─── */}
       <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white/60 p-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">
             Affiner
           </span>
           {FILTERS.map((f) => {
@@ -215,7 +215,7 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
             <button
               type="button"
               onClick={resetFilters}
-              className="ml-1 text-sm font-medium text-slate-400 underline-offset-2 hover:text-slate-600 hover:underline"
+              className="ml-1 text-sm font-medium text-slate-600 underline-offset-2 hover:text-slate-800 hover:underline"
             >
               Réinitialiser
             </button>
@@ -237,7 +237,7 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
 
       {/* Filtres « cas d'usage » : sélection par badge (couleur de la catégorie). */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">
           Cas d&apos;usage
         </span>
         {BADGE_FILTERS.map((b) => {
@@ -295,14 +295,14 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
 
                     {/* #1 — Coût réel estimé (le critère du site), en fourchette. */}
                     <div className="mt-3 rounded-xl bg-slate-50 px-3 py-2.5">
-                      <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                      <p className="text-[11px] font-medium uppercase tracking-wide text-slate-600">
                         Coût réel estimé
                       </p>
                       <p className="text-lg font-bold tracking-tight text-slate-900">
                         {it.minCost === it.maxCost
                           ? `${formatEur(it.minCost)}/an`
                           : `${formatEur(it.minCost)} – ${formatEur(it.maxCost)}/an`}
-                        <span className="ml-1 text-xs font-medium text-slate-400">
+                        <span className="ml-1 text-xs font-medium text-slate-500">
                           selon l&apos;usage
                         </span>
                       </p>
@@ -332,7 +332,7 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
                           Vérifié le {it.verified}
                         </span>
                       ) : (
-                        <span className="text-xs text-slate-400">
+                        <span className="text-xs text-slate-500">
                           Données indicatives
                         </span>
                       )}

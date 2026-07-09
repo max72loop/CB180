@@ -89,7 +89,7 @@ function CostBar({
         <span className="text-sm text-slate-600">{label}</span>
         <span className="text-sm font-bold tabular-nums text-slate-900">
           {formatEur(Math.max(amount, 0))}
-          <span className="font-medium text-slate-400"> /an</span>
+          <span className="font-medium text-slate-500"> /an</span>
         </span>
       </div>
       <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
@@ -227,7 +227,7 @@ export default function QuickResult({
         <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
           <div className="flex items-center justify-between text-xs font-medium text-slate-600">
             <span>Précision de l&apos;estimation</span>
-            <span className="tabular-nums text-slate-400">
+            <span className="tabular-nums text-slate-500">
               {ANSWERED} / {TOTAL} réponses
             </span>
           </div>

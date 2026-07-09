@@ -35,7 +35,7 @@ export default function SiteFooter() {
           </div>
 
           <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
               Le comparateur
             </p>
             <ul className="space-y-2 text-sm">
@@ -79,7 +79,7 @@ export default function SiteFooter() {
           </div>
 
           <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
               Légal
             </p>
             <ul className="space-y-2 text-sm">
@@ -112,7 +112,7 @@ export default function SiteFooter() {
             un conseil personnalisé ni une recommandation de souscription.
             Certains liens sont affiliés et n&apos;influencent pas le classement.
           </p>
-          <p className="mt-4 text-xs text-slate-400">
+          <p className="mt-4 text-xs text-slate-600">
             © {new Date().getFullYear()} CB180. Tous droits réservés.
           </p>
         </div>

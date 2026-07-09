@@ -130,7 +130,7 @@ export default function MiniSimulateur({ card }: MiniSimulateurProps) {
         </div>
       </div>
 
-      <p className="mt-4 text-xs leading-relaxed text-slate-400">
+      <p className="mt-4 text-xs leading-relaxed text-slate-600">
         Estimation sur données officielles et hypothèses explicites (retrait
         moyen 100 €, prime amortie sur 3 ans). La « situation actuelle » modélise
         une carte de réseau traditionnel avec la cotisation indiquée. Pour un

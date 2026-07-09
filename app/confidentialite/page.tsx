@@ -101,10 +101,7 @@ export default function ConfidentialitePage() {
             Les audits anonymisés sont conservés au maximum{" "}
             <strong>25 mois</strong> à des fins de mesure d&apos;audience. Les
             adresses email sont conservées jusqu&apos;à votre désinscription, et au
-            plus <strong>3 ans</strong> après le dernier contact.{" "}
-            <span className="text-slate-400">
-              (durées ajustables selon votre politique)
-            </span>
+            plus <strong>3 ans</strong> après le dernier contact.
           </p>
         </Section>
 
@@ -152,7 +149,7 @@ export default function ConfidentialitePage() {
           .
         </p>
 
-        <p className="mt-8 text-xs text-slate-400">
+        <p className="mt-8 text-xs text-slate-500">
           Dernière mise à jour : {LAST_UPDATE}.
         </p>
       </main>

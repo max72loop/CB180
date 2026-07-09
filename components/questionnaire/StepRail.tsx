@@ -80,7 +80,7 @@ function StepGroup({
   const ids = DISPLAY_ORDER.slice(startIndex, startIndex + count);
   return (
     <div>
-      <p className="px-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+      <p className="px-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
         {title}
       </p>
       <ol className="mt-2">
@@ -104,7 +104,7 @@ function StepGroup({
                       ? "font-semibold text-indigo-700"
                       : state === "done"
                         ? "text-slate-700"
-                        : "text-slate-400",
+                        : "text-slate-500",
                   ].join(" ")}
                 >
                   {SHORT_LABELS[qid]}
@@ -161,7 +161,7 @@ export default function StepRail({
           Votre profil se dessine
         </p>
         {chips.length === 0 ? (
-          <p className="mt-2 text-xs text-slate-400">
+          <p className="mt-2 text-xs text-slate-500">
             Vos réponses apparaîtront ici.
           </p>
         ) : (
@@ -171,7 +171,7 @@ export default function StepRail({
                 key={chip.qid}
                 className="animate-step flex items-baseline justify-between gap-3 text-xs"
               >
-                <span className="shrink-0 text-slate-400">{chip.label}</span>
+                <span className="shrink-0 text-slate-500">{chip.label}</span>
                 <span className="text-right font-medium text-slate-700">
                   {chip.value}
                 </span>
@@ -183,10 +183,10 @@ export default function StepRail({
 
       {/* 3. Rassurance + astuce clavier. */}
       <div className="mt-8">
-        <p className="text-xs leading-relaxed text-slate-400">
+        <p className="text-xs leading-relaxed text-slate-600">
           Aucune donnée identifiante, aucun nom de banque demandé.
         </p>
-        <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-400">
+        <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-600">
           <kbd className="rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 font-sans text-[0.65rem] font-semibold text-slate-500">
             1-{Math.min(optionCount, 9)}
           </kbd>

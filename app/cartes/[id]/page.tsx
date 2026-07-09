@@ -209,7 +209,7 @@ export default async function CartePage({ params }: Params) {
               {/* Prix + actions */}
               <div className="mt-7 flex flex-wrap items-end gap-x-6 gap-y-2">
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate-600">
                     Cotisation
                   </p>
                   <p className="text-4xl font-extrabold tracking-tight text-slate-900">
@@ -242,7 +242,7 @@ export default async function CartePage({ params }: Params) {
                   </a>
                 )}
               </div>
-              <p className="mt-3 text-xs text-slate-400">
+              <p className="mt-3 text-xs text-slate-600">
                 Simulation gratuite, sans inscription.
                 {hasOffer &&
                   ` Lien affilié vers le site officiel de ${card.issuer.split(" (")[0]} — n'influence pas le classement.`}
@@ -309,8 +309,8 @@ export default async function CartePage({ params }: Params) {
               </span>
             </p>
 
-            <details className="mt-3 text-xs leading-relaxed text-slate-400">
-              <summary className="cursor-pointer font-medium text-slate-500 marker:content-['']">
+            <details className="mt-3 text-xs leading-relaxed text-slate-600">
+              <summary className="cursor-pointer font-medium text-slate-700 marker:content-['']">
                 Hypothèses de calcul
               </summary>
               <p className="mt-1.5">
@@ -399,7 +399,7 @@ export default async function CartePage({ params }: Params) {
                   >
                     <MiniCard tone={toneForTier(other.tier)} className="shrink-0" />
                     <span className="min-w-0 flex-1 text-sm font-medium text-slate-800">
-                      {card.name} <span className="text-slate-400">vs</span>{" "}
+                      {card.name} <span className="text-slate-500">vs</span>{" "}
                       {other.name}
                     </span>
                     <ArrowIcon className="h-4 w-4 shrink-0 text-indigo-500 transition-transform group-hover:translate-x-0.5" />
@@ -518,7 +518,7 @@ function FactCard({
         <Icon className="h-5 w-5" />
       </span>
       <div className="min-w-0">
-        <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">
+        <dt className="text-xs font-medium uppercase tracking-wide text-slate-600">
           {label}
         </dt>
         <dd className="mt-0.5 text-sm font-semibold leading-snug text-slate-800">
@@ -575,7 +575,7 @@ function FeaturesSection({ card }: { card: Card }) {
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {groups.map(({ group, rows }) => (
           <div key={group.id} className="rounded-2xl border border-slate-200 bg-white p-5">
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">
               {group.title}
             </h3>
             <ul className="mt-3 space-y-2.5">
@@ -588,11 +588,11 @@ function FeaturesSection({ card }: { card: Card }) {
                         <CheckIcon className="h-3.5 w-3.5" />
                       </span>
                     ) : (
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500">
                         <MinusIcon className="h-3.5 w-3.5" />
                       </span>
                     )}
-                    <span className={yes ? "font-medium text-slate-800" : "text-slate-400"}>
+                    <span className={yes ? "font-medium text-slate-800" : "text-slate-500"}>
                       {r.label}
                     </span>
                   </li>
@@ -635,7 +635,7 @@ function ScenarioCard({
 
       <p className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900">
         {netAnnual <= 0 ? formatEur(0) : formatEur(netAnnual)}
-        <span className="text-sm font-medium text-slate-400">/an</span>
+        <span className="text-sm font-medium text-slate-500">/an</span>
       </p>
 
       {/* Barre à l'échelle commune aux trois scénarios. */}
