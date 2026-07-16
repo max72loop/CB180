@@ -24,6 +24,7 @@ import {
   feeLabel,
   fxLabel,
   incomeLabel,
+  relatedCards,
   toneForTier,
   verifiedDate,
   welcomeLabel,
@@ -85,11 +86,10 @@ export default async function CartePage({ params }: Params) {
   // Atouts factuels différenciants, dérivés des champs vérifiés (pills du hero).
   const highlights = cardHighlights(card, 4);
 
-  // Suggestions de comparaison : 4 autres cartes (les moins chères d'abord).
-  const comparables = publicCards()
-    .filter((c) => c.id !== card.id)
-    .sort((a, b) => a.annual_fee_eur - b.annual_fee_eur || a.name.localeCompare(b.name))
-    .slice(0, 4);
+  // Suggestions de comparaison : 4 autres cartes les plus PERTINENTES (même
+  // gamme, profils communs, cotisation voisine). Maillage interne pertinent :
+  // les cartes payantes redeviennent des cibles de liens, pas seulement les 0 €.
+  const comparables = relatedCards(card, publicCards(), 4);
 
   // Coût réel : coût annuel net estimé de CETTE carte pour 3 usages types.
   // Chiffres déterministes (SSG), donc indexables : ils captent « coût réel ».

@@ -80,6 +80,43 @@ export function cardHighlights(card: Card, max = 2): string[] {
 }
 
 /**
+ * Cartes les plus PERTINENTES à comparer avec `card`, pour le maillage interne.
+ *
+ * On ne prend PLUS les 4 cartes les moins chères (ce tri privait de liens toute
+ * carte payante, aussi bien positionnée soit-elle) : on classe par proximité
+ * réelle — même gamme, profils cibles communs, cotisation voisine, même réseau.
+ * Résultat : chaque fiche pointe vers ses vraies concurrentes, et les cartes
+ * payantes redeviennent des cibles de liens internes (concentre le PageRank).
+ * Déterministe (SSG) : départages stables par cotisation puis nom.
+ */
+export function relatedCards(card: Card, pool: Card[], max = 4): Card[] {
+  const relevance = (other: Card): number => {
+    let s = 0;
+    if (other.tier === card.tier) s += 3;
+    const sharedProfiles = other.target_profiles.filter((p) =>
+      card.target_profiles.includes(p),
+    ).length;
+    s += sharedProfiles * 2;
+    if (other.network === card.network) s += 0.5;
+    // Proximité de cotisation : bonus 0..2, divisé par 2 tous les ~40 € d'écart.
+    const feeGap = Math.abs(other.annual_fee_eur - card.annual_fee_eur);
+    s += 2 / (1 + feeGap / 40);
+    return s;
+  };
+  return pool
+    .filter((c) => c.id !== card.id)
+    .map((c) => ({ c, s: relevance(c) }))
+    .sort(
+      (a, b) =>
+        b.s - a.s ||
+        a.c.annual_fee_eur - b.c.annual_fee_eur ||
+        a.c.name.localeCompare(b.c.name),
+    )
+    .slice(0, max)
+    .map((x) => x.c);
+}
+
+/**
  * Slug canonique d'une comparaison de deux cartes : ids triés + « -vs- »,
  * pour qu'une même paire n'ait qu'une seule URL (pas de doublon A-vs-B / B-vs-A).
  */
@@ -135,7 +172,76 @@ export function cardFaq(card: Card): { q: string; a: string }[] {
         : `La cotisation de ${card.name} est de ${feeLabel(card)}. Le coût réel total dépend en plus de vos usages à l'étranger : le simulateur le chiffre.`,
   });
 
+  // Q/R propres à l'entité (actualité tarifaire, comparaison intra-marque…),
+  // ajoutées après le gabarit générique : longue traîne à forte intention.
+  if (card.faq_extra) faq.push(...card.faq_extra);
+
   return faq;
+}
+
+/**
+ * Segment de texte éditorial : soit du texte brut, soit une mention de carte à
+ * transformer en lien interne (`cardId` renseigné). Produit par linkifyCardNames.
+ */
+export interface TextSegment {
+  text: string;
+  cardId?: string;
+}
+
+/**
+ * Découpe un texte éditorial en segments, en repérant les noms EXACTS de cartes
+ * du catalogue pour les rendre cliquables vers leur fiche. Maillage interne
+ * contextuel : un guide qui cite « Hello Prime » en prose pointe désormais vers
+ * /cartes/hellobank-prime, ce qui transmet une pertinence thématique réelle.
+ *
+ * Discipline anti-suroptimisation : une SEULE occurrence liée par carte (via
+ * `alreadyLinked`, partagé entre sections d'un même guide), correspondance
+ * sensible à la casse et bornée aux mots (pas de sous-chaîne au milieu d'un
+ * mot), noms les plus longs prioritaires (« Nickel Chrome » avant « Nickel »).
+ * Fonction pure : ne dépend pas de React, la page décide du rendu du lien.
+ */
+export function linkifyCardNames(
+  body: string,
+  cards: { id: string; name: string }[],
+  alreadyLinked: Set<string>,
+): TextSegment[] {
+  const isWordChar = (ch: string | undefined): boolean =>
+    ch != null && /[A-Za-zÀ-ÿ0-9]/.test(ch);
+  const segments: TextSegment[] = [];
+  let i = 0;
+  while (i < body.length) {
+    // Occurrence la plus proche à partir de i ; à égalité, le nom le plus long.
+    let best: { index: number; id: string; name: string } | null = null;
+    for (const c of cards) {
+      if (alreadyLinked.has(c.id)) continue;
+      const idx = body.indexOf(c.name, i);
+      if (idx === -1) continue;
+      if (
+        best === null ||
+        idx < best.index ||
+        (idx === best.index && c.name.length > best.name.length)
+      ) {
+        best = { index: idx, id: c.id, name: c.name };
+      }
+    }
+    if (best === null) {
+      segments.push({ text: body.slice(i) });
+      break;
+    }
+    const before = body[best.index - 1];
+    const after = body[best.index + best.name.length];
+    if (isWordChar(before) || isWordChar(after)) {
+      // Mention au milieu d'un mot : on la laisse en texte et on avance.
+      segments.push({ text: body.slice(i, best.index + best.name.length) });
+      i = best.index + best.name.length;
+      continue;
+    }
+    if (best.index > i) segments.push({ text: body.slice(i, best.index) });
+    segments.push({ text: best.name, cardId: best.id });
+    alreadyLinked.add(best.id);
+    i = best.index + best.name.length;
+  }
+  return segments;
 }
 
 /** Date de vérification lisible « JJ/MM/AAAA » ou null si non vérifiée. */

@@ -14,6 +14,7 @@ import { GUIDES, getGuide, type Guide } from "@/lib/guides";
 import {
   feeLabel,
   fxLabel,
+  linkifyCardNames,
   toneForTier,
   verifiedDate,
 } from "@/lib/card-display";
@@ -57,6 +58,12 @@ export default async function GuidePage({ params }: Params) {
 
   const cards = matchingCards(guide);
 
+  // Maillage interne contextuel : le corps éditorial lie chaque nom de carte du
+  // catalogue vers sa fiche (1re occurrence seulement, `linkedCards` partagé
+  // entre sections). Transmet une pertinence thématique aux fiches citées.
+  const catalog = publicCards().map((c) => ({ id: c.id, name: c.name }));
+  const linkedCards = new Set<string>();
+
   return (
     <>
       <SiteHeader />
@@ -79,7 +86,7 @@ export default async function GuidePage({ params }: Params) {
           {guide.title}
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-          {guide.intro}
+          <EditorialText body={guide.intro} catalog={catalog} linked={linkedCards} />
         </p>
 
         <p className="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
@@ -156,7 +163,11 @@ export default async function GuidePage({ params }: Params) {
                   {section.h}
                 </h2>
                 <p className="mt-3 leading-relaxed text-slate-600">
-                  {section.body}
+                  <EditorialText
+                    body={section.body}
+                    catalog={catalog}
+                    linked={linkedCards}
+                  />
                 </p>
               </section>
             ))}
@@ -216,6 +227,40 @@ export default async function GuidePage({ params }: Params) {
         </p>
       </main>
       <SiteFooter />
+    </>
+  );
+}
+
+/**
+ * Rend un paragraphe éditorial en liant les noms de cartes cités vers leur
+ * fiche (maillage interne contextuel). `linked` est partagé entre sections pour
+ * ne lier chaque carte qu'une fois par guide. Le texte non lié reste intact.
+ */
+function EditorialText({
+  body,
+  catalog,
+  linked,
+}: {
+  body: string;
+  catalog: { id: string; name: string }[];
+  linked: Set<string>;
+}) {
+  const segments = linkifyCardNames(body, catalog, linked);
+  return (
+    <>
+      {segments.map((seg, i) =>
+        seg.cardId ? (
+          <Link
+            key={i}
+            href={`/cartes/${seg.cardId}`}
+            className="font-medium text-indigo-600 underline decoration-indigo-200 underline-offset-2 hover:text-indigo-700 hover:decoration-indigo-400"
+          >
+            {seg.text}
+          </Link>
+        ) : (
+          <span key={i}>{seg.text}</span>
+        ),
+      )}
     </>
   );
 }

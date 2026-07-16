@@ -60,6 +60,14 @@ export interface Card {
   /** Note de vérification rédigée, publiée telle quelle sur la fiche. */
   verif_public?: string;
   /**
+   * Questions/réponses SPÉCIFIQUES à cette carte, ajoutées à la FAQ générée
+   * (lib/card-display.cardFaq) et au JSON-LD FAQPage. Sert à capter la longue
+   * traîne propre à l'entité (comparaison intra-marque, actualité tarifaire,
+   * nuances « sans frais »…) que le gabarit générique ne couvre pas. Réponses
+   * strictement factuelles (IOBSP), ancrées sur les données vérifiées.
+   */
+  faq_extra?: { q: string; a: string }[];
+  /**
    * Chemin d'une image officielle de la carte, servie depuis /public
    * (ex. "/cartes/revolut-standard.webp"). Fournie via les kits d'affiliation
    * (Awin/Kwanko) sous licence. Si absente, un visuel rendu fidèle à la marque
