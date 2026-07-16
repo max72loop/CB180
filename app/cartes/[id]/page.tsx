@@ -8,7 +8,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import { ProductCardVisual, MiniCard } from "@/components/brand/CardVisual";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
 import CostEstimator from "@/components/cartes/CostEstimator";
 import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
 import { getCard, publicCards } from "@/lib/cards";
@@ -24,7 +24,7 @@ import {
   feeLabel,
   fxLabel,
   incomeLabel,
-  toneForTier,
+  relatedCards,
   verifiedDate,
   welcomeLabel,
 } from "@/lib/card-display";
@@ -85,11 +85,10 @@ export default async function CartePage({ params }: Params) {
   // Atouts factuels différenciants, dérivés des champs vérifiés (pills du hero).
   const highlights = cardHighlights(card, 4);
 
-  // Suggestions de comparaison : 4 autres cartes (les moins chères d'abord).
-  const comparables = publicCards()
-    .filter((c) => c.id !== card.id)
-    .sort((a, b) => a.annual_fee_eur - b.annual_fee_eur || a.name.localeCompare(b.name))
-    .slice(0, 4);
+  // Suggestions de comparaison : 4 autres cartes les plus PERTINENTES (même
+  // gamme, profils communs, cotisation voisine). Maillage interne pertinent :
+  // les cartes payantes redeviennent des cibles de liens, pas seulement les 0 €.
+  const comparables = relatedCards(card, publicCards(), 4);
 
   // Coût réel : coût annuel net estimé de CETTE carte pour 3 usages types.
   // Chiffres déterministes (SSG), donc indexables : ils captent « coût réel ».
@@ -397,7 +396,7 @@ export default async function CartePage({ params }: Params) {
                     href={`/comparatif/${comparisonSlug(card.id, other.id)}`}
                     className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 transition-all hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-600/5"
                   >
-                    <MiniCard tone={toneForTier(other.tier)} className="shrink-0" />
+                    <ProductCardVisual card={other} size="sm" />
                     <span className="min-w-0 flex-1 text-sm font-medium text-slate-800">
                       {card.name} <span className="text-slate-500">vs</span>{" "}
                       {other.name}

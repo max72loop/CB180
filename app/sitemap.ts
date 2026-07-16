@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/cartes",
     "/guides",
     "/banques",
+    "/profils",
     "/observatoire",
     "/simulateur",
     "/comment-ca-marche",

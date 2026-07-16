@@ -8,13 +8,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import { MiniCard } from "@/components/brand/CardVisual";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
 import { publicCards } from "@/lib/cards";
 import { GUIDES, getGuide, type Guide } from "@/lib/guides";
 import {
   feeLabel,
   fxLabel,
-  toneForTier,
+  linkifyCardNames,
   verifiedDate,
 } from "@/lib/card-display";
 import type { Card } from "@/lib/types";
@@ -57,6 +57,12 @@ export default async function GuidePage({ params }: Params) {
 
   const cards = matchingCards(guide);
 
+  // Maillage interne contextuel : le corps éditorial lie chaque nom de carte du
+  // catalogue vers sa fiche (1re occurrence seulement, `linkedCards` partagé
+  // entre sections). Transmet une pertinence thématique aux fiches citées.
+  const catalog = publicCards().map((c) => ({ id: c.id, name: c.name }));
+  const linkedCards = new Set<string>();
+
   return (
     <>
       <SiteHeader />
@@ -79,7 +85,7 @@ export default async function GuidePage({ params }: Params) {
           {guide.title}
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-          {guide.intro}
+          <EditorialText body={guide.intro} catalog={catalog} linked={linkedCards} />
         </p>
 
         <p className="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
@@ -109,7 +115,7 @@ export default async function GuidePage({ params }: Params) {
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
                       {i + 1}
                     </span>
-                    <MiniCard tone={toneForTier(card.tier)} />
+                    <ProductCardVisual card={card} size="sm" />
                     <div className="min-w-0 flex-1">
                       <Link
                         href={`/cartes/${card.id}`}
@@ -156,7 +162,11 @@ export default async function GuidePage({ params }: Params) {
                   {section.h}
                 </h2>
                 <p className="mt-3 leading-relaxed text-slate-600">
-                  {section.body}
+                  <EditorialText
+                    body={section.body}
+                    catalog={catalog}
+                    linked={linkedCards}
+                  />
                 </p>
               </section>
             ))}
@@ -216,6 +226,40 @@ export default async function GuidePage({ params }: Params) {
         </p>
       </main>
       <SiteFooter />
+    </>
+  );
+}
+
+/**
+ * Rend un paragraphe éditorial en liant les noms de cartes cités vers leur
+ * fiche (maillage interne contextuel). `linked` est partagé entre sections pour
+ * ne lier chaque carte qu'une fois par guide. Le texte non lié reste intact.
+ */
+function EditorialText({
+  body,
+  catalog,
+  linked,
+}: {
+  body: string;
+  catalog: { id: string; name: string }[];
+  linked: Set<string>;
+}) {
+  const segments = linkifyCardNames(body, catalog, linked);
+  return (
+    <>
+      {segments.map((seg, i) =>
+        seg.cardId ? (
+          <Link
+            key={i}
+            href={`/cartes/${seg.cardId}`}
+            className="font-medium text-indigo-600 underline decoration-indigo-200 underline-offset-2 hover:text-indigo-700 hover:decoration-indigo-400"
+          >
+            {seg.text}
+          </Link>
+        ) : (
+          <span key={i}>{seg.text}</span>
+        ),
+      )}
     </>
   );
 }

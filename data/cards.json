@@ -280,6 +280,24 @@
       "to_verify": false,
       "verif_note": "Brochure 'CONDITIONS ET TARIFS - 1ER JANVIER 2026'. Cotisation 5 EUR/mois (60 EUR/an). 'Sans frais' hors zone euro cote Hello MAIS hors change reseau Visa et frais banques etrangeres (pas 0% tout compris). Prime base ~80 EUR (l'affichage 'jusqu'a 280 EUR' inclut 200 EUR de bons conditionnes mobilite). Revenus 1 500 EUR/mois requis. Cashback = offres marchands, pas un taux %.",
       "verif_public": "Conditions et tarifs au 1er janvier 2026. Cotisation de 5 €/mois, soit 60 €/an. Attention à la mention « sans frais » hors zone euro : elle vaut pour Hello bank!, mais le taux de change du réseau Visa et les frais des banques étrangères restent dus — ce n'est pas du 0 % tout compris. La prime de base est d'environ 80 € ; l'affichage « jusqu'à 280 € » inclut 200 € de bons conditionnés à une mobilité bancaire. Le cashback Hello Extra est un catalogue d'offres marchands, pas un taux de remise.",
+      "faq_extra": [
+        {
+          "q": "Hello Prime devient-elle gratuite en octobre 2026 ?",
+          "a": "À compter du 1er octobre 2026, Hello bank! annonce que Hello Prime sera gratuite les mois où au moins 1 500 € sont versés sur le compte ; à défaut, la cotisation passe à 6 €/mois. Jusque-là, elle reste à 5 €/mois (60 €/an). Vérifiez les conditions à jour de Hello bank! avant toute décision."
+        },
+        {
+          "q": "Quelle différence entre Hello Prime et Hello One ?",
+          "a": "Hello One est la carte d'entrée de gamme, gratuite sous condition d'un paiement par mois et sans condition de revenu. Hello Prime est la carte intermédiaire à 5 €/mois, avec des assurances de niveau Premier/Gold et des retraits hors zone euro sans frais côté Hello bank!. Les paiements en devises sont sans frais de change sur les deux cartes."
+        },
+        {
+          "q": "Les paiements à l'étranger sont-ils vraiment sans frais avec Hello Prime ?",
+          "a": "Hello bank! n'applique aucun frais de change sur les paiements hors zone euro (0 %). En revanche, le taux de change du réseau Visa s'applique, et les retraits peuvent rester soumis aux frais des banques étrangères. « Sans frais » vaut donc côté Hello bank!, pas « tout compris »."
+        },
+        {
+          "q": "La prime de bienvenue Hello Prime est-elle vraiment de 280 € ?",
+          "a": "La prime de base confirmée est d'environ 80 €. L'affichage « jusqu'à 280 € » ajoute 200 € de bons conditionnés à une mobilité bancaire (domiciliation de revenus, etc.). Ces offres promotionnelles sont volatiles : vérifiez le montant exact et ses conditions au moment de la souscription."
+        }
+      ],
       "foreign_withdrawal_fee_percent": 0,
       "foreign_withdrawal_flat_eur": 0,
       "free_foreign_withdrawals_per_month": 999,
