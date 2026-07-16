@@ -8,14 +8,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import { MiniCard } from "@/components/brand/CardVisual";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
 import { publicCards } from "@/lib/cards";
 import { GUIDES, getGuide, type Guide } from "@/lib/guides";
 import {
   feeLabel,
   fxLabel,
   linkifyCardNames,
-  toneForTier,
   verifiedDate,
 } from "@/lib/card-display";
 import type { Card } from "@/lib/types";
@@ -116,7 +115,7 @@ export default async function GuidePage({ params }: Params) {
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
                       {i + 1}
                     </span>
-                    <MiniCard tone={toneForTier(card.tier)} />
+                    <ProductCardVisual card={card} size="sm" />
                     <div className="min-w-0 flex-1">
                       <Link
                         href={`/cartes/${card.id}`}

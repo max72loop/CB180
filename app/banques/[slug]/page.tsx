@@ -7,9 +7,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import { MiniCard } from "@/components/brand/CardVisual";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
 import { BANKS, cardsForBank, getBank } from "@/lib/banks";
-import { feeLabel, fxLabel, toneForTier, verifiedDate } from "@/lib/card-display";
+import { feeLabel, fxLabel, verifiedDate } from "@/lib/card-display";
 import { SITE_URL } from "@/lib/site";
 
 interface Params {
@@ -105,7 +105,7 @@ export default async function BanquePage({ params }: Params) {
                     key={card.id}
                     className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4"
                   >
-                    <MiniCard tone={toneForTier(card.tier)} />
+                    <ProductCardVisual card={card} size="sm" />
                     <div className="min-w-0 flex-1">
                       <Link
                         href={`/cartes/${card.id}`}

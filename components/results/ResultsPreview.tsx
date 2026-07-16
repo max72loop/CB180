@@ -18,24 +18,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { costComposition, splitByEligibility } from "@/lib/engine";
 import { distinguishingFeatures } from "@/lib/card-features";
-import { MiniCard } from "@/components/brand/CardVisual";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
 import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
 import ShareResult from "@/components/results/ShareResult";
 import TiebreakByFeatures from "@/components/results/TiebreakByFeatures";
 import { shareCompoFromBreakdown } from "@/lib/share";
-import type { Card, CostBreakdown, CostShare, RankedCard } from "@/lib/types";
+import type { CostBreakdown, CostShare, RankedCard } from "@/lib/types";
 import { formatEur, formatEurCents, formatSignedEur } from "@/lib/format";
 
 /** Vue de coût mise en avant. */
 type CostView = "recurring" | "year1";
-
-/** Teinte de la vignette de carte selon la gamme (décoratif, neutre). */
-function toneForTier(tier: Card["tier"]): "brand" | "dark" | "emerald" | "slate" {
-  if (tier === "premium") return "dark";
-  if (tier === "haut_de_gamme") return "emerald";
-  if (tier === "intermediaire") return "brand";
-  return "slate";
-}
 
 interface ResultsPreviewProps {
   current: CostBreakdown;
@@ -664,7 +656,7 @@ function RankedCardRow({
       )}
       <div className="flex items-start justify-between gap-3 p-4">
         <div className="flex min-w-0 gap-3">
-          <MiniCard tone={toneForTier(card.tier)} className="mt-0.5" />
+          <ProductCardVisual card={card} size="sm" className="mt-0.5" />
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               {rank != null ? (

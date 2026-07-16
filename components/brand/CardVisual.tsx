@@ -3,8 +3,9 @@
 // sans-contact, numéro masqué, réseau. Sert d'illustration produit sur la
 // landing. Purement décoratif (aria-hidden).
 //
-// ProductCardVisual (plus bas) rend, lui, une carte NOMMÉE sur les fiches :
-// image officielle si fournie (card.image), sinon visuel fidèle à la marque.
+// ProductCardVisual (plus bas) rend, lui, une carte NOMMÉE sur les fiches ET
+// dans les listes (prop `size`) : image officielle si fournie (card.image),
+// sinon visuel fidèle à la marque.
 
 import Image from "next/image";
 import type { Card } from "@/lib/types";
@@ -31,13 +32,19 @@ interface CardVisualProps {
 }
 
 /** Puce EMV stylisée (dorée ou argentée). */
-function Chip({ tone = "gold" }: { tone?: "gold" | "silver" }) {
+function Chip({
+  tone = "gold",
+  className = "h-7 w-9",
+}: {
+  tone?: "gold" | "silver";
+  className?: string;
+}) {
   const fill = tone === "silver" ? "#d7dbe0" : "#f5d67b";
   const stroke = tone === "silver" ? "#a9b0b8" : "#d9b24a";
   const line = tone === "silver" ? "#9098a1" : "#c79a34";
   const inner = tone === "silver" ? "#c3c9d0" : "#e6c25c";
   return (
-    <svg viewBox="0 0 40 32" className="h-7 w-9" aria-hidden>
+    <svg viewBox="0 0 40 32" className={className} aria-hidden>
       <rect x="1" y="1" width="38" height="30" rx="5" fill={fill} stroke={stroke} strokeWidth="1" />
       <path
         d="M14 1v30M26 1v30M1 11h13M26 11h13M1 21h13M26 21h13"
@@ -62,32 +69,6 @@ function Contactless({ className = "h-6 w-6 text-white/80" }: { className?: stri
         strokeLinecap="round"
       />
     </svg>
-  );
-}
-
-/**
- * Vignette de carte compacte pour les listes (en-tête de ligne de résultat).
- * Décorative, neutre : une petite carte au dégradé + puce.
- */
-export function MiniCard({
-  tone = "brand",
-  className = "",
-}: {
-  tone?: CardTone;
-  className?: string;
-}) {
-  return (
-    <span
-      aria-hidden
-      className={[
-        "relative inline-flex h-8 w-12 shrink-0 items-end overflow-hidden rounded-md p-1 shadow-sm ring-1 ring-black/5",
-        TONES[tone],
-        className,
-      ].join(" ")}
-    >
-      <span className="absolute left-1 top-1 h-2 w-2.5 rounded-[2px] bg-[#f5d67b]" />
-      <span className="h-1 w-6 rounded-full bg-white/50" />
-    </span>
   );
 }
 
@@ -235,6 +216,38 @@ function CardPattern({
   }
 }
 
+/** Échelle de rendu d'une carte nommée : pleine largeur, ou vignette de liste. */
+export type ProductCardSize = "md" | "sm";
+
+/**
+ * Gabarits des deux échelles. `sm` garde la même identité (fond de marque,
+ * motif, wordmark, puce, réseau) mais retire le numéro masqué et le nom de la
+ * carte : à 80 px de large ils ne sont plus lisibles, et la ligne de liste
+ * affiche déjà le nom juste à côté. La largeur est fixée ici (et non par
+ * l'appelant) pour que toutes les vignettes de l'outil s'alignent.
+ */
+const PRODUCT_SIZE: Record<
+  ProductCardSize,
+  { frame: string; pad: string; wordmark: string; chip: string; contactless: string; network: string }
+> = {
+  md: {
+    frame: "w-full rounded-2xl shadow-xl",
+    pad: "p-5",
+    wordmark: "text-sm",
+    chip: "h-7 w-9",
+    contactless: "h-6 w-6",
+    network: "rounded px-1.5 py-0.5 text-[10px] tracking-wider",
+  },
+  sm: {
+    frame: "w-20 shrink-0 rounded-lg shadow-sm",
+    pad: "p-1.5",
+    wordmark: "text-[8px]",
+    chip: "h-4 w-5",
+    contactless: "h-3 w-3",
+    network: "rounded-sm px-1 py-px text-[7px] tracking-wide",
+  },
+};
+
 /**
  * Visuel d'une carte NOMMÉE, pour les fiches / listes de produits réels.
  *
@@ -251,19 +264,23 @@ export function ProductCardVisual({
   className = "",
   sheen = false,
   priority = false,
+  size = "md",
 }: {
   card: Card;
   className?: string;
   sheen?: boolean;
   priority?: boolean;
+  size?: ProductCardSize;
 }) {
+  const s = PRODUCT_SIZE[size];
   const alt = `Carte ${card.name} (${card.issuer})`;
 
   if (card.image) {
     return (
       <div
         className={[
-          "relative aspect-[1.586/1] w-full overflow-hidden rounded-2xl shadow-xl ring-1 ring-black/5",
+          "relative aspect-[1.586/1] overflow-hidden ring-1 ring-black/5",
+          s.frame,
           className,
         ].join(" ")}
       >
@@ -271,7 +288,7 @@ export function ProductCardVisual({
           src={card.image}
           alt={alt}
           fill
-          sizes="(max-width: 640px) 90vw, 400px"
+          sizes={size === "sm" ? "80px" : "(max-width: 640px) 90vw, 400px"}
           className="object-cover"
           priority={priority}
         />
@@ -288,7 +305,9 @@ export function ProductCardVisual({
       role="img"
       aria-label={alt}
       className={[
-        "relative aspect-[1.586/1] w-full overflow-hidden rounded-2xl p-5 shadow-xl ring-1 ring-black/10",
+        "relative aspect-[1.586/1] overflow-hidden ring-1 ring-black/10",
+        s.frame,
+        s.pad,
         sheen ? "card-sheen" : "",
         className,
       ].join(" ")}
@@ -298,26 +317,35 @@ export function ProductCardVisual({
       <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
 
       <div className="relative flex h-full flex-col justify-between">
-        <div className="flex items-start justify-between gap-2">
-          <span className="text-sm font-bold tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
+        <div className="flex items-start justify-between gap-1.5">
+          <span
+            className={`min-w-0 truncate font-bold leading-tight tracking-tight ${s.wordmark}`}
+            style={{ fontFamily: "var(--font-display)" }}
+          >
             {brand.wordmark}
           </span>
-          <Contactless className="h-6 w-6 opacity-70" />
+          <Contactless className={`shrink-0 opacity-70 ${s.contactless}`} />
         </div>
 
-        <div className="flex items-center gap-3">
-          <Chip tone={brand.chip} />
-          <span className="font-mono text-sm tracking-widest opacity-80">
-            ••••&nbsp;••••&nbsp;••••
-          </span>
-        </div>
+        {size === "md" && (
+          <div className="flex items-center gap-3">
+            <Chip tone={brand.chip} className={s.chip} />
+            <span className="font-mono text-sm tracking-widest opacity-80">
+              ••••&nbsp;••••&nbsp;••••
+            </span>
+          </div>
+        )}
 
-        <div className="flex items-end justify-between gap-2">
-          <span className="max-w-[65%] text-xs font-medium leading-tight opacity-90">
-            {card.name}
-          </span>
+        <div className="flex items-end justify-between gap-1.5">
+          {size === "md" ? (
+            <span className="max-w-[65%] text-xs font-medium leading-tight opacity-90">
+              {card.name}
+            </span>
+          ) : (
+            <Chip tone={brand.chip} className={s.chip} />
+          )}
           <span
-            className="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+            className={`shrink-0 font-bold uppercase leading-tight ${s.network}`}
             style={{ backgroundColor: "rgba(255,255,255,0.18)" }}
           >
             {card.network}

@@ -14,8 +14,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { MiniCard } from "@/components/brand/CardVisual";
-import { toneForTier, comparisonSlug } from "@/lib/card-display";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
+import { comparisonSlug } from "@/lib/card-display";
 import {
   distinguishingFeatures,
   featureMatchCount,
@@ -148,7 +148,7 @@ export default function TiebreakByFeatures({
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 gap-3">
-                  <MiniCard tone={toneForTier(row.card.tier)} className="mt-0.5" />
+                  <ProductCardVisual card={row.card} size="sm" className="mt-0.5" />
                   <div className="min-w-0">
                     <Link
                       href={`/cartes/${row.card.id}`}

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import { ProductCardVisual, MiniCard } from "@/components/brand/CardVisual";
+import { ProductCardVisual } from "@/components/brand/CardVisual";
 import CostEstimator from "@/components/cartes/CostEstimator";
 import PriceAlertSignup from "@/components/marketing/PriceAlertSignup";
 import { getCard, publicCards } from "@/lib/cards";
@@ -25,7 +25,6 @@ import {
   fxLabel,
   incomeLabel,
   relatedCards,
-  toneForTier,
   verifiedDate,
   welcomeLabel,
 } from "@/lib/card-display";
@@ -397,7 +396,7 @@ export default async function CartePage({ params }: Params) {
                     href={`/comparatif/${comparisonSlug(card.id, other.id)}`}
                     className="group flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 transition-all hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-600/5"
                   >
-                    <MiniCard tone={toneForTier(other.tier)} className="shrink-0" />
+                    <ProductCardVisual card={other} size="sm" />
                     <span className="min-w-0 flex-1 text-sm font-medium text-slate-800">
                       {card.name} <span className="text-slate-500">vs</span>{" "}
                       {other.name}
