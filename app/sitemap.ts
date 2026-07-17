@@ -3,7 +3,7 @@
 
 import type { MetadataRoute } from "next";
 import { publicCards } from "@/lib/cards";
-import { comparisonSlug } from "@/lib/card-display";
+import { comparisonPairs } from "@/lib/card-display";
 import { GUIDES } from "@/lib/guides";
 import { BANKS } from "@/lib/banks";
 import { PROFILS } from "@/lib/profils";
@@ -62,17 +62,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // Toutes les paires canoniques de comparaison (longue traîne SEO).
-  const comparisonEntries: MetadataRoute.Sitemap = [];
-  for (let i = 0; i < pub.length; i++) {
-    for (let j = i + 1; j < pub.length; j++) {
-      comparisonEntries.push({
-        url: `${SITE}/comparatif/${comparisonSlug(pub[i].id, pub[j].id)}`,
-        changeFrequency: "monthly",
-        priority: 0.5,
-      });
-    }
-  }
+  // Comparatifs : on ne soumet QUE les paires réellement maillées depuis les
+  // fiches (cf. comparisonPairs). Soumettre les n(n-1)/2 paires noyait le site
+  // sous ~900 URLs sans lien interne — 92 % du sitemap pour un contenu quasi
+  // dupliqué, au détriment du budget de crawl des pages qui comptent.
+  const comparisonEntries: MetadataRoute.Sitemap = comparisonPairs(pub).map((slug) => ({
+    url: `${SITE}/comparatif/${slug}`,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
 
   return [
     ...staticEntries,

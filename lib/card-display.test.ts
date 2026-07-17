@@ -1,9 +1,16 @@
 // lib/card-display.test.ts
 // Couvre les helpers de maillage interne : linkifyCardNames (liens éditoriaux
-// contextuels) et relatedCards (suggestions de comparaison par pertinence).
+// contextuels), relatedCards (suggestions de comparaison par pertinence) et
+// comparisonPairs (paires retenues pour le prérendu et le sitemap).
 
 import { describe, it, expect } from "vitest";
-import { linkifyCardNames, relatedCards, type TextSegment } from "./card-display";
+import {
+  comparisonPairs,
+  comparisonSlug,
+  linkifyCardNames,
+  relatedCards,
+  type TextSegment,
+} from "./card-display";
 import type { Card } from "./types";
 
 const CATALOG = [
@@ -118,5 +125,48 @@ describe("relatedCards", () => {
     const out = relatedCards(ref, [ref, a, b], 1);
     expect(out).toHaveLength(1);
     expect(out.map((c) => c.id)).not.toContain("ref");
+  });
+});
+
+describe("comparisonPairs", () => {
+  const pool = ["a", "b", "c", "d", "e", "f"].map((id) =>
+    card({ id, name: id.toUpperCase(), annual_fee_eur: id.charCodeAt(0) * 10 }),
+  );
+
+  it("ne retient que des slugs canoniques, sans doublon A-vs-B / B-vs-A", () => {
+    const pairs = comparisonPairs(pool, 3);
+    expect(new Set(pairs).size).toBe(pairs.length);
+    for (const slug of pairs) {
+      const [x, y] = slug.split("-vs-");
+      expect(slug).toBe(comparisonSlug(x, y));
+    }
+  });
+
+  it("reste sous la combinatoire complète et croît linéairement avec max", () => {
+    const full = (pool.length * (pool.length - 1)) / 2;
+    expect(comparisonPairs(pool, 2).length).toBeLessThan(full);
+    expect(comparisonPairs(pool, 2).length).toBeLessThanOrEqual(
+      comparisonPairs(pool, 4).length,
+    );
+  });
+
+  it("couvre chaque carte par au moins une paire (aucune carte orpheline)", () => {
+    const linked = new Set(comparisonPairs(pool, 2).flatMap((s) => s.split("-vs-")));
+    for (const c of pool) expect(linked.has(c.id)).toBe(true);
+  });
+
+  it("couvre exactement les paires que relatedCards produit depuis les fiches", () => {
+    const expected = new Set(
+      pool.flatMap((c) =>
+        relatedCards(c, pool, 3).map((o) => comparisonSlug(c.id, o.id)),
+      ),
+    );
+    expect(new Set(comparisonPairs(pool, 3))).toEqual(expected);
+  });
+
+  it("est déterministe et trié (rendu SSG stable)", () => {
+    const pairs = comparisonPairs(pool, 3);
+    expect(pairs).toEqual([...pairs].sort());
+    expect(comparisonPairs(pool, 3)).toEqual(pairs);
   });
 });

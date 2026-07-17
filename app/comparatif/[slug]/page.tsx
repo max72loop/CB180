@@ -12,6 +12,7 @@ import { ProductCardVisual } from "@/components/brand/CardVisual";
 import { getCard, publicCards } from "@/lib/cards";
 import {
   INSURANCE_LABEL,
+  comparisonPairs,
   comparisonSlug,
   feeLabel,
   fxLabel,
@@ -45,15 +46,10 @@ function resolvePair(slug: string): { a: Card; b: Card } | null {
   return { a, b };
 }
 
+// Prérendu limité aux paires maillées depuis les fiches (cf. comparisonPairs).
+// Les autres paires restent servies à la demande via dynamicParams (défaut true).
 export function generateStaticParams() {
-  const cards = publicCards();
-  const params: { slug: string }[] = [];
-  for (let i = 0; i < cards.length; i++) {
-    for (let j = i + 1; j < cards.length; j++) {
-      params.push({ slug: comparisonSlug(cards[i].id, cards[j].id) });
-    }
-  }
-  return params;
+  return comparisonPairs(publicCards()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {

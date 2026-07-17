@@ -1,21 +1,16 @@
 import { ImageResponse } from "next/og";
+import { notFound } from "next/navigation";
 import { getCard, publicCards } from "@/lib/cards";
-import { comparisonSlug, parseComparisonSlug } from "@/lib/card-display";
+import { comparisonPairs, parseComparisonSlug } from "@/lib/card-display";
 
 // Image de partage social dédiée à chaque comparaison « A vs B ».
 export const alt = "Comparatif de cartes : CB180";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// Doit rester aligné sur le generateStaticParams de page.tsx : même source.
 export function generateStaticParams() {
-  const cards = publicCards();
-  const params: { slug: string }[] = [];
-  for (let i = 0; i < cards.length; i++) {
-    for (let j = i + 1; j < cards.length; j++) {
-      params.push({ slug: comparisonSlug(cards[i].id, cards[j].id) });
-    }
-  }
-  return params;
+  return comparisonPairs(publicCards()).map((slug) => ({ slug }));
 }
 
 export default async function Image({
@@ -24,9 +19,14 @@ export default async function Image({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  // Même garde que resolvePair (page.tsx) : sans ce filtre d'affiliation, une
+  // paire dont la PAGE renvoie 404 rendait quand même son image de partage, en
+  // y affichant le nom d'une carte non publique.
   const parsed = parseComparisonSlug(slug);
-  const a = parsed ? getCard(parsed[0]) : undefined;
-  const b = parsed ? getCard(parsed[1]) : undefined;
+  const [a, b] = parsed ? [getCard(parsed[0]), getCard(parsed[1])] : [];
+  if (!a || !b || a.affiliate.network == null || b.affiliate.network == null) {
+    notFound();
+  }
 
   return new ImageResponse(
     (
@@ -57,9 +57,9 @@ export default async function Image({
             letterSpacing: -2,
           }}
         >
-          <span>{a?.name ?? "Carte A"}</span>
+          <span>{a.name}</span>
           <span style={{ fontSize: 40, opacity: 0.8 }}>vs</span>
-          <span>{b?.name ?? "Carte B"}</span>
+          <span>{b.name}</span>
         </div>
         <div style={{ marginTop: 36, fontSize: 26, opacity: 0.9 }}>
           Coûts et frais comparés sur données officielles
