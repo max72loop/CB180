@@ -241,15 +241,17 @@ export function featureMatchCount(card: Card, keys: BoolFeatureKey[]): number {
 
 /**
  * Valeur d'affichage d'une fonctionnalité pour le tableau comparatif : « Oui »,
- * « Non » ou « — » (non vérifié). Une seule source de vérité du wording tri-état.
+ * « Non », ou null si non vérifié. Une seule source de vérité du wording tri-état.
+ * Le null est délibéré : il laisse `rowHasData` masquer une ligne qu'aucune carte
+ * ne renseigne, et le rendu d'une cellule vide (« — ») aux composants.
  */
-export function featureCompareValue(card: Card, key: BoolFeatureKey): string {
+export function featureCompareValue(card: Card, key: BoolFeatureKey): string | null {
   switch (featureStatus(card, key)) {
     case "yes":
       return "Oui";
     case "no":
       return "Non";
     default:
-      return "—";
+      return null;
   }
 }
