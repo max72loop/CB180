@@ -14,7 +14,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { formatEur } from "@/lib/format";
-import type { CardCompareData } from "@/lib/card-compare";
 import type { Badge, BadgeId } from "@/lib/card-badges";
 import { BADGE_FILTERS } from "@/lib/card-badges";
 import type { Card } from "@/lib/types";
@@ -43,9 +42,7 @@ export interface CardListItem {
   deferredDebit: boolean;
   /** Badges « Best for » éligibles, ordonnés par priorité (affichage : 2 max). */
   badges: Badge[];
-  /** Données prêtes à comparer (tableau côte à côte). */
-  compare: CardCompareData;
-  /** Carte brute, pour le widget d'estimation (calcul moteur côté client). */
+  /** Carte brute : widget d'estimation (moteur côté client) et tableau comparatif. */
   card: Card;
   /** Visuel de la carte, rendu côté serveur et passé tel quel. */
   visual: React.ReactNode;
@@ -179,8 +176,8 @@ export default function CardsExplorer({ items }: { items: CardListItem[] }) {
   const selectedData = useMemo(
     () =>
       selected
-        .map((id) => items.find((it) => it.id === id)?.compare)
-        .filter((c): c is CardCompareData => Boolean(c)),
+        .map((id) => items.find((it) => it.id === id)?.card)
+        .filter((c): c is Card => Boolean(c)),
     [selected, items],
   );
 

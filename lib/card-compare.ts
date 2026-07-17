@@ -1,15 +1,24 @@
 // lib/card-compare.ts
-// Couche PURE (sans React) du comparateur côte à côte de /cartes. Transforme une
-// Card en données d'affichage comparables et définit les LIGNES du tableau.
+// Couche PURE (sans React) du tableau comparatif. SOURCE UNIQUE des lignes et de
+// la surbrillance pour les DEUX surfaces qui comparent des cartes :
+//  · le modal côte à côte de /cartes (2 à 3 cartes, client) ;
+//  · la page SEO /comparatif/[slug] (2 cartes, serveur).
+// Les deux avaient leur propre jeu de lignes et leur propre logique de « meilleure
+// valeur », qui divergeaient. Tout se définit désormais ici ; les composants ne
+// font plus que du rendu (leurs designs, eux, restent volontairement distincts :
+// modal dense et scrollable vs page SEO aérée).
 //
 // Deux principes :
 //  · Honnêteté (IOBSP) : une ligne dont AUCUNE carte comparée n'a la donnée n'est
-//    pas affichée (rowHasData). On ne fabrique pas de « — » partout. Les champs
-//    non encore modélisés (plafond de paiement, note CB180) restent donc masqués
-//    tant qu'ils ne sont pas renseignés, mais la ligne existe déjà (évolutif).
+//    pas affichée (rowHasData). On ne fabrique pas de « — » partout.
 //  · Surbrillance objective : chaque ligne comparable expose un `score` (plus BAS
 //    = meilleur) ; la meilleure valeur n'est mise en avant que s'il y a une vraie
 //    différence entre les cartes (bestIndices).
+//
+// Une ligne se déclare ici quand le champ qui l'alimente EXISTE dans le
+// catalogue. Ajouter la ligne avant la donnée (plafond de paiement, note CB180 :
+// longtemps présents ici en `value: () => null`) ne prépare rien — rowHasData la
+// masque de toute façon, et le code mort survit à l'intention.
 
 import type { Card } from "./types";
 import {
@@ -19,123 +28,117 @@ import {
   incomeLabel,
   welcomeLabel,
 } from "./card-display";
+import {
+  FEATURE_GROUPS,
+  FEATURE_LABEL,
+  debitLabel,
+  featureCompareValue,
+  materialLabel,
+} from "./card-features";
 
-/** Données d'une carte prêtes à comparer, pré-calculées côté serveur. */
-export interface CardCompareData {
-  id: string;
-  name: string;
-  network: string;
-  /** Cotisation : texte lisible + score (€/an, plus bas = mieux). */
-  feeText: string;
-  feeScore: number;
-  /** Frais de change hors zone euro : texte + score (%, plus bas = mieux). */
-  fxText: string;
-  fxScore: number;
-  /** Retrait DAB hors zone euro : texte libre + score proxy (null si inconnu). */
-  withdrawalText: string;
-  withdrawalScore: number | null;
-  /** Condition de revenu : texte + score (€/mois requis, 0 = sans condition). */
-  incomeText: string;
-  incomeScore: number;
-  /** Avantages principaux (cashback, assurances, miles, prime), liste courte. */
-  perks: string[];
-  /** Plafond de paiement : non modélisé aujourd'hui → null (ligne masquée). */
-  ceilingText: string | null;
-  /** Note CB180 : non modélisée aujourd'hui → null (ligne masquée). */
-  ratingText: string | null;
-}
-
-/** Construit les données comparables d'une carte à partir de champs vérifiés. */
-export function buildCompareData(card: Card): CardCompareData {
-  const perks: string[] = [];
-  if (card.cashback) perks.push(`Cashback : ${card.cashback}`);
-  if (card.insurances_level !== "none") perks.push(INSURANCE_LABEL[card.insurances_level]);
-  if (card.miles_program) perks.push(`Miles : ${card.miles_program}`);
-  if (card.welcome_bonus_eur > 0) perks.push(welcomeLabel(card));
-
-  // Score proxy du retrait étranger (plus bas = mieux) : gratuit si retraits
-  // illimités, sinon somme % + fixe si l'un des deux est renseigné, sinon inconnu.
-  const freeFw = card.free_foreign_withdrawals_per_month ?? 0;
-  const pct = card.foreign_withdrawal_fee_percent;
-  const flat = card.foreign_withdrawal_flat_eur;
-  let withdrawalScore: number | null;
-  if (freeFw >= 100) withdrawalScore = 0;
-  else if (pct == null && flat == null) withdrawalScore = null;
-  else withdrawalScore = (pct ?? 0) + (flat ?? 0);
-
-  return {
-    id: card.id,
-    name: card.name,
-    network: card.network,
-    feeText: feeLabel(card),
-    feeScore: card.annual_fee_eur,
-    fxText: fxLabel(card),
-    fxScore: card.fx_fee_percent,
-    withdrawalText: card.foreign_withdrawal,
-    withdrawalScore,
-    incomeText: incomeLabel(card),
-    incomeScore: card.min_monthly_income_eur ?? 0,
-    perks,
-    ceilingText: null,
-    ratingText: null,
-  };
-}
-
-/** Rendu d'une cellule : soit une valeur simple, soit une liste (avantages). */
-export type CompareCell = string | string[] | null;
+/** Valeur d'une cellule : texte, ou null si la carte ne renseigne pas la donnée. */
+export type CompareCell = string | null;
 
 /** Descripteur d'une ligne du tableau comparatif. */
 export interface CompareRow {
   id: string;
   label: string;
   /** Valeur d'une carte pour cette ligne (null = non renseigné). */
-  value: (d: CardCompareData) => CompareCell;
+  value: (card: Card) => CompareCell;
   /** Score comparable (plus BAS = mieux), ou null si non comparable / inconnu. */
-  score?: (d: CardCompareData) => number | null;
+  score?: (card: Card) => number | null;
+  /**
+   * Libellé du repère porté par la meilleure valeur. Propre à chaque ligne : un
+   * score bas ne veut pas dire « moins cher » partout (pour la condition de
+   * revenu, il veut dire « plus accessible »). Wording IOBSP : on qualifie le
+   * poste comparé, jamais la carte.
+   */
+  bestLabel?: string;
 }
 
-/** Lignes du tableau, dans l'ordre d'affichage. Le nom sert d'en-tête de colonne. */
+/**
+ * Score proxy du retrait hors zone euro (plus bas = mieux) : gratuit si retraits
+ * illimités, sinon somme % + fixe si l'un des deux est renseigné, sinon inconnu.
+ */
+export function withdrawalScore(card: Card): number | null {
+  const freeFw = card.free_foreign_withdrawals_per_month ?? 0;
+  const pct = card.foreign_withdrawal_fee_percent;
+  const flat = card.foreign_withdrawal_flat_eur;
+  if (freeFw >= 100) return 0;
+  if (pct == null && flat == null) return null;
+  return (pct ?? 0) + (flat ?? 0);
+}
+
+/**
+ * Lignes « coût & conditions », dans l'ordre d'affichage.
+ *
+ * Cashback, assurances, miles et prime sont QUATRE lignes distinctes, et non un
+ * bloc « avantages » agrégé : sur un tableau, des lignes alignées se comparent,
+ * une liste à puces non. C'est aussi ce qui permet aux deux surfaces de partager
+ * le même jeu de lignes (la page ne montrait ni cashback ni miles).
+ */
 export const COMPARE_ROWS: CompareRow[] = [
-  { id: "network", label: "Réseau", value: (d) => d.network },
+  { id: "network", label: "Réseau", value: (c) => c.network },
   {
     id: "fee",
     label: "Cotisation annuelle",
-    value: (d) => d.feeText,
-    score: (d) => d.feeScore,
+    value: (c) => feeLabel(c),
+    score: (c) => c.annual_fee_eur,
+    bestLabel: "moins cher",
   },
   {
     id: "fx",
-    label: "Frais hors zone euro (change)",
-    value: (d) => d.fxText,
-    score: (d) => d.fxScore,
+    label: "Frais de change (hors zone euro)",
+    value: (c) => fxLabel(c),
+    score: (c) => c.fx_fee_percent,
+    bestLabel: "moins cher",
   },
   {
     id: "withdrawal",
     label: "Retrait DAB hors zone euro",
-    value: (d) => d.withdrawalText,
-    score: (d) => d.withdrawalScore,
+    value: (c) => c.foreign_withdrawal,
+    score: withdrawalScore,
+    bestLabel: "moins cher",
   },
-  { id: "ceiling", label: "Plafond de paiement", value: (d) => d.ceilingText },
   {
     id: "income",
-    label: "Conditions de revenu",
-    value: (d) => d.incomeText,
-    score: (d) => d.incomeScore,
+    label: "Condition de revenu",
+    value: (c) => incomeLabel(c),
+    score: (c) => c.min_monthly_income_eur ?? 0,
+    bestLabel: "plus accessible",
   },
+  { id: "cashback", label: "Cashback", value: (c) => c.cashback },
   {
-    id: "perks",
-    label: "Avantages principaux",
-    value: (d) => (d.perks.length > 0 ? d.perks : null),
+    id: "insurances",
+    label: "Assurances / assistance",
+    value: (c) => INSURANCE_LABEL[c.insurances_level],
   },
-  { id: "rating", label: "Note CB180", value: (d) => d.ratingText },
+  { id: "miles", label: "Programme de miles", value: (c) => c.miles_program },
+  { id: "welcome", label: "Prime de bienvenue", value: (c) => welcomeLabel(c) },
+];
+
+/**
+ * Lignes « Fonctionnalités & services », dérivées de la taxonomie card-features
+ * (débit et matière, puis les booléennes des groupes). Séparées de COMPARE_ROWS
+ * pour que les surfaces puissent les regrouper sous leur propre intertitre.
+ */
+export const FEATURE_COMPARE_ROWS: CompareRow[] = [
+  { id: "debitType", label: "Mode de débit", value: debitLabel },
+  { id: "cardMaterial", label: "Matière de la carte", value: materialLabel },
+  ...FEATURE_GROUPS.flatMap((group) =>
+    group.keys.map(
+      (key): CompareRow => ({
+        id: key,
+        label: FEATURE_LABEL[key],
+        value: (c) => featureCompareValue(c, key),
+      }),
+    ),
+  ),
 ];
 
 /** True si au moins une carte comparée renseigne la ligne (sinon on la masque). */
-export function rowHasData(row: CompareRow, cards: CardCompareData[]): boolean {
-  return cards.some((c) => {
-    const v = row.value(c);
-    return Array.isArray(v) ? v.length > 0 : v != null;
-  });
+export function rowHasData(row: CompareRow, cards: Card[]): boolean {
+  return cards.some((c) => row.value(c) != null);
 }
 
 /**
@@ -144,7 +147,7 @@ export function rowHasData(row: CompareRow, cards: CardCompareData[]): boolean {
  * comparables, ou aucune différence réelle (toutes égales) : on ne met alors
  * rien en avant.
  */
-export function bestIndices(row: CompareRow, cards: CardCompareData[]): Set<number> {
+export function bestIndices(row: CompareRow, cards: Card[]): Set<number> {
   const empty = new Set<number>();
   if (!row.score) return empty;
   const scores = cards.map((c) => row.score!(c));

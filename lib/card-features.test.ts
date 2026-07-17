@@ -100,10 +100,12 @@ describe("featureHighlights — atouts positifs, ordonnés, bornés", () => {
 });
 
 describe("featureCompareValue — wording tri-état du comparatif", () => {
-  it("mappe yes/no/unknown vers Oui/Non/—", () => {
+  it("mappe yes/no vers Oui/Non, et unknown vers null", () => {
     expect(featureCompareValue(makeCard({ subAccounts: true }), "subAccounts")).toBe("Oui");
     expect(featureCompareValue(makeCard({ subAccounts: false }), "subAccounts")).toBe("Non");
-    expect(featureCompareValue(makeCard(), "subAccounts")).toBe("—");
+    // null (et non « — ») : c'est au rendu d'afficher la cellule vide, et à
+    // rowHasData de masquer une ligne qu'aucune carte ne renseigne.
+    expect(featureCompareValue(makeCard(), "subAccounts")).toBeNull();
   });
 });
 

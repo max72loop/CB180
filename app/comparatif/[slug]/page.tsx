@@ -11,22 +11,17 @@ import SiteFooter from "@/components/marketing/SiteFooter";
 import { ProductCardVisual } from "@/components/brand/CardVisual";
 import { getCard, publicCards } from "@/lib/cards";
 import {
-  INSURANCE_LABEL,
+  comparisonPairs,
   comparisonSlug,
-  feeLabel,
-  fxLabel,
-  incomeLabel,
   parseComparisonSlug,
-  welcomeLabel,
 } from "@/lib/card-display";
 import {
-  FEATURE_GROUPS,
-  FEATURE_LABEL,
-  debitLabel,
-  featureCompareValue,
-  featureStatus,
-  materialLabel,
-} from "@/lib/card-features";
+  COMPARE_ROWS,
+  FEATURE_COMPARE_ROWS,
+  bestIndices,
+  rowHasData,
+  type CompareRow,
+} from "@/lib/card-compare";
 import type { Card } from "@/lib/types";
 import { SITE_URL } from "@/lib/site";
 
@@ -45,15 +40,10 @@ function resolvePair(slug: string): { a: Card; b: Card } | null {
   return { a, b };
 }
 
+// Prérendu limité aux paires maillées depuis les fiches (cf. comparisonPairs).
+// Les autres paires restent servies à la demande via dynamicParams (défaut true).
 export function generateStaticParams() {
-  const cards = publicCards();
-  const params: { slug: string }[] = [];
-  for (let i = 0; i < cards.length; i++) {
-    for (let j = i + 1; j < cards.length; j++) {
-      params.push({ slug: comparisonSlug(cards[i].id, cards[j].id) });
-    }
-  }
-  return params;
+  return comparisonPairs(publicCards()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -80,30 +70,12 @@ export default async function ComparatifPage({ params }: Params) {
   const canonical = comparisonSlug(a.id, b.id);
   if (slug !== canonical) redirect(`/comparatif/${canonical}`);
 
-  // Lignes « fonctionnalités » : on n'affiche une ligne QUE si au moins une des
-  // deux cartes renseigne la valeur (sinon deux « — » n'apprennent rien). Débit
-  // et matière (enum) d'abord, puis les fonctionnalités booléennes des groupes.
-  const featureRows: { label: string; a: string; b: string }[] = [];
-  if (debitLabel(a) || debitLabel(b)) {
-    featureRows.push({ label: "Mode de débit", a: debitLabel(a) ?? "—", b: debitLabel(b) ?? "—" });
-  }
-  if (materialLabel(a) || materialLabel(b)) {
-    featureRows.push({
-      label: "Matière de la carte",
-      a: materialLabel(a) ?? "—",
-      b: materialLabel(b) ?? "—",
-    });
-  }
-  for (const group of FEATURE_GROUPS) {
-    for (const key of group.keys) {
-      if (featureStatus(a, key) === "unknown" && featureStatus(b, key) === "unknown") continue;
-      featureRows.push({
-        label: FEATURE_LABEL[key],
-        a: featureCompareValue(a, key),
-        b: featureCompareValue(b, key),
-      });
-    }
-  }
+  // Lignes du tableau (définies dans lib/card-compare, partagées avec le modal
+  // de /cartes) : on n'affiche une ligne QUE si au moins une des deux cartes
+  // renseigne la valeur — sinon deux « — » n'apprennent rien.
+  const cards = [a, b];
+  const costRows = COMPARE_ROWS.filter((r) => rowHasData(r, cards));
+  const featureRows = FEATURE_COMPARE_ROWS.filter((r) => rowHasData(r, cards));
 
   return (
     <>
@@ -157,30 +129,9 @@ export default async function ComparatifPage({ params }: Params) {
               Comparaison des frais de {a.name} et {b.name}
             </caption>
             <tbody className="divide-y divide-slate-100">
-              <Row
-                label="Cotisation annuelle"
-                a={feeLabel(a)}
-                b={feeLabel(b)}
-                cheaper={cheaperFee(a, b)}
-              />
-              <Row
-                label="Frais de change (hors zone euro)"
-                a={fxLabel(a)}
-                b={fxLabel(b)}
-                cheaper={cheaperFx(a, b)}
-              />
-              <Row
-                label="Retraits à l'étranger"
-                a={a.foreign_withdrawal}
-                b={b.foreign_withdrawal}
-              />
-              <Row label="Prime de bienvenue" a={welcomeLabel(a)} b={welcomeLabel(b)} />
-              <Row label="Condition de revenu" a={incomeLabel(a)} b={incomeLabel(b)} />
-              <Row
-                label="Assurances / assistance"
-                a={INSURANCE_LABEL[a.insurances_level]}
-                b={INSURANCE_LABEL[b.insurances_level]}
-              />
+              {costRows.map((row) => (
+                <Row key={row.id} row={row} cards={cards} />
+              ))}
               {featureRows.length > 0 && (
                 <tr>
                   <th
@@ -192,15 +143,15 @@ export default async function ComparatifPage({ params }: Params) {
                   </th>
                 </tr>
               )}
-              {featureRows.map((r) => (
-                <Row key={r.label} label={r.label} a={r.a} b={r.b} />
+              {featureRows.map((row) => (
+                <Row key={row.id} row={row} cards={cards} />
               ))}
             </tbody>
           </table>
         </div>
         <p className="mt-2 text-xs text-slate-600">
-          Le repère « moins cher » ne porte que sur le poste concerné, pas sur le
-          coût global, qui dépend de vos usages.
+          Chaque repère ne porte que sur le poste de sa ligne, pas sur le coût
+          global, qui dépend de vos usages.
         </p>
 
         {/* CTA simulateur */}
@@ -235,48 +186,39 @@ export default async function ComparatifPage({ params }: Params) {
   );
 }
 
-/** Renvoie "a" / "b" / null selon la cotisation la plus basse (0 = à égalité). */
-function cheaperFee(a: Card, b: Card): "a" | "b" | null {
-  if (a.annual_fee_eur === b.annual_fee_eur) return null;
-  return a.annual_fee_eur < b.annual_fee_eur ? "a" : "b";
-}
-function cheaperFx(a: Card, b: Card): "a" | "b" | null {
-  if (a.fx_fee_percent === b.fx_fee_percent) return null;
-  return a.fx_fee_percent < b.fx_fee_percent ? "a" : "b";
-}
-
-function Row({
-  label,
-  a,
-  b,
-  cheaper,
-}: {
-  label: string;
-  a: string;
-  b: string;
-  cheaper?: "a" | "b" | null;
-}) {
+/** Une ligne du tableau : libellé + une cellule par carte comparée. */
+function Row({ row, cards }: { row: CompareRow; cards: Card[] }) {
+  const best = bestIndices(row, cards);
   return (
     <tr>
       <th
         scope="row"
         className="w-1/3 bg-slate-50 px-4 py-3 text-left align-top text-xs font-medium uppercase tracking-wide text-slate-500"
       >
-        {label}
+        {row.label}
       </th>
-      <Cell value={a} best={cheaper === "a"} />
-      <Cell value={b} best={cheaper === "b"} />
+      {cards.map((c, i) => (
+        <Cell
+          key={c.id}
+          value={row.value(c)}
+          bestLabel={best.has(i) ? row.bestLabel : undefined}
+        />
+      ))}
     </tr>
   );
 }
 
-function Cell({ value, best }: { value: string; best?: boolean }) {
+function Cell({ value, bestLabel }: { value: string | null; bestLabel?: string }) {
   return (
     <td className="px-4 py-3 align-top text-slate-800">
-      <span className="font-medium">{value}</span>
-      {best && (
+      {value == null ? (
+        <span className="text-slate-500">—</span>
+      ) : (
+        <span className="font-medium">{value}</span>
+      )}
+      {bestLabel && (
         <span className="ml-2 inline-flex items-center rounded-full bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
-          moins cher
+          {bestLabel}
         </span>
       )}
     </td>

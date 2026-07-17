@@ -125,6 +125,35 @@ export function comparisonSlug(aId: string, bId: string): string {
   return `${x}-vs-${y}`;
 }
 
+/**
+ * Paires de comparaison RETENUES pour le prérendu et le sitemap : l'union des
+ * liens que `relatedCards` produit réellement depuis chaque fiche.
+ *
+ * On ne prérend PLUS les n(n-1)/2 paires du catalogue. Cette combinatoire coûtait
+ * 903 pages + 903 images OG au build pour 43 cartes, dont ~88 % sans aucun lien
+ * interne (atteignables par le seul sitemap) et au contenu quasi dupliqué — un
+ * profil de pages que Google classe « crawled, currently not indexed ». Surtout,
+ * le coût croissait en n² : chaque carte ajoutée valait +43 pages.
+ *
+ * En se limitant aux paires maillées, le coût redevient LINÉAIRE (~`max` liens
+ * par carte) et chaque URL publiée porte un signal de lien interne. Les paires
+ * écartées restent servies à la demande (`dynamicParams` par défaut à `true`) :
+ * on ne perd aucune URL, on cesse juste de les payer au build.
+ *
+ * La relation n'est pas symétrique (B peut figurer dans le top de A sans que A
+ * figure dans celui de B) : le Set dédoublonne sur le slug canonique. Trié pour
+ * un rendu déterministe (SSG).
+ */
+export function comparisonPairs(pool: Card[], max = 4): string[] {
+  const slugs = new Set<string>();
+  for (const card of pool) {
+    for (const other of relatedCards(card, pool, max)) {
+      slugs.add(comparisonSlug(card.id, other.id));
+    }
+  }
+  return [...slugs].sort();
+}
+
 /** Extrait les deux ids d'un slug de comparaison, ou null si invalide. */
 export function parseComparisonSlug(slug: string): [string, string] | null {
   const parts = slug.split("-vs-");

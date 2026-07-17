@@ -11,7 +11,6 @@ import CardsExplorer, { type CardListItem } from "@/components/cartes/CardsExplo
 import { publicCards } from "@/lib/cards";
 import { feeLabel, verifiedDate } from "@/lib/card-display";
 import { featureHighlights } from "@/lib/card-features";
-import { buildCompareData } from "@/lib/card-compare";
 import { cardBadges } from "@/lib/card-badges";
 import { computeAnnualCost } from "@/lib/engine";
 import { USAGE_SCENARIOS } from "@/lib/scenarios";
@@ -49,9 +48,9 @@ export default function CartesIndex() {
       noIncomeCondition: card.min_monthly_income_eur == null,
       deferredDebit: debit === "differe" || debit === "choix",
       badges: cardBadges(card),
-      compare: buildCompareData(card),
-      // Le widget d'estimation (client) n'utilise que les frais : on neutralise
-      // le bloc affiliation (commission, URL de tracking) avant de l'envoyer.
+      // Le widget d'estimation et le tableau comparatif (client) n'utilisent que
+      // les frais : on neutralise le bloc affiliation (commission, URL de
+      // tracking) avant de l'envoyer.
       card: { ...card, affiliate: { network: null, est_commission_eur: 0 } },
       visual: <ProductCardVisual card={card} className="w-full" />,
     };

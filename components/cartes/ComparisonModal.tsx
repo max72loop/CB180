@@ -2,21 +2,24 @@
 
 // components/cartes/ComparisonModal.tsx
 // Modal de comparaison côte à côte de 2 à 3 cartes sélectionnées sur /cartes.
-// Une colonne par carte, une ligne par caractéristique (lib/card-compare). La
-// meilleure valeur objective d'une ligne est mise en avant quand elle diffère.
+// Une colonne par carte, une ligne par caractéristique. Lignes et surbrillance
+// viennent de lib/card-compare, partagé avec la page SEO /comparatif/[slug] :
+// ce composant ne fait que du rendu.
 // Accessibilité : role="dialog" + aria-modal, focus trap, Échap / clic overlay
 // pour fermer, colonne de libellés fixe au scroll horizontal (mobile).
 
 import { useEffect, useRef } from "react";
 import {
   COMPARE_ROWS,
+  FEATURE_COMPARE_ROWS,
   bestIndices,
   rowHasData,
-  type CardCompareData,
+  type CompareRow,
 } from "@/lib/card-compare";
+import type { Card } from "@/lib/types";
 
 interface ComparisonModalProps {
-  cards: CardCompareData[];
+  cards: Card[];
   onClose: () => void;
   onRemove: (id: string) => void;
 }
@@ -72,8 +75,10 @@ export default function ComparisonModal({
     };
   }, [onClose]);
 
-  // Colonnes = cartes ; lignes = caractéristiques renseignées par au moins une carte.
-  const rows = COMPARE_ROWS.filter((r) => rowHasData(r, cards));
+  // Colonnes = cartes ; lignes = caractéristiques renseignées par au moins une
+  // carte. Les fonctionnalités sont regroupées sous leur propre intertitre.
+  const costRows = COMPARE_ROWS.filter((r) => rowHasData(r, cards));
+  const featureRows = FEATURE_COMPARE_ROWS.filter((r) => rowHasData(r, cards));
 
   return (
     <div
@@ -153,42 +158,23 @@ export default function ComparisonModal({
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, rowIdx) => {
-                const best = bestIndices(row, cards);
-                const zebra = rowIdx % 2 === 1;
-                return (
-                  <tr key={row.id}>
-                    <th
-                      scope="row"
-                      className={[
-                        "sticky left-0 z-10 p-2 text-left align-top font-medium text-slate-600",
-                        zebra ? "bg-slate-50" : "bg-white",
-                      ].join(" ")}
-                    >
-                      {row.label}
-                    </th>
-                    {cards.map((c, colIdx) => {
-                      const v = row.value(c);
-                      const isBest = best.has(colIdx);
-                      return (
-                        <td
-                          key={c.id}
-                          className={[
-                            "p-2 align-top",
-                            isBest
-                              ? "bg-emerald-50 font-bold text-emerald-800"
-                              : zebra
-                                ? "bg-slate-50 text-slate-700"
-                                : "bg-white text-slate-700",
-                          ].join(" ")}
-                        >
-                          <CellValue value={v} />
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
+              {costRows.map((row, i) => (
+                <DataRow key={row.id} row={row} cards={cards} zebra={i % 2 === 1} />
+              ))}
+              {featureRows.length > 0 && (
+                <tr>
+                  <th
+                    scope="colgroup"
+                    colSpan={cards.length + 1}
+                    className="sticky left-0 bg-slate-100 p-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500"
+                  >
+                    Fonctionnalités &amp; services
+                  </th>
+                </tr>
+              )}
+              {featureRows.map((row, i) => (
+                <DataRow key={row.id} row={row} cards={cards} zebra={i % 2 === 1} />
+              ))}
             </tbody>
           </table>
         </div>
@@ -197,23 +183,48 @@ export default function ComparisonModal({
   );
 }
 
-/** Rendu d'une cellule : « — » si vide, liste à puces si avantages, texte sinon. */
-function CellValue({ value }: { value: string | string[] | null }) {
-  if (value == null || (Array.isArray(value) && value.length === 0)) {
-    return <span className="text-slate-500">—</span>;
-  }
-  if (Array.isArray(value)) {
-    return (
-      <ul className="space-y-1">
-        {value.map((v) => (
-          <li key={v} className="leading-snug">
-            {v}
-          </li>
-        ))}
-      </ul>
-    );
-  }
-  return <span>{value}</span>;
+/** Une ligne du tableau : libellé fixe au scroll + une cellule par carte. */
+function DataRow({
+  row,
+  cards,
+  zebra,
+}: {
+  row: CompareRow;
+  cards: Card[];
+  zebra: boolean;
+}) {
+  const best = bestIndices(row, cards);
+  return (
+    <tr>
+      <th
+        scope="row"
+        className={[
+          "sticky left-0 z-10 p-2 text-left align-top font-medium text-slate-600",
+          zebra ? "bg-slate-50" : "bg-white",
+        ].join(" ")}
+      >
+        {row.label}
+      </th>
+      {cards.map((c, colIdx) => {
+        const value = row.value(c);
+        return (
+          <td
+            key={c.id}
+            className={[
+              "p-2 align-top",
+              best.has(colIdx)
+                ? "bg-emerald-50 font-bold text-emerald-800"
+                : zebra
+                  ? "bg-slate-50 text-slate-700"
+                  : "bg-white text-slate-700",
+            ].join(" ")}
+          >
+            {value ?? <span className="text-slate-500">—</span>}
+          </td>
+        );
+      })}
+    </tr>
+  );
 }
 
 function XIcon({ className }: { className?: string }) {
