@@ -10,12 +10,15 @@
 //
 // Deux principes :
 //  · Honnêteté (IOBSP) : une ligne dont AUCUNE carte comparée n'a la donnée n'est
-//    pas affichée (rowHasData). On ne fabrique pas de « — » partout. Les champs
-//    non encore modélisés (plafond de paiement, note CB180) restent donc masqués
-//    tant qu'ils ne sont pas renseignés, mais la ligne existe déjà (évolutif).
+//    pas affichée (rowHasData). On ne fabrique pas de « — » partout.
 //  · Surbrillance objective : chaque ligne comparable expose un `score` (plus BAS
 //    = meilleur) ; la meilleure valeur n'est mise en avant que s'il y a une vraie
 //    différence entre les cartes (bestIndices).
+//
+// Une ligne se déclare ici quand le champ qui l'alimente EXISTE dans le
+// catalogue. Ajouter la ligne avant la donnée (plafond de paiement, note CB180 :
+// longtemps présents ici en `value: () => null`) ne prépare rien — rowHasData la
+// masque de toute façon, et le code mort survit à l'intention.
 
 import type { Card } from "./types";
 import {
@@ -97,8 +100,6 @@ export const COMPARE_ROWS: CompareRow[] = [
     score: withdrawalScore,
     bestLabel: "moins cher",
   },
-  // Non modélisé aujourd'hui → toujours null, donc masqué (ligne évolutive).
-  { id: "ceiling", label: "Plafond de paiement", value: () => null },
   {
     id: "income",
     label: "Condition de revenu",
@@ -114,8 +115,6 @@ export const COMPARE_ROWS: CompareRow[] = [
   },
   { id: "miles", label: "Programme de miles", value: (c) => c.miles_program },
   { id: "welcome", label: "Prime de bienvenue", value: (c) => welcomeLabel(c) },
-  // Non modélisée aujourd'hui → toujours null, donc masquée (ligne évolutive).
-  { id: "rating", label: "Note CB180", value: () => null },
 ];
 
 /**

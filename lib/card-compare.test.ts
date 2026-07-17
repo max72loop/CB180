@@ -108,10 +108,10 @@ describe("bestIndices — surbrillance objective", () => {
 });
 
 describe("rowHasData — lignes conditionnelles", () => {
-  it("masque une ligne dont aucune carte n'a la donnée (plafond, note)", () => {
+  it("masque une ligne dont aucune carte n'a la donnée", () => {
     const cards = [makeCard(), makeCard()];
-    expect(rowHasData(row("ceiling"), cards)).toBe(false);
-    expect(rowHasData(row("rating"), cards)).toBe(false);
+    expect(rowHasData(row("cashback"), cards)).toBe(false);
+    expect(rowHasData(row("miles"), cards)).toBe(false);
     // Réseau et cotisation sont toujours renseignés.
     expect(rowHasData(row("network"), cards)).toBe(true);
     expect(rowHasData(row("fee"), cards)).toBe(true);
