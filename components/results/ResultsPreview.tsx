@@ -265,6 +265,27 @@ export default function ResultsPreview({
         </section>
       )}
 
+      {/* ─── Clôture orientée action : la moins chère selon les réponses ─── */}
+      {bestRecurring && (
+        <ClosingAction best={bestRecurring} sessionId={sessionId} />
+      )}
+
+      {/* Rétention : l'alerte tarifaire, mécanisme de ré-engagement, promue au
+          moment du résultat plutôt qu'enfouie ailleurs (audit, chantier 05). */}
+      {bestRecurring && (
+        <section className="space-y-3">
+          <p className="text-sm leading-relaxed text-slate-600">
+            Les cotisations et frais changent chaque année. On garde
+            l&apos;œil sur la{" "}
+            <span className="font-semibold text-slate-900">
+              {bestRecurring.card.name}
+            </span>{" "}
+            pour vous.
+          </p>
+          <PriceAlertSignup card={bestRecurring.card} source="results" />
+        </section>
+      )}
+
       {/* Capture email optionnelle, stockée séparément du profil */}
       <EmailCapture
         sessionId={sessionId}
@@ -275,38 +296,28 @@ export default function ResultsPreview({
         }}
       />
 
-      {/* Rétention : l'alerte tarifaire, mécanisme de ré-engagement, promue au
-          moment du résultat plutôt qu'enfouie ailleurs (audit, chantier 05). */}
-      {bestRecurring && (
-        <section className="space-y-3">
-          <p className="text-sm leading-relaxed text-slate-600">
-            La mieux placée aujourd&apos;hui selon vos réponses&nbsp;:{" "}
-            <span className="font-semibold text-slate-900">
-              {bestRecurring.card.name}
-            </span>
-            . Mais les cotisations et frais changent chaque année. On garde
-            l&apos;œil pour vous.
-          </p>
-          <PriceAlertSignup card={bestRecurring.card} source="results" />
-        </section>
-      )}
-
-      <div className="space-y-3 border-t border-slate-200 pt-6">
-        <button
-          type="button"
-          onClick={onEdit}
-          className="w-full rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
-        >
-          Modifier mes réponses
-        </button>
-        <button
-          type="button"
-          onClick={onRestart}
-          className="w-full rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
-        >
-          Recommencer la simulation
-        </button>
-        <p className="pt-1 text-xs leading-relaxed text-slate-500">
+      {/* Actions secondaires, désormais discrètes : l'action forte est l'offre. */}
+      <div className="space-y-4 border-t border-slate-200 pt-6">
+        <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="text-sm font-semibold text-indigo-600 transition-colors hover:text-indigo-700 focus:outline-none focus-visible:underline"
+          >
+            Modifier mes réponses
+          </button>
+          <span className="hidden text-slate-300 sm:inline" aria-hidden>
+            ·
+          </span>
+          <button
+            type="button"
+            onClick={onRestart}
+            className="text-sm font-medium text-slate-500 transition-colors hover:text-slate-700 focus:outline-none focus-visible:underline"
+          >
+            Recommencer la simulation
+          </button>
+        </div>
+        <p className="text-xs leading-relaxed text-slate-500">
           CB180 est un site d&apos;information et de comparaison. Ces résultats ne
           constituent ni un conseil personnalisé ni une recommandation de
           souscription. Pour toute décision, lisez les conditions générales de la
@@ -315,6 +326,63 @@ export default function ResultsPreview({
       </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * Passage à l'action : bloc de clôture centré sur la carte la moins chère selon
+ * les réponses, avec l'offre en action forte. Ne prescrit pas — reprend le
+ * cadrage objectif (« la moins chère du panel selon vos réponses ») et rappelle
+ * le caractère affilié + non-conseil (IOBSP).
+ */
+function ClosingAction({
+  best,
+  sessionId,
+}: {
+  best: RankedCard;
+  sessionId: string | null;
+}) {
+  const { card, breakdown } = best;
+  const hasOffer =
+    card.affiliate.network != null && !!card.source_url?.startsWith("http");
+  const cost = breakdown.netAnnualCostWithoutBonusEur;
+
+  return (
+    <section className="rounded-2xl border border-indigo-200 bg-indigo-50/50 p-5">
+      <p className="text-sm font-semibold text-indigo-600">
+        La moins chère du panel, selon vos réponses
+      </p>
+      <div className="mt-3 flex items-center gap-4">
+        <ProductCardVisual card={card} size="sm" />
+        <div className="min-w-0">
+          <p className="font-semibold text-slate-900">{card.name}</p>
+          <p className="text-sm text-slate-500">{card.issuer}</p>
+          <p className="mt-0.5">
+            <span className="text-base font-bold text-slate-900">
+              {formatEur(cost)}
+            </span>{" "}
+            <span className="text-xs text-slate-500">/ an récurrent</span>
+          </p>
+        </div>
+      </div>
+      {hasOffer && (
+        <a
+          href={`/go/${card.id}?from=results_cta${
+            sessionId ? `&sid=${encodeURIComponent(sessionId)}` : ""
+          }`}
+          target="_blank"
+          rel="noopener noreferrer sponsored nofollow"
+          className="mt-4 block w-full rounded-xl bg-indigo-600 px-6 py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-indigo-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+        >
+          Voir l&apos;offre {card.name}
+        </a>
+      )}
+      <p className="mt-2 text-xs leading-relaxed text-slate-500">
+        {card.affiliate.network ? "Lien affilié. " : ""}Classement trié
+        objectivement par coût&nbsp;: ni conseil personnalisé, ni recommandation
+        de souscription.
+      </p>
+    </section>
   );
 }
 
@@ -427,13 +495,12 @@ function Reveal({
   const counted = useCountUp(improves ? gain : currentCost);
 
   return (
-    <div
-      className={
-        improves
-          ? "space-y-6 md:grid md:grid-cols-2 md:items-start md:gap-6 md:space-y-0"
-          : "space-y-6"
-      }
-    >
+    <div className="space-y-6">
+      <div
+        className={
+          improves ? "md:grid md:grid-cols-2 md:items-start md:gap-6" : ""
+        }
+      >
       {/* ─ Acte 1 : le grand chiffre, au-dessus de la ligne de flottaison ─ */}
       <section
         className={[
@@ -501,7 +568,142 @@ function Reveal({
 
       {/* ─ Acte 2 : la décomposition poste par poste ─ */}
       {improves && <ComparisonBars current={current} best={best} />}
+      </div>
+
+      {/* ─ Acte 1bis : pourquoi ELLE, pour CE profil (leviers, langage clair) ─ */}
+      {improves && <WhyThisCard current={current} best={best} />}
     </div>
+  );
+}
+
+/** Un levier de l'écart récurrent (positif = en faveur de la carte la moins chère). */
+interface GainDriver {
+  key: "cotisation" | "change" | "retrait" | "cashback" | "rewards";
+  amountEur: number;
+}
+
+/**
+ * Décompose l'écart récurrent (situation actuelle ⇄ carte la moins chère) en
+ * leviers et renvoie le principal contributeur positif. Sert à EXPLIQUER en
+ * langage clair pourquoi cette carte ressort la moins chère POUR CE PROFIL, à
+ * partir des seules réponses saisies. Wording IOBSP : un constat chiffré tiré des
+ * réponses, jamais « recommandé pour vous ».
+ */
+function primaryGainDriver(
+  current: CostBreakdown,
+  best: CostBreakdown,
+): GainDriver | null {
+  const drivers: GainDriver[] = [
+    { key: "cotisation", amountEur: current.annualFeeEur - best.annualFeeEur },
+    { key: "change", amountEur: current.fxFeeEur - best.fxFeeEur },
+    {
+      key: "retrait",
+      amountEur:
+        current.foreignWithdrawalFeeEur - best.foreignWithdrawalFeeEur,
+    },
+    { key: "cashback", amountEur: best.cashbackValueEur },
+    { key: "rewards", amountEur: best.rewardsValueEur },
+  ];
+  const top = [...drivers].sort((a, b) => b.amountEur - a.amountEur)[0];
+  return top && top.amountEur > 0 ? top : null;
+}
+
+const DRIVER_HEADING: Record<GainDriver["key"], string> = {
+  cotisation: "Ce qui fait la différence : la cotisation",
+  change: "Ce qui fait la différence : les frais de change",
+  retrait: "Ce qui fait la différence : les retraits à l'étranger",
+  cashback: "Ce qui fait la différence : le cashback",
+  rewards: "Ce qui fait la différence : les miles / points",
+};
+
+/**
+ * L'explication personnalisée : relie le grand chiffre aux réponses de
+ * l'utilisateur en pointant le poste qui creuse l'écart. Ne prescrit rien —
+ * décrit d'où vient l'économie, avec les montants tirés du profil saisi.
+ */
+function WhyThisCard({
+  current,
+  best,
+}: {
+  current: CostBreakdown;
+  best: RankedCard;
+}) {
+  const driver = primaryGainDriver(current, best.breakdown);
+  if (!driver) return null;
+
+  const name = best.card.name;
+  const bd = best.breakdown;
+  const foreignSpend = bd.inputs.foreignAnnualSpendingEur;
+  const withdrawals = bd.inputs.foreignWithdrawalsPerYear;
+
+  let body: React.ReactNode = null;
+  switch (driver.key) {
+    case "change":
+      body = (
+        <>
+          Sur environ{" "}
+          <span className="font-semibold text-slate-800">
+            {formatEur(foreignSpend)}
+          </span>{" "}
+          de dépenses hors zone euro par an — d&apos;après vos réponses — votre
+          carte actuelle prélève ~{formatEur(current.fxFeeEur)} de frais de
+          change, contre ~{formatEur(bd.fxFeeEur)} avec la {name}.
+        </>
+      );
+      break;
+    case "retrait":
+      body = (
+        <>
+          Sur environ{" "}
+          <span className="font-semibold text-slate-800">
+            {withdrawals} retraits
+          </span>{" "}
+          à l&apos;étranger par an, vous payez ~
+          {formatEur(current.foreignWithdrawalFeeEur)} de frais aujourd&apos;hui,
+          contre ~{formatEur(bd.foreignWithdrawalFeeEur)} avec la {name}.
+        </>
+      );
+      break;
+    case "cotisation":
+      body = (
+        <>
+          Votre cotisation actuelle (~{formatEur(current.annualFeeEur)}/an) pèse
+          plus lourd que celle de la {name} ({formatEur(bd.annualFeeEur)}/an),
+          pour le reste de votre profil.
+        </>
+      );
+      break;
+    case "cashback":
+      body = (
+        <>
+          La {name} vous reverse environ{" "}
+          <span className="font-semibold text-slate-800">
+            {formatEur(bd.cashbackValueEur)}/an
+          </span>{" "}
+          de cashback sur le niveau de dépenses que vous avez indiqué.
+        </>
+      );
+      break;
+    case "rewards":
+      body = (
+        <>
+          La {name} génère environ{" "}
+          <span className="font-semibold text-slate-800">
+            {formatEur(bd.rewardsValueEur)}/an
+          </span>{" "}
+          en miles / points valorisés, d&apos;après vos réponses.
+        </>
+      );
+      break;
+  }
+
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5">
+      <p className="text-sm font-semibold text-indigo-600">
+        {DRIVER_HEADING[driver.key]}
+      </p>
+      <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{body}</p>
+    </section>
   );
 }
 
