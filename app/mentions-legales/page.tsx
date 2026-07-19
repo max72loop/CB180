@@ -8,10 +8,9 @@ export const metadata = {
 };
 
 // Mentions légales (LCEN) + informations obligatoires du comparateur
-// (Code de la consommation, décret n°2016-505). Les champs [à compléter]
-// doivent être renseignés avant mise en ligne publique.
+// (Code de la consommation, décret n°2016-505).
 
-const LAST_UPDATE = "4 juillet 2026";
+const LAST_UPDATE = "19 juillet 2026";
 
 export default function MentionsLegalesPage() {
   const total = cards.length;
@@ -31,8 +30,8 @@ export default function MentionsLegalesPage() {
             entrepreneur individuel (micro-entreprise).
           </p>
           <ul className="mt-2 list-none space-y-1">
-            <li>Adresse : <Todo>adresse postale</Todo></li>
-            <li>SIREN / SIRET : <Todo>numéro</Todo></li>
+            <li>Adresse : 80 rue Robespierre, 93170 Bagnolet</li>
+            <li>SIREN : 952&nbsp;242&nbsp;428 — SIRET : 952&nbsp;242&nbsp;428&nbsp;00011</li>
             <li>
               Contact :{" "}
               <a
@@ -169,13 +168,5 @@ function Section({ title, children }: { title: string; children: React.ReactNode
         {children}
       </div>
     </section>
-  );
-}
-
-function Todo({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="rounded bg-amber-100 px-1 text-amber-800">
-      [à compléter : {children}]
-    </span>
   );
 }
