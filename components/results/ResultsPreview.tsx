@@ -853,7 +853,9 @@ function RankedCardRow({
     >
       {highlight && (
         <p className="bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-700">
-          Coût annuel le plus bas du panel
+          {view === "year1"
+            ? "Coût 1ʳᵉ année le plus bas du panel"
+            : "Coût récurrent le plus bas du panel"}
         </p>
       )}
       <div className="flex items-start justify-between gap-3 p-4">
