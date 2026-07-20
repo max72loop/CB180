@@ -4,28 +4,28 @@
     {
       "period": "2026-Q3",
       "label": "3ᵉ trimestre 2026",
-      "generatedAt": "2026-07-07",
-      "panelSize": 33,
-      "referenceDate": "2026-07-07",
-      "avgAnnualFee": 92.72,
-      "medianAnnualFee": 58.8,
+      "generatedAt": "2026-07-20",
+      "panelSize": 36,
+      "referenceDate": "2026-07-09",
+      "avgAnnualFee": 111.43,
+      "medianAnnualFee": 60,
       "minAnnualFee": 0,
-      "maxAnnualFee": 708,
-      "shareFree": 0.36,
-      "shareNoForeignFee": 0.3,
-      "avgFxFeePercent": 0.58,
+      "maxAnnualFee": 792,
+      "shareFree": 0.33,
+      "shareNoForeignFee": 0.28,
+      "avgFxFeePercent": 0.76,
       "byTier": [
         {
           "tier": "entree",
           "label": "Entrée de gamme",
-          "count": 12,
-          "avgFee": 10.08
+          "count": 13,
+          "avgFee": 14.31
         },
         {
           "tier": "intermediaire",
           "label": "Intermédiaire",
-          "count": 11,
-          "avgFee": 66.94
+          "count": 12,
+          "avgFee": 69.28
         },
         {
           "tier": "premium",
@@ -36,8 +36,8 @@
         {
           "tier": "haut_de_gamme",
           "label": "Haut de gamme",
-          "count": 2,
-          "avgFee": 354
+          "count": 3,
+          "avgFee": 500
         }
       ],
       "cheapest": {
@@ -47,10 +47,10 @@
         "fee": 0
       },
       "mostExpensive": {
-        "id": "amex-platinum",
-        "name": "American Express Carte Platinum",
+        "id": "amex-afklm-platinum",
+        "name": "Carte Air France KLM American Express Platinum",
         "issuer": "American Express France",
-        "fee": 708
+        "fee": 792
       },
       "cards": [
         {
@@ -194,11 +194,25 @@
           "fxFee": 0
         },
         {
+          "id": "amex-afklm-silver",
+          "name": "Carte Air France KLM American Express Silver",
+          "issuer": "American Express France",
+          "annualFee": 65,
+          "fxFee": 2.8
+        },
+        {
           "id": "monabanq-uniq",
           "name": "Monabanq Uniq",
           "issuer": "Monabanq (Crédit Mutuel Alliance Fédérale)",
           "annualFee": 72,
           "fxFee": 2
+        },
+        {
+          "id": "amex-green",
+          "name": "Carte Green American Express",
+          "issuer": "American Express France",
+          "annualFee": 95,
+          "fxFee": 2.8
         },
         {
           "id": "nickel-metal",
@@ -282,6 +296,13 @@
           "name": "American Express Carte Platinum",
           "issuer": "American Express France",
           "annualFee": 708,
+          "fxFee": 2.8
+        },
+        {
+          "id": "amex-afklm-platinum",
+          "name": "Carte Air France KLM American Express Platinum",
+          "issuer": "American Express France",
+          "annualFee": 792,
           "fxFee": 2.8
         }
       ]
